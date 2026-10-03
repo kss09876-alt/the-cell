@@ -121,35 +121,69 @@ const R = {
 
 // ---------- BGM ----------
 // cells 시트 bgm 칸: Spotify 링크(앨범/트랙/플레이리스트) 또는 오디오 파일(드라이브 링크·mp3 URL)
+// 진입 즉시 자동재생을 시도하고, 브라우저가 막으면 '소리와 함께 입장' 게이트를 띄워 첫 클릭에 재생합니다.
 function setupBgm(cell) {
   const src = (cell.bgm || '').trim();
   if (!src) return;
   const box = document.createElement('div');
   box.className = 'bgm';
-  const sp = src.match(/open\.spotify\.com\/(?:intl-\w+\/)?(album|track|playlist)\/([\w]+)/);
+  box.innerHTML = `<button class="bgm-btn" aria-pressed="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">BGM</span></button>`;
+  document.body.appendChild(box);
+  const btn = box.querySelector('.bgm-btn'), lbl = box.querySelector('.lbl');
+  let userMuted = false, playing = false;
+  const setState = (p) => { playing = p; box.classList.toggle('playing', p); btn.setAttribute('aria-pressed', String(p)); lbl.textContent = p ? 'SOUND ON' : 'SOUND OFF'; if (p) closeGate(); };
+
+  let player; // { play(), pause() }
+  const sp = src.match(/open\.spotify\.com\/(?:intl-\w+\/)?(album|track|playlist)\/(\w+)/);
   if (sp) {
-    box.innerHTML = `
-      <button class="bgm-btn" aria-expanded="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">BGM</span></button>
-      <div class="bgm-panel" hidden>
-        <iframe src="https://open.spotify.com/embed/${sp[1]}/${sp[2]}?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        <p>재생 버튼을 눌러 들어보세요 · Spotify</p>
-      </div>`;
-    const btn = box.querySelector('.bgm-btn'), panel = box.querySelector('.bgm-panel');
-    btn.addEventListener('click', () => { panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); });
-    setTimeout(() => { panel.hidden = false; btn.setAttribute('aria-expanded', 'true'); }, 1800);
+    const panel = document.createElement('div');
+    panel.className = 'bgm-panel';
+    panel.innerHTML = `<div class="sp-host"></div><p>Spotify · 로그인하지 않으면 30초 미리듣기</p>`;
+    box.appendChild(panel);
+    let ctrl, pending = false;
+    player = { play: () => (ctrl ? ctrl.play() : (pending = true)), pause: () => ctrl && ctrl.pause() };
+    window.onSpotifyIframeApiReady = (API) => {
+      API.createController(panel.querySelector('.sp-host'), { uri: `spotify:${sp[1]}:${sp[2]}`, width: '100%', height: 152, theme: 'dark' }, (c) => {
+        ctrl = c;
+        c.addListener('playback_update', (e) => setState(!e.data.isPaused && !e.data.isBuffering ? true : (e.data.isBuffering ? playing : false)));
+        c.addListener('ready', () => { if (pending || !userMuted) c.play(); });
+      });
+    };
+    const s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true; document.head.appendChild(s);
+    btn.addEventListener('click', () => { if (playing) { userMuted = true; player.pause(); } else { userMuted = false; player.play(); } });
   } else {
     const id = src.match(/\/d\/([\w-]{20,})/)?.[1] || (/^[\w-]{20,}$/.test(src) ? src : '');
-    const url = id ? `https://drive.google.com/uc?export=download&id=${id}` : src;
-    box.innerHTML = `<button class="bgm-btn" aria-pressed="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">소리 켜기</span></button>`;
-    const audio = new Audio(url); audio.loop = true; audio.preload = 'none'; audio.volume = 0;
-    const btn = box.querySelector('.bgm-btn'), lbl = box.querySelector('.lbl');
-    let fade;
-    const ramp = (to, done) => { clearInterval(fade); fade = setInterval(() => { const v = audio.volume + (to > audio.volume ? 0.04 : -0.04); audio.volume = Math.max(0, Math.min(to, 1, v)); if (Math.abs(audio.volume - to) < 0.05) { audio.volume = to; clearInterval(fade); done && done(); } }, 60); };
-    const on = () => audio.play().then(() => { ramp(0.6); box.classList.add('playing'); btn.setAttribute('aria-pressed', 'true'); lbl.textContent = '소리 끄기'; }).catch(() => {});
-    const off = () => ramp(0, () => { audio.pause(); box.classList.remove('playing'); btn.setAttribute('aria-pressed', 'false'); lbl.textContent = '소리 켜기'; });
-    btn.addEventListener('click', () => (audio.paused ? on() : off()));
+    const audio = new Audio(id ? `https://drive.google.com/uc?export=download&id=${id}` : src);
+    audio.loop = true; audio.volume = 0.6;
+    audio.addEventListener('playing', () => setState(true));
+    audio.addEventListener('pause', () => setState(false));
+    player = { play: () => audio.play().catch(() => {}), pause: () => audio.pause() };
+    btn.addEventListener('click', () => { if (playing) { userMuted = true; player.pause(); } else { userMuted = false; player.play(); } });
+    player.play(); // 즉시 자동재생 시도
   }
-  document.body.appendChild(box);
+
+  // 사용자 첫 상호작용(클릭·키·터치)에 재생
+  const kick = (e) => {
+    if (e.target.closest && (e.target.closest('.bgm') || e.target.closest('.sound-gate'))) return;
+    if (!userMuted && !playing) player.play();
+    ['pointerdown', 'keydown', 'touchstart'].forEach((t) => removeEventListener(t, kick, true));
+  };
+  ['pointerdown', 'keydown', 'touchstart'].forEach((t) => addEventListener(t, kick, true));
+
+  // 자동재생이 막혔으면 게이트 표시
+  let gate;
+  function closeGate() { if (gate) { gate.classList.add('out'); setTimeout(() => gate && gate.remove(), 600); gate = null; } }
+  setTimeout(() => {
+    if (playing || userMuted) return;
+    gate = document.createElement('div');
+    gate.className = 'sound-gate';
+    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS CELL HAS SOUND</p>
+      <button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> 소리와 함께 입장</button>
+      <button class="sg-off">소리 없이 보기</button></div>`;
+    document.body.appendChild(gate);
+    gate.querySelector('.sg-on').addEventListener('click', () => { userMuted = false; player.play(); closeGate(); });
+    gate.querySelector('.sg-off').addEventListener('click', () => { userMuted = true; closeGate(); });
+  }, 1600);
 }
 
 // ---------- wave ----------
