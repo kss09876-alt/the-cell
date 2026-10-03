@@ -116,7 +116,41 @@ const R = {
   setupScroll();
   setupWaves();
   setupPianos();
+  setupBgm(cell);
 })();
+
+// ---------- BGM ----------
+// cells 시트 bgm 칸: Spotify 링크(앨범/트랙/플레이리스트) 또는 오디오 파일(드라이브 링크·mp3 URL)
+function setupBgm(cell) {
+  const src = (cell.bgm || '').trim();
+  if (!src) return;
+  const box = document.createElement('div');
+  box.className = 'bgm';
+  const sp = src.match(/open\.spotify\.com\/(?:intl-\w+\/)?(album|track|playlist)\/([\w]+)/);
+  if (sp) {
+    box.innerHTML = `
+      <button class="bgm-btn" aria-expanded="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">BGM</span></button>
+      <div class="bgm-panel" hidden>
+        <iframe src="https://open.spotify.com/embed/${sp[1]}/${sp[2]}?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <p>재생 버튼을 눌러 들어보세요 · Spotify</p>
+      </div>`;
+    const btn = box.querySelector('.bgm-btn'), panel = box.querySelector('.bgm-panel');
+    btn.addEventListener('click', () => { panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); });
+    setTimeout(() => { panel.hidden = false; btn.setAttribute('aria-expanded', 'true'); }, 1800);
+  } else {
+    const id = src.match(/\/d\/([\w-]{20,})/)?.[1] || (/^[\w-]{20,}$/.test(src) ? src : '');
+    const url = id ? `https://drive.google.com/uc?export=download&id=${id}` : src;
+    box.innerHTML = `<button class="bgm-btn" aria-pressed="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">소리 켜기</span></button>`;
+    const audio = new Audio(url); audio.loop = true; audio.preload = 'none'; audio.volume = 0;
+    const btn = box.querySelector('.bgm-btn'), lbl = box.querySelector('.lbl');
+    let fade;
+    const ramp = (to, done) => { clearInterval(fade); fade = setInterval(() => { const v = audio.volume + (to > audio.volume ? 0.04 : -0.04); audio.volume = Math.max(0, Math.min(to, 1, v)); if (Math.abs(audio.volume - to) < 0.05) { audio.volume = to; clearInterval(fade); done && done(); } }, 60); };
+    const on = () => audio.play().then(() => { ramp(0.6); box.classList.add('playing'); btn.setAttribute('aria-pressed', 'true'); lbl.textContent = '소리 끄기'; }).catch(() => {});
+    const off = () => ramp(0, () => { audio.pause(); box.classList.remove('playing'); btn.setAttribute('aria-pressed', 'false'); lbl.textContent = '소리 켜기'; });
+    btn.addEventListener('click', () => (audio.paused ? on() : off()));
+  }
+  document.body.appendChild(box);
+}
 
 // ---------- wave ----------
 function setupWaves() {
