@@ -11,7 +11,8 @@ const media = (src, alt = '') => src
 // 블록 타입별 렌더러 — 새 연출이 필요하면 여기에 타입을 추가하세요.
 const R = {
   cover: (b, c, i) => `
-    <section class="b-cover" style="${b.bg ? `--bg:${esc(b.bg)}` : ''}">
+    <section class="b-cover ${b.align === 'cosmos' ? 'is-cosmos' : ''}" style="${b.bg ? `--bg:${esc(b.bg)}` : ''}">
+      ${b.align === 'cosmos' ? '<canvas class="star-cv" data-mode="drift"></canvas>' : ''}
       ${b.media ? `<div class="cover-media parallax" data-speed="0.3">${media(b.media)}</div>` : '<div class="cover-cube"><i></i><i></i><i></i><i></i><i></i><i></i></div>'}
       <div class="cover-text">
         <p class="eyebrow">CELL ${String(i + 1).padStart(3, '0')}</p>
@@ -62,6 +63,21 @@ const R = {
     <section class="b-wave" ${b.bg ? `style="--bg:${esc(b.bg)}"` : ''}>
       <canvas class="wave-cv"></canvas>
       <div class="wave-text reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
+    </section>`,
+  // cosmos: 스크롤하면 별 사이로 빨려 들어가는 워프 + 문장
+  cosmos: (b) => `
+    <section class="b-cosmos" ${b.bg ? `style="--bg:${esc(b.bg)}"` : ''}>
+      <div class="cosmos-sticky"><canvas class="star-cv" data-mode="warp"></canvas>
+        <div class="cosmos-text">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div></div>
+    </section>`,
+  // quantum: 확률 구름 — 클릭(관측)하면 한 점으로 붕괴
+  quantum: (b) => `
+    <section class="b-quantum">
+      <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
+      <div class="q-stage reveal"><canvas class="q-cv"></canvas>
+        <div class="q-hud"><span class="q-state">상태: 중첩 (superposition)</span><span class="q-count">관측 0회</span></div>
+        <div class="q-tip">화면을 클릭해 관측하기</div></div>
+      ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // timeline: body = "연도 내용|연도 내용|..."
   timeline: (b) => {
@@ -116,8 +132,116 @@ const R = {
   setupScroll();
   setupWaves();
   setupPianos();
+  setupStars();
+  setupQuantum();
   setupBgm(cell);
 })();
+
+// ---------- 별 (drift: 천천히 흐르는 별 / warp: 스크롤 진행에 따라 가속) ----------
+function setupStars() {
+  document.querySelectorAll('.star-cv').forEach((cv) => {
+    const g = cv.getContext('2d'), mode = cv.dataset.mode;
+    const sec = cv.closest('section');
+    const dpr = Math.min(devicePixelRatio, 2);
+    let w, h, visible = false, mx = 0, my = 0;
+    const N = mode === 'warp' ? 900 : 500;
+    const stars = Array.from({ length: N }, () => ({ x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2, z: Math.random(), hue: Math.random() < 0.15 ? 200 + Math.random() * 80 : 0 }));
+    const size = () => { w = cv.clientWidth; h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    size(); addEventListener('resize', size);
+    addEventListener('pointermove', (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) requestAnimationFrame(draw); }).observe(sec);
+    let last = performance.now();
+    function draw(now) {
+      if (!visible) return;
+      const dt = Math.min(50, now - last) / 1000; last = now;
+      let speed = 0.03;
+      if (mode === 'warp') {
+        const r = sec.getBoundingClientRect();
+        const p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - innerHeight)));
+        speed = 0.05 + Math.pow(p, 2) * 1.6;
+        sec.style.setProperty('--p', p.toFixed(3));
+      }
+      g.fillStyle = mode === 'warp' ? `rgba(4,5,12,${speed > 0.6 ? 0.35 : 0.9})` : 'rgba(5,6,13,1)';
+      g.fillRect(0, 0, w, h);
+      const cx = w / 2 - mx * 40, cy = h / 2 - my * 40, f = Math.max(w, h) * 0.6;
+      for (const s of stars) {
+        const pz = s.z;
+        s.z -= speed * dt;
+        if (s.z <= 0.02) { s.z = 1; s.x = (Math.random() - 0.5) * 2; s.y = (Math.random() - 0.5) * 2; continue; }
+        const sx = cx + (s.x / s.z) * f * 0.5, sy = cy + (s.y / s.z) * f * 0.5;
+        if (sx < -50 || sx > w + 50 || sy < -50 || sy > h + 50) continue;
+        const a = Math.min(1, (1 - s.z) * 1.4);
+        const rad = Math.max(0.4, (1 - s.z) * 2.2);
+        g.strokeStyle = g.fillStyle = s.hue ? `hsla(${s.hue},90%,75%,${a})` : `rgba(235,240,255,${a})`;
+        if (speed > 0.25) {
+          const px = cx + (s.x / pz) * f * 0.5, py = cy + (s.y / pz) * f * 0.5;
+          g.lineWidth = rad; g.beginPath(); g.moveTo(px, py); g.lineTo(sx, sy); g.stroke();
+        } else { g.beginPath(); g.arc(sx, sy, rad, 0, 6.283); g.fill(); }
+      }
+      requestAnimationFrame(draw);
+    }
+  });
+}
+
+// ---------- 양자 관측 ----------
+function setupQuantum() {
+  document.querySelectorAll('.q-stage').forEach((stage) => {
+    const cv = stage.querySelector('.q-cv'), g = cv.getContext('2d');
+    const stateEl = stage.querySelector('.q-state'), countEl = stage.querySelector('.q-count'), tip = stage.querySelector('.q-tip');
+    const dpr = Math.min(devicePixelRatio, 2);
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#9db8ff';
+    let w, h, visible = false, count = 0;
+    let collapse = null; // {x, y, t}
+    const N = 1400;
+    const P = Array.from({ length: N }, (_, i) => ({ a: Math.random() * 6.283, r: Math.random(), l: (i % 3) + 1, ph: Math.random() * 6.283, x: 0, y: 0 }));
+    const size = () => { w = cv.clientWidth; h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    size(); addEventListener('resize', size);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) requestAnimationFrame(draw); }).observe(stage);
+    stage.addEventListener('pointerdown', (e) => {
+      const r = cv.getBoundingClientRect();
+      // 관측 결과는 확률 분포를 따라 정해진다: 클릭 근처의 입자 하나를 '결과'로 선택
+      const cx = e.clientX - r.left, cy = e.clientY - r.top;
+      let best = P[0], bd = 1e9;
+      for (let i = 0; i < 60; i++) { const p = P[(Math.random() * N) | 0]; const d = (p.x - cx) ** 2 + (p.y - cy) ** 2; if (d < bd) { bd = d; best = p; } }
+      collapse = { x: best.x, y: best.y, t: performance.now() };
+      count++; countEl.textContent = `관측 ${count}회`;
+      stateEl.textContent = `상태: 붕괴 — 위치 (${((best.x / w) * 2 - 1).toFixed(2)}, ${(-(best.y / h) * 2 + 1).toFixed(2)})`;
+      tip.classList.add('hide');
+      stage.classList.add('flash'); setTimeout(() => stage.classList.remove('flash'), 300);
+    });
+    function draw(now) {
+      if (!visible) return;
+      const t = now / 1000;
+      g.fillStyle = 'rgba(5,6,13,.28)'; g.fillRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.42;
+      let k = 0; // 0 = 중첩, 1 = 완전 붕괴
+      if (collapse) {
+        const e = (now - collapse.t) / 1000;
+        k = e < 0.35 ? e / 0.35 : e < 2.2 ? 1 : Math.max(0, 1 - (e - 2.2) / 1.6);
+        if (e > 3.8) { collapse = null; stateEl.textContent = '상태: 중첩 (superposition)'; }
+      }
+      const ease = k * k * (3 - 2 * k);
+      for (const p of P) {
+        // 오비탈처럼 보이는 확률 분포 (l = 엽 개수)
+        const ang = p.a + t * 0.15 * (p.l % 2 ? 1 : -1);
+        const lobe = Math.abs(Math.cos(p.l * ang + Math.sin(t * 0.7 + p.ph) * 0.3));
+        const rr = R * (0.15 + 0.85 * Math.sqrt(p.r) * lobe) + Math.sin(t * 3 + p.ph) * 4;
+        const ox = cx + Math.cos(ang) * rr, oy = cy + Math.sin(ang) * rr * 0.8;
+        const tx = collapse ? collapse.x + Math.cos(p.ph) * 3 * (1 - ease) : ox;
+        const ty = collapse ? collapse.y + Math.sin(p.ph) * 3 * (1 - ease) : oy;
+        p.x = ox + (tx - ox) * ease; p.y = oy + (ty - oy) * ease;
+        g.fillStyle = p.l === 1 ? accent : p.l === 2 ? 'rgba(200,180,255,.8)' : 'rgba(235,240,255,.6)';
+        g.fillRect(p.x, p.y, 1.4, 1.4);
+      }
+      if (collapse && ease > 0.6) {
+        const grd = g.createRadialGradient(collapse.x, collapse.y, 0, collapse.x, collapse.y, 40 * ease);
+        grd.addColorStop(0, 'rgba(255,255,255,.9)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = grd; g.beginPath(); g.arc(collapse.x, collapse.y, 40 * ease, 0, 6.283); g.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+  });
+}
 
 // ---------- BGM ----------
 // cells 시트 bgm 칸: Spotify 링크(앨범/트랙/플레이리스트) 또는 오디오 파일(드라이브 링크·mp3 URL)
