@@ -39,14 +39,14 @@
   {
    "id": "c004",
    "order": 4,
-   "status": "coming",
-   "title": "CELL 004",
-   "subtitle": "Coming soon",
-   "artist": "",
-   "period": "2027",
-   "color": "#8a7cff",
+   "status": "open",
+   "title": "CELL 004 · async",
+   "subtitle": "소음과 음악 사이, 류이치 사카모토의 소리들",
+   "artist": "류이치 사카모토 (1952–2023)",
+   "period": "가상 기획전 · 데모",
+   "color": "#d8d2c2",
    "thumbnail": "",
-   "summary": ""
+   "summary": "THE CELL 시연용 가상 기획전. 사카모토의 음악 세계를 비동기(async), 소음, 어긋난 조율이라는 키워드로 따라갑니다."
   },
   {
    "id": "c005",
@@ -230,6 +230,116 @@
   {
    "cell_id": "c003",
    "order": 5,
+   "type": "end",
+   "title": "다음 셀로",
+   "body": "",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 1,
+   "type": "cover",
+   "title": "async",
+   "body": "소음과 음악 사이, 류이치 사카모토의 소리들",
+   "media": "",
+   "caption": "",
+   "bg": "#0c0c0c",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 2,
+   "type": "wave",
+   "title": "",
+   "body": "피아노는 숲에서 온 나무와 땅에서 온 쇠를 사람이 억지로 맞춰 놓은 상자다. 이 셀은 그 조율이 조금씩 풀리는 순간에서 시작한다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 3,
+   "type": "text",
+   "title": "기획 의도",
+   "body": "류이치 사카모토는 테크노 팝에서 영화음악, 그리고 소음과 침묵의 실험까지 반세기 동안 소리의 경계를 옮겨 다녔다. 이 가상 기획전은 그의 마지막 시기 키워드인 ‘async(비동기)’를 따라, 정해진 박자와 조율 바깥에 놓인 소리들을 다시 듣는 방법을 제안한다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 4,
+   "type": "timeline",
+   "title": "1952 — 2023",
+   "body": "1952 1월 17일, 도쿄 나카노에서 태어나다|1978 호소노 하루오미, 다카하시 유키히로와 Yellow Magic Orchestra 결성|1983 영화 〈전장의 메리 크리스마스〉에 배우로 출연하고 음악을 맡다|1988 〈마지막 황제〉로 데이비드 번, 쑤총과 함께 아카데미 음악상 수상|2011 동일본대지진. 이후 쓰나미에 잠겼던 피아노의 소리에 귀 기울이다|2014 인두암 진단으로 활동을 멈추다|2015 복귀 후 영화 〈레버넌트〉 음악 작업|2017 8년 만의 솔로 앨범 《async》 발표|2023 앨범 《12》 발표. 3월 28일 타계",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 5,
+   "type": "sticky",
+   "title": "소리를 듣는 네 가지 방법",
+   "body": "맞추지 않는다 — async는 ‘비동기’. 모든 소리가 같은 박자를 따르지 않아도 음악이 된다.|소음을 듣는다 — 빗소리, 발소리, 낡은 건반의 잡음도 악보의 일부가 된다.|조율을 풀어준다 — 물에 잠겼던 피아노의 어긋난 음정은 자연이 되돌려 받은 소리다.|여백을 남긴다 — 음과 음 사이의 침묵이 가장 오래 남는다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 6,
+   "type": "piano",
+   "title": "어긋난 피아노",
+   "body": "건반을 눌러보세요. ‘조율 풀기’를 켜면 물에 잠겼던 피아노처럼 음정이 조금씩 어긋나고, 건반마다 작은 잡음이 섞입니다.",
+   "media": "",
+   "caption": "웹 오디오로 합성한 소리입니다. 실제 녹음이 아닙니다.",
+   "bg": "",
+   "align": "detuned"
+  },
+  {
+   "cell_id": "c004",
+   "order": 7,
+   "type": "quote",
+   "title": "",
+   "body": "Ars longa, vita brevis.",
+   "media": "",
+   "caption": "예술은 길고 인생은 짧다 — 히포크라테스. 사카모토가 즐겨 인용한 경구",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 8,
+   "type": "video",
+   "title": "마지막 연주",
+   "body": "",
+   "media": "https://www.youtube.com/watch?v=DBYVQuGs5hc",
+   "caption": "〈Ryuichi Sakamoto | Opus〉(2023, 감독 네오 소라) 공식 예고편 · Modern Films",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c004",
+   "order": 9,
+   "type": "text",
+   "title": "",
+   "body": "이 셀은 THE CELL 플랫폼 시연을 위해 임의로 구성한 가상 기획전이며, 실제 전시나 권리자와 관계가 없습니다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": "center"
+  },
+  {
+   "cell_id": "c004",
+   "order": 10,
    "type": "end",
    "title": "다음 셀로",
    "body": "",
