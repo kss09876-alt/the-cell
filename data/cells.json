@@ -11,7 +11,8 @@
    "color": "#9db8ff",
    "thumbnail": "",
    "summary": "우주의 첫 순간을 THE CELL의 첫 번째 방으로. 중첩·관측·양자 요동을 따라 138억 년을 건너는 인터랙티브 셀.",
-   "bgm": ""
+   "bgm": "ambient:cosmos",
+   "fx": "stars"
   },
   {
    "id": "c002",
@@ -24,7 +25,8 @@
    "color": "#f2c14e",
    "thumbnail": "",
    "summary": "빛과 그림자를 주제로 한 샘플 셀입니다. 시트에서 내용을 바꿔보세요.",
-   "bgm": ""
+   "bgm": "",
+   "fx": ""
   },
   {
    "id": "c003",
@@ -37,7 +39,8 @@
    "color": "#ef6f6c",
    "thumbnail": "",
    "summary": "영상·인용·스티키 스크롤 블록을 보여주는 샘플 셀입니다.",
-   "bgm": ""
+   "bgm": "",
+   "fx": ""
   },
   {
    "id": "c004",
@@ -50,7 +53,8 @@
    "color": "#d8d2c2",
    "thumbnail": "",
    "summary": "THE CELL 시연용 가상 기획전. 사카모토의 음악 세계를 비동기(async), 소음, 어긋난 조율이라는 키워드로 따라갑니다.",
-   "bgm": "https://open.spotify.com/album/55BwNuGPkSSKOCBkTSCQWA"
+   "bgm": "https://open.spotify.com/album/55BwNuGPkSSKOCBkTSCQWA",
+   "fx": ""
   },
   {
    "id": "c005",
@@ -63,7 +67,8 @@
    "color": "#5aa9e6",
    "thumbnail": "",
    "summary": "",
-   "bgm": ""
+   "bgm": "",
+   "fx": ""
   }
  ],
  "blocks": [
