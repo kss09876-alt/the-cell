@@ -100,10 +100,10 @@ function starTexture(cell, idx, kind, cv, g, s) {
   tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
   return tex;
 }
-function glowSprite() {
+function glowSprite(stops = ['rgba(190,210,255,.9)', 'rgba(140,170,255,.35)', 'rgba(100,120,255,0)']) {
   const cv = document.createElement('canvas'); cv.width = cv.height = 256;
   const g = cv.getContext('2d'), grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grd.addColorStop(0, 'rgba(190,210,255,.9)'); grd.addColorStop(0.25, 'rgba(140,170,255,.35)'); grd.addColorStop(1, 'rgba(100,120,255,0)');
+  grd.addColorStop(0, stops[0]); grd.addColorStop(0.25, stops[1]); grd.addColorStop(1, stops[2]);
   g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace;
   return new THREE.Sprite(new THREE.SpriteMaterial({ map: t, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.6 }));
@@ -157,6 +157,21 @@ function makeCube(cell, idx) {
   const edges = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: fxStars ? '#b9ccff' : open ? '#0b0b0d' : (cell.color || '#888'), transparent: true, opacity: fxStars ? 0.9 : open ? 0.4 : 0.55 }));
   mesh.add(edges);
   mesh.userData = { cell, idx, open, home: new THREE.Vector3(), phase: Math.random() * Math.PI * 2, hover: 0 };
+  if (open && cell.fx === 'prism') {
+    // 빛의 단면: 무지개 후광 + 색이 흐르는 모서리
+    const halo = glowSprite(['rgba(255,240,200,.9)', 'rgba(255,190,90,.3)', 'rgba(255,150,60,0)']); halo.scale.setScalar(2.4); halo.position.z = -0.3; mesh.add(halo);
+    mesh.userData.fx = { halo, edges, kind: 'prism' };
+    edges.material.opacity = 1;
+  }
+  if (open && cell.fx === 'ripple') {
+    // 소리의 지도: 큐브에서 퍼져나가는 파문
+    const rings = [0, 1, 2].map((k) => {
+      const pts = []; for (let i = 0; i <= 64; i++) { const a = (i / 64) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0)); }
+      const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: cell.color || '#ef6f6c', transparent: true, opacity: 0.6 }));
+      ring.userData.k = k; mesh.add(ring); return ring;
+    });
+    mesh.userData.fx = { rings, kind: 'ripple' };
+  }
   if (fxStars) {
     const halo = glowSprite(); halo.scale.setScalar(2.8); halo.position.z = -0.3; mesh.add(halo);
     const dust = starDust(); mesh.add(dust);
@@ -264,7 +279,13 @@ function tick(now) {
     m.rotation.y = Math.cos(t * 0.35 + u.phase) * 0.25 * (1 - u.hover) - world.rotation.y * u.hover;
     const s = (0.15 + 0.85 * e) * (1 + u.hover * 0.12);
     m.scale.setScalar(s);
-    if (u.fx) {
+    if (u.fx && u.fx.kind === 'prism') {
+      u.fx.halo.material.opacity = (0.4 + Math.sin(t * 1.3 + u.phase) * 0.15 + u.hover * 0.4) * e;
+      u.fx.halo.material.color.setHSL((t * 0.08) % 1, 0.9, 0.7);
+      u.fx.edges.material.color.setHSL((t * 0.15) % 1, 1, 0.6);
+    } else if (u.fx && u.fx.kind === 'ripple') {
+      u.fx.rings.forEach((r) => { const ph = ((t * 0.45 + r.userData.k / 3) % 1); r.scale.setScalar(0.75 + ph * 1.6); r.material.opacity = (1 - ph) * (0.55 + u.hover * 0.4) * e; });
+    } else if (u.fx) {
       u.fx.halo.material.opacity = (0.45 + Math.sin(t * 1.6 + u.phase) * 0.18 + u.hover * 0.35) * e;
       u.fx.halo.scale.setScalar(2.6 + Math.sin(t * 1.1) * 0.25 + u.hover * 0.6);
       u.fx.dust.rotation.y += 0.004; u.fx.dust.rotation.x += 0.0015;
