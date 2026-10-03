@@ -144,9 +144,10 @@ function setupBgm(cell) {
     player = { play: () => (ctrl ? ctrl.play() : (pending = true)), pause: () => ctrl && ctrl.pause() };
     window.onSpotifyIframeApiReady = (API) => {
       API.createController(panel.querySelector('.sp-host'), { uri: `spotify:${sp[1]}:${sp[2]}`, width: '100%', height: 152, theme: 'dark' }, (c) => {
-        ctrl = c;
-        c.addListener('playback_update', (e) => setState(!e.data.isPaused && !e.data.isBuffering ? true : (e.data.isBuffering ? playing : false)));
-        c.addListener('ready', () => { if (pending || !userMuted) c.play(); });
+        ctrl = c; window.__spCtrl = c;
+        c.addListener('playback_update', (e) => { window.__spLast = e.data; setState(!e.data.isPaused && !e.data.isBuffering ? true : (e.data.isBuffering ? playing : false)); });
+        // 사용자 활성화가 있을 때만 재생 요청 (활성화 없이 요청하면 막힘)
+        c.addListener('ready', () => { if (!userMuted && (pending || navigator.userActivation?.hasBeenActive)) c.play(); });
       });
     };
     const s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true; document.head.appendChild(s);
@@ -172,7 +173,7 @@ function setupBgm(cell) {
 
   // 자동재생이 막혔으면 게이트 표시
   let gate;
-  function closeGate() { if (gate) { gate.classList.add('out'); setTimeout(() => gate && gate.remove(), 600); gate = null; } }
+  function closeGate() { const g = gate; if (g) { g.classList.add('out'); setTimeout(() => g.remove(), 600); gate = null; } }
   setTimeout(() => {
     if (playing || userMuted) return;
     gate = document.createElement('div');
