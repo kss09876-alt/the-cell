@@ -283,7 +283,7 @@ function setupPianos() {
 function finish(color) {
   wipe.style.background = color;
   document.getElementById('loader').classList.add('done');
-  requestAnimationFrame(() => requestAnimationFrame(() => wipe.classList.remove('on')));
+  setTimeout(() => wipe.classList.remove('on'), 60);
   document.querySelectorAll('a[href]').forEach((a) => a.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || a.target) return;
     e.preventDefault();
