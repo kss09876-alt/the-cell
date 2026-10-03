@@ -137,6 +137,81 @@ const R = {
   setupBgm(cell);
 })();
 
+// ---------- 앰비언트 합성 엔진 ----------
+function createAmbient(kind, onState) {
+  let ctx, master, sparkleTimer, built = false;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function impulse(sec) {
+    const len = ctx.sampleRate * sec, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5); }
+    return buf;
+  }
+  function build() {
+    built = true;
+    master = ctx.createGain(); master.gain.value = 0;
+    const comp = ctx.createDynamicsCompressor(); master.connect(comp).connect(ctx.destination);
+    const verb = ctx.createConvolver(); verb.buffer = impulse(5);
+    const wet = ctx.createGain(); wet.gain.value = 0.7; verb.connect(wet).connect(master);
+    const dry = ctx.createGain(); dry.gain.value = 0.5; dry.connect(master);
+    // 드론: A·E 중심의 열린 화음, 살짝 어긋난 두 개의 발진기
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700; lp.Q.value = 0.6;
+    const lfo = ctx.createOscillator(), lfoG = ctx.createGain(); lfo.frequency.value = 0.04; lfoG.gain.value = 380;
+    lfo.connect(lfoG).connect(lp.frequency); lfo.start();
+    lp.connect(dry); lp.connect(verb);
+    [55, 82.41, 110, 164.81, 246.94].forEach((f, i) => {
+      [-5, 5].forEach((cents, j) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = j ? 'triangle' : 'sine'; o.frequency.value = f; o.detune.value = cents;
+        g.gain.value = 0.05 / (1 + i * 0.5);
+        const trem = ctx.createOscillator(), tg = ctx.createGain(); trem.frequency.value = rnd(0.03, 0.09); tg.gain.value = g.gain.value * 0.6;
+        trem.connect(tg).connect(g.gain); trem.start();
+        o.connect(g).connect(lp); o.start();
+      });
+    });
+    // 우주의 바람: 대역통과 노이즈
+    const nb = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate), nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    const ns = ctx.createBufferSource(); ns.buffer = nb; ns.loop = true;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = 0.8;
+    const nlfo = ctx.createOscillator(), nlg = ctx.createGain(); nlfo.frequency.value = 0.07; nlg.gain.value = 300; nlfo.connect(nlg).connect(bp.frequency); nlfo.start();
+    const ng = ctx.createGain(); ng.gain.value = 0.018;
+    ns.connect(bp).connect(ng).connect(verb); ns.start();
+    // 별빛: 펜타토닉 고음이 무작위로 반짝임
+    const notes = [880, 987.77, 1108.73, 1318.51, 1479.98, 1760, 1975.53, 2217.46];
+    const sparkle = () => {
+      const t = ctx.currentTime, f = notes[(Math.random() * notes.length) | 0];
+      const o = ctx.createOscillator(), g = ctx.createGain(), pan = ctx.createStereoPanner();
+      o.type = 'sine'; o.frequency.value = f; pan.pan.value = rnd(-0.8, 0.8);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(rnd(0.025, 0.05), t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + rnd(2, 4));
+      o.connect(g).connect(pan); pan.connect(verb); pan.connect(dry);
+      o.start(t); o.stop(t + 4.2);
+      sparkleTimer = setTimeout(sparkle, rnd(900, 3200));
+    };
+    sparkle();
+  }
+  return {
+    play() {
+      try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+      if (!built) build();
+      return ctx.resume().then(() => {
+        if (ctx.state !== 'running') return;
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+        master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 3);
+        onState(true);
+      }).catch(() => {});
+    },
+    pause() {
+      if (!ctx) return;
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
+      setTimeout(() => ctx.suspend(), 1300);
+      onState(false);
+    },
+  };
+}
+
 // ---------- 별 (drift: 천천히 흐르는 별 / warp: 스크롤 진행에 따라 가속) ----------
 function setupStars() {
   document.querySelectorAll('.star-cv').forEach((cv) => {
@@ -258,6 +333,13 @@ function setupBgm(cell) {
   const setState = (p) => { playing = p; box.classList.toggle('playing', p); btn.setAttribute('aria-pressed', String(p)); lbl.textContent = p ? 'SOUND ON' : 'SOUND OFF'; if (p) closeGate(); };
 
   let player; // { play(), pause() }
+  if (src.startsWith('ambient')) {
+    // 웹오디오로 실시간 합성하는 오리지널 앰비언트 (저작권 걱정 없음)
+    const amb = createAmbient(src.split(':')[1] || 'cosmos', setState);
+    player = { play: () => amb.play(), pause: () => amb.pause() };
+    btn.addEventListener('click', () => { if (playing) { userMuted = true; player.pause(); } else { userMuted = false; player.play(); } });
+    player.play();
+  } else {
   const sp = src.match(/open\.spotify\.com\/(?:intl-\w+\/)?(album|track|playlist)\/(\w+)/);
   if (sp) {
     const panel = document.createElement('div');
@@ -287,6 +369,7 @@ function setupBgm(cell) {
     player.play(); // 즉시 자동재생 시도
   }
 
+  }
   // 사용자 첫 상호작용(클릭·키·터치)에 재생
   const kick = (e) => {
     if (e.target.closest && (e.target.closest('.bgm') || e.target.closest('.sound-gate'))) return;
