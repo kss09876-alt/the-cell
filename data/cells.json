@@ -10,7 +10,8 @@
    "period": "2026.10 –",
    "color": "#7ee0d0",
    "thumbnail": "",
-   "summary": "THE CELL 플랫폼의 첫 번째 셀. 큐브 하나가 하나의 세계가 되는 방식을 소개합니다."
+   "summary": "THE CELL 플랫폼의 첫 번째 셀. 큐브 하나가 하나의 세계가 되는 방식을 소개합니다.",
+   "bgm": ""
   },
   {
    "id": "c002",
@@ -22,7 +23,8 @@
    "period": "2026.11 –",
    "color": "#f2c14e",
    "thumbnail": "",
-   "summary": "빛과 그림자를 주제로 한 샘플 셀입니다. 시트에서 내용을 바꿔보세요."
+   "summary": "빛과 그림자를 주제로 한 샘플 셀입니다. 시트에서 내용을 바꿔보세요.",
+   "bgm": ""
   },
   {
    "id": "c003",
@@ -34,7 +36,8 @@
    "period": "2026.12 –",
    "color": "#ef6f6c",
    "thumbnail": "",
-   "summary": "영상·인용·스티키 스크롤 블록을 보여주는 샘플 셀입니다."
+   "summary": "영상·인용·스티키 스크롤 블록을 보여주는 샘플 셀입니다.",
+   "bgm": ""
   },
   {
    "id": "c004",
@@ -46,7 +49,8 @@
    "period": "가상 기획전 · 데모",
    "color": "#d8d2c2",
    "thumbnail": "",
-   "summary": "THE CELL 시연용 가상 기획전. 사카모토의 음악 세계를 비동기(async), 소음, 어긋난 조율이라는 키워드로 따라갑니다."
+   "summary": "THE CELL 시연용 가상 기획전. 사카모토의 음악 세계를 비동기(async), 소음, 어긋난 조율이라는 키워드로 따라갑니다.",
+   "bgm": "https://open.spotify.com/album/55BwNuGPkSSKOCBkTSCQWA"
   },
   {
    "id": "c005",
@@ -58,7 +62,8 @@
    "period": "2027",
    "color": "#5aa9e6",
    "thumbnail": "",
-   "summary": ""
+   "summary": "",
+   "bgm": ""
   }
  ],
  "blocks": [
