@@ -249,7 +249,7 @@ figcaption, .caption { margin-top: 14px; font-size: 13px; color: var(--muted); l
 .q-hud { position: absolute; left: 16px; right: 16px; top: 14px; display: flex; justify-content: space-between; gap: 12px; font-size: 12px; letter-spacing: .06em; color: var(--muted); font-variant-numeric: tabular-nums; pointer-events: none; }
 .q-state { color: var(--accent); }
 .q-tip { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); font-size: 12px; letter-spacing: .2em; color: var(--muted); pointer-events: none; transition: opacity .4s; animation: pulse 2s infinite; }
-.q-tip.hide { opacity: 0; }
+.q-tip.hide { opacity: 0; animation: none; }
 @keyframes pulse { 50% { opacity: .4; } }
 .q-cap { max-width: 1100px; margin: 14px auto 0; }
 
