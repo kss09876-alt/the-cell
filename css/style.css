@@ -208,6 +208,20 @@ figcaption, .caption { margin-top: 14px; font-size: 13px; color: var(--muted); l
 .piano-ctl input { accent-color: var(--accent); width: 18px; height: 18px; }
 @media (max-width: 720px) { .b-timeline li { grid-template-columns: 1fr; gap: 4px; } .piano-hint { display: none; } }
 
+/* BGM 플레이어 */
+.bgm { position: fixed; right: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 32px); z-index: 35; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 10px; }
+.bgm-btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: rgba(11,11,13,.8); backdrop-filter: blur(8px); border: 1px solid var(--line); font-size: 12px; font-weight: 600; letter-spacing: .12em; }
+.bgm-btn:hover, .bgm-btn[aria-expanded="true"], .bgm.playing .bgm-btn { border-color: var(--accent); }
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.eq i { width: 3px; height: 4px; background: var(--accent); }
+.bgm-btn[aria-expanded="true"] .eq i, .bgm.playing .eq i { animation: eq 1s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: .2s !important; } .eq i:nth-child(3) { animation-delay: .4s !important; }
+@keyframes eq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+.bgm-panel { width: min(360px, calc(100vw - 32px)); padding: 10px; background: rgba(11,11,13,.92); border: 1px solid var(--line); border-radius: 14px; animation: slideIn .4s var(--ease); }
+.bgm-panel[hidden] { display: none; }
+.bgm-panel iframe { display: block; width: 100%; border: 0; border-radius: 10px; }
+.bgm-panel p { margin-top: 8px; font-size: 11px; color: var(--muted); text-align: right; }
+
 @media (max-width: 720px) {
   .hint { display: none; }
   .b-sticky { grid-template-columns: 1fr; }
