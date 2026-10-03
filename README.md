@@ -34,6 +34,7 @@ data/cells.json  백업 데이터
 | title, subtitle, artist, period, summary | 표시 텍스트 |
 | color | 큐브·포인트 색 (#hex) |
 | thumbnail | 큐브 앞면 이미지 (드라이브 파일 ID 또는 공유 링크) |
+| bgm | 배경음악. Spotify 앨범·트랙·플레이리스트 링크(공식 임베드 플레이어) 또는 **사용 허락을 받은** 오디오 파일(드라이브 링크/mp3 URL) |
 
 ## THE_CELL_blocks 컬럼
 
@@ -41,7 +42,7 @@ data/cells.json  백업 데이터
 |---|---|
 | cell_id | 소속 셀 id |
 | order | 셀 안에서의 순서 |
-| type | `cover` `text` `image` `gallery` `quote` `video` `sticky` `end` |
+| type | `cover` `text` `image` `gallery` `quote` `video` `sticky` `wave` `timeline` `piano` `end` |
 | title / body | 제목 / 본문 (줄바꿈 가능, `sticky`는 단계를 `\|`로 구분) |
 | media | 드라이브 파일 ID·링크 / YouTube·Vimeo URL. `gallery`·`sticky`는 쉼표로 여러 개 |
 | caption | 캡션·인용 출처 |
