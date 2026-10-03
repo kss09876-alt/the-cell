@@ -1,0 +1,242 @@
+{
+ "cells": [
+  {
+   "id": "c001",
+   "order": 1,
+   "status": "open",
+   "title": "CELL 001 · 최초의 방",
+   "subtitle": "모든 전시는 하나의 셀에서 시작된다",
+   "artist": "VALIX LAB",
+   "period": "2026.10 –",
+   "color": "#7ee0d0",
+   "thumbnail": "",
+   "summary": "THE CELL 플랫폼의 첫 번째 셀. 큐브 하나가 하나의 세계가 되는 방식을 소개합니다."
+  },
+  {
+   "id": "c002",
+   "order": 2,
+   "status": "open",
+   "title": "CELL 002 · 빛의 단면",
+   "subtitle": "사각형 안에 가둔 빛의 기록",
+   "artist": "샘플 작가 A",
+   "period": "2026.11 –",
+   "color": "#f2c14e",
+   "thumbnail": "",
+   "summary": "빛과 그림자를 주제로 한 샘플 셀입니다. 시트에서 내용을 바꿔보세요."
+  },
+  {
+   "id": "c003",
+   "order": 3,
+   "status": "open",
+   "title": "CELL 003 · 소리의 지도",
+   "subtitle": "도시의 소리를 큐브에 담다",
+   "artist": "샘플 작가 B",
+   "period": "2026.12 –",
+   "color": "#ef6f6c",
+   "thumbnail": "",
+   "summary": "영상·인용·스티키 스크롤 블록을 보여주는 샘플 셀입니다."
+  },
+  {
+   "id": "c004",
+   "order": 4,
+   "status": "coming",
+   "title": "CELL 004",
+   "subtitle": "Coming soon",
+   "artist": "",
+   "period": "2027",
+   "color": "#8a7cff",
+   "thumbnail": "",
+   "summary": ""
+  },
+  {
+   "id": "c005",
+   "order": 5,
+   "status": "coming",
+   "title": "CELL 005",
+   "subtitle": "Coming soon",
+   "artist": "",
+   "period": "2027",
+   "color": "#5aa9e6",
+   "thumbnail": "",
+   "summary": ""
+  }
+ ],
+ "blocks": [
+  {
+   "cell_id": "c001",
+   "order": 1,
+   "type": "cover",
+   "title": "최초의 방",
+   "body": "모든 전시는 하나의 셀에서 시작된다",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c001",
+   "order": 2,
+   "type": "text",
+   "title": "큐브라는 단위",
+   "body": "THE CELL은 하나의 큐브를 하나의 전시로 다룹니다.\n큐브는 닫혀 있지만, 들어오는 순간 끝없이 펼쳐집니다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c001",
+   "order": 3,
+   "type": "image",
+   "title": "",
+   "body": "",
+   "media": "",
+   "caption": "이미지 블록 — 시트의 media 칸에 드라이브 파일 ID나 링크를 넣으면 이 자리에 표시됩니다.",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c001",
+   "order": 4,
+   "type": "sticky",
+   "title": "셀이 열리는 순서",
+   "body": "첫째, 관람객은 큐브 그리드에서 하나의 셀을 고릅니다.|둘째, 큐브가 다가오며 전시 안으로 진입합니다.|셋째, 스크롤을 따라 이야기가 펼쳐집니다.|넷째, 마지막에 다음 셀로 이어집니다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c001",
+   "order": 5,
+   "type": "quote",
+   "title": "",
+   "body": "작은 방 하나가 하나의 우주가 될 수 있다.",
+   "media": "",
+   "caption": "THE CELL 기획 노트",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c001",
+   "order": 6,
+   "type": "end",
+   "title": "다음 셀로",
+   "body": "",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c002",
+   "order": 1,
+   "type": "cover",
+   "title": "빛의 단면",
+   "body": "사각형 안에 가둔 빛의 기록",
+   "media": "",
+   "caption": "",
+   "bg": "#1a1606",
+   "align": ""
+  },
+  {
+   "cell_id": "c002",
+   "order": 2,
+   "type": "text",
+   "title": "",
+   "body": "이 셀은 샘플입니다. 구글 시트의 THE_CELL_blocks 시트에서 cell_id가 c002인 행을 편집하면 이 페이지가 바뀝니다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": "center"
+  },
+  {
+   "cell_id": "c002",
+   "order": 3,
+   "type": "gallery",
+   "title": "",
+   "body": "",
+   "media": "",
+   "caption": "갤러리 블록 — media 칸에 여러 파일 ID를 쉼표로 구분해 넣으세요.",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c002",
+   "order": 4,
+   "type": "image",
+   "title": "",
+   "body": "",
+   "media": "",
+   "caption": "풀블리드 이미지",
+   "bg": "",
+   "align": "full"
+  },
+  {
+   "cell_id": "c002",
+   "order": 5,
+   "type": "end",
+   "title": "다음 셀로",
+   "body": "",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c003",
+   "order": 1,
+   "type": "cover",
+   "title": "소리의 지도",
+   "body": "도시의 소리를 큐브에 담다",
+   "media": "",
+   "caption": "",
+   "bg": "#1a0b0b",
+   "align": ""
+  },
+  {
+   "cell_id": "c003",
+   "order": 2,
+   "type": "text",
+   "title": "듣는 전시",
+   "body": "영상 블록은 유튜브 링크나 드라이브 영상 파일 ID를 받습니다.",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c003",
+   "order": 3,
+   "type": "video",
+   "title": "",
+   "body": "",
+   "media": "",
+   "caption": "영상 블록 — media 칸에 YouTube URL 또는 드라이브 파일 ID",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c003",
+   "order": 4,
+   "type": "quote",
+   "title": "",
+   "body": "소리는 공간의 모양을 기억한다.",
+   "media": "",
+   "caption": "샘플 인용",
+   "bg": "",
+   "align": ""
+  },
+  {
+   "cell_id": "c003",
+   "order": 5,
+   "type": "end",
+   "title": "다음 셀로",
+   "body": "",
+   "media": "",
+   "caption": "",
+   "bg": "",
+   "align": ""
+  }
+ ]
+}
