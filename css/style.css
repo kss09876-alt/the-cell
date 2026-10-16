@@ -31,7 +31,7 @@ img { display: block; max-width: 100%; }
 
 /* ---------- 로더 / 전환 ---------- */
 .loader { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: var(--bg); transition: opacity .6s, visibility .6s; }
-.loader span { width: 28px; height: 28px; border: 2px solid var(--accent); animation: spin 1.2s var(--ease) infinite; }
+.loader span { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,.12); border-top-color: var(--accent); animation: spin 1s linear infinite; }
 .loader.done { opacity: 0; visibility: hidden; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .wipe { position: fixed; inset: 0; z-index: 45; pointer-events: none; background: var(--accent); clip-path: inset(50% 50% 50% 50%); transition: clip-path .5s var(--ease); }
@@ -257,7 +257,7 @@ figcaption, .caption { margin-top: 14px; font-size: 13px; color: var(--muted); l
 .b-cover.is-light { background: #0a0906; }
 .b-cover.is-sound { background: #0e0808; cursor: crosshair; }
 .beam-cv, .rip-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.b-cover.is-light .cover-cube, .b-cover.is-sound .cover-cube { display: none; }
+.b-cover.is-light .cover-cube, .b-cover.is-sound .cover-cube, .b-cover.is-light .cover-planet, .b-cover.is-sound .cover-planet { display: none; }
 .b-lab { padding: clamp(96px, 14vh, 160px) clamp(16px, 4vw, 40px); }
 .b-prism, .b-shadow { background: #0a0906; }
 .b-soundmap, .b-listen { background: #0e0808; }
@@ -273,6 +273,44 @@ figcaption, .caption { margin-top: 14px; font-size: 13px; color: var(--muted); l
 .sm-node.on span { color: var(--accent); }
 .listen-btn { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 16px 28px; border-radius: 999px; background: var(--accent); color: #0e0808; font-weight: 800; font-size: 16px; transition: top .4s, transform .4s; }
 .listen-btn.on { top: auto; bottom: 16px; transform: translateX(-50%); background: rgba(14,8,8,.8); color: var(--fg); border: 1px solid var(--accent); font-size: 13px; padding: 10px 18px; }
+
+/* ===== XPACE 브랜드 · 행성 ===== */
+.logo-x { position: relative; width: 14px; height: 14px; }
+.logo-x::before, .logo-x::after { content: ''; position: absolute; left: 50%; top: 50%; width: 18px; height: 2px; background: currentColor; }
+.logo-x::before { transform: translate(-50%, -50%) rotate(45deg); }
+.logo-x::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.hero-copy .lede strong { color: var(--fg); font-weight: 700; }
+.labels { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+.p-label { position: absolute; left: 0; top: 0; pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; padding: 5px 10px 5px 8px; border-radius: 999px; background: rgba(5,6,11,.55); border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(4px); font-size: 12px; white-space: nowrap; transition: opacity .3s, border-color .2s, background .2s; will-change: transform; }
+.p-label b { font-size: 10px; letter-spacing: .14em; color: var(--accent); }
+.p-label span { color: rgba(242,241,236,.85); }
+.p-label:hover, .p-label.on { border-color: var(--accent); background: rgba(5,6,11,.85); }
+.p-label.is-coming { opacity: .45 !important; cursor: default; }
+.p-label.is-coming b { color: var(--muted); }
+.landing .hero-copy, .landing .hint, .landing .labels { opacity: 0; transition: opacity .5s; }
+.hero-copy, .hint { transition: opacity .5s; }
+@media (max-width: 720px) { .p-label span { display: none; } }
+
+/* 전시 커버의 행성 */
+.cover-planet { --s: min(42vw, 300px); position: absolute; width: var(--s); height: var(--s); animation: floaty 9s ease-in-out infinite; }
+.pl-body { position: absolute; inset: 0; border-radius: 50%; background:
+  radial-gradient(circle at 32% 30%, color-mix(in srgb, var(--accent) 70%, #fff) 0%, var(--accent) 22%, color-mix(in srgb, var(--accent) 35%, #000) 62%, #05060b 100%);
+  box-shadow: 0 0 80px color-mix(in srgb, var(--accent) 35%, transparent), inset -30px -20px 60px rgba(0,0,0,.6); opacity: .55; }
+.pl-body::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: repeating-linear-gradient(-12deg, transparent 0 18px, rgba(255,255,255,.05) 18px 24px); }
+.pl-ring { position: absolute; left: -38%; right: -38%; top: 50%; height: 32%; transform: translateY(-50%) rotate(-14deg); border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); }
+.pl-ring.back { clip-path: inset(0 0 50% 0); opacity: .35; }
+.pl-ring.front { clip-path: inset(50% 0 0 0); opacity: .7; }
+@keyframes floaty { 50% { transform: translateY(-14px); } }
+
+/* 스티키: 궤도 (단계마다 행성이 궤도를 따라 이동) */
+@property --a { syntax: '<angle>'; inherits: true; initial-value: 200deg; }
+.spin-orbit { --k: 0; --s: min(36vw, 380px); --a: calc(200deg + var(--k) * 90deg); position: relative; width: var(--s); aspect-ratio: 1 / .42; transition: --a 1.4s var(--ease); }
+.so-core { position: absolute; left: 50%; top: 50%; width: 9%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: #fff6e6; box-shadow: 0 0 40px #ffd9a0, 0 0 90px rgba(157,184,255,.5); z-index: 2; }
+.so-ring { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid rgba(242,241,236,.18); transform: translate(-50%, -50%); }
+.so-ring.r1 { width: 45%; height: 45%; } .so-ring.r2 { width: 72%; height: 72%; } .so-ring.r3 { width: 100%; height: 100%; border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+.so-arm { position: absolute; inset: 0; }
+.so-planet { position: absolute; left: calc(50% + 50% * cos(var(--a))); top: calc(50% + 50% * sin(var(--a))); width: 9%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, var(--accent) 45%, #000 100%); box-shadow: 0 0 24px var(--accent); z-index: 3; }
+@media (max-width: 720px) { .spin-orbit { --s: 70vw; } }
 
 @media (max-width: 720px) {
   .hint { display: none; }
