@@ -13,9 +13,9 @@ const R = {
   cover: (b, c, i) => `
     <section class="b-cover ${b.align ? 'is-' + esc(b.align) : ''}" style="${b.bg ? `--bg:${esc(b.bg)}` : ''}">
       ${b.align === 'cosmos' ? '<canvas class="star-cv" data-mode="drift"></canvas>' : ''}${b.align === 'light' ? '<canvas class="beam-cv"></canvas>' : ''}${b.align === 'sound' ? '<canvas class="rip-cv"></canvas>' : ''}
-      ${b.media ? `<div class="cover-media parallax" data-speed="0.3">${media(b.media)}</div>` : '<div class="cover-cube"><i></i><i></i><i></i><i></i><i></i><i></i></div>'}
+      ${b.media ? `<div class="cover-media parallax" data-speed="0.3">${media(b.media)}</div>` : '<div class="cover-planet"><i class="pl-ring back"></i><i class="pl-body"></i><i class="pl-ring front"></i></div>'}
       <div class="cover-text">
-        <p class="eyebrow">CELL ${String(i + 1).padStart(3, '0')}</p>
+        <p class="eyebrow">X-${String(i + 1).padStart(3, '0')}</p>
         <h1 class="split">${esc(b.title || c.title)}</h1>
         <p class="sub reveal">${esc(b.body || c.subtitle)}</p>
         <p class="meta reveal">${esc([c.artist, c.period].filter(Boolean).join(' · '))}</p>
@@ -52,7 +52,7 @@ const R = {
     const imgs = (b.media || '').split(',').map((s) => s.trim());
     return `<section class="b-sticky" style="--n:${steps.length}">
       <div class="sticky-media">
-        ${imgs.some(Boolean) ? imgs.map((s, k) => `<div class="sm-item" data-k="${k}">${media(s)}</div>`).join('') : `<div class="spin-cube" data-steps="${steps.length}"><i></i><i></i><i></i><i></i><i></i><i></i></div>`}
+        ${imgs.some(Boolean) ? imgs.map((s, k) => `<div class="sm-item" data-k="${k}">${media(s)}</div>`).join('') : `<div class="spin-orbit" data-steps="${steps.length}"><i class="so-core"></i><i class="so-ring r1"></i><i class="so-ring r2"></i><i class="so-ring r3"></i><span class="so-arm"><i class="so-planet"></i></span></div>`}
         ${b.title ? `<h2>${esc(b.title)}</h2>` : ''}
       </div>
       <div class="sticky-steps">${steps.map((s, k) => `<div class="step" data-k="${k}"><span>${String(k + 1).padStart(2, '0')}</span><p>${esc(s)}</p></div>`).join('')}</div>
@@ -136,9 +136,9 @@ const R = {
     const pos = open.findIndex((x) => x.id === c.id);
     const next = open[(pos + 1) % open.length];
     return `<section class="b-end">
-      <p class="eyebrow">END OF CELL ${String(i + 1).padStart(3, '0')}</p>
-      ${next && next.id !== c.id ? `<a class="next" href="cell.html?id=${encodeURIComponent(next.id)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || '다음 셀로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
-      <a class="back" href="./">← 큐브 그리드로 돌아가기</a>
+      <p class="eyebrow">END OF X-${String(i + 1).padStart(3, '0')}</p>
+      ${next && next.id !== c.id ? `<a class="next" href="cell.html?id=${encodeURIComponent(next.id)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || '다음 행성으로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
+      <a class="back" href="./">← 행성계로 돌아가기</a>
     </section>`;
   },
 };
@@ -148,10 +148,10 @@ const R = {
   const idx = cells.findIndex((c) => c.id === id);
   const cell = cells[idx];
   if (!cell || cell.status !== 'open') {
-    story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>열려 있지 않은 셀입니다.</h2><a class="back" href="./">← 돌아가기</a></section>`;
+    story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>아직 열리지 않은 행성입니다.</h2><a class="back" href="./">← 돌아가기</a></section>`;
     return finish('#7ee0d0');
   }
-  document.title = `${cell.title} — THE CELL`;
+  document.title = `${cell.title} — XPACE`;
   document.documentElement.style.setProperty('--accent', cell.color || '#7ee0d0');
   document.getElementById('cell-label').textContent = cell.title;
   let bs = blocks.filter((b) => b.cell_id === cell.id);
@@ -428,7 +428,7 @@ function setupBgm(cell) {
     if (playing || userMuted) return;
     gate = document.createElement('div');
     gate.className = 'sound-gate';
-    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS CELL HAS SOUND</p>
+    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS PLANET HAS SOUND</p>
       <button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> 소리와 함께 입장</button>
       <button class="sg-off">소리 없이 보기</button></div>`;
     document.body.appendChild(gate);
@@ -559,7 +559,7 @@ function setupScroll() {
     const sec = e.target.closest('.b-sticky'); const k = Number(e.target.dataset.k);
     sec.querySelectorAll('.step').forEach((s) => s.classList.toggle('on', Number(s.dataset.k) === k));
     sec.querySelectorAll('.sm-item').forEach((s, j, arr) => s.classList.toggle('on', j === Math.min(k, arr.length - 1)));
-    const cube = sec.querySelector('.spin-cube'); if (cube) cube.style.setProperty('--k', k);
+    const orb = sec.querySelector('.spin-orbit'); if (orb) orb.style.setProperty('--k', k);
   }), { rootMargin: '-45% 0px -45% 0px' });
   document.querySelectorAll('.step').forEach((s) => stepIO.observe(s));
 
