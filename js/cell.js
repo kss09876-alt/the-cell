@@ -1,4 +1,4 @@
-import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=11';
+import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=12';
 
 const story = document.getElementById('story');
 const wipe = document.getElementById('wipe');
@@ -218,6 +218,7 @@ const R = {
     story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>아직 열리지 않은 행성입니다.</h2><a class="back" href="./">← 돌아가기</a></section>`;
     return finish('#7ee0d0');
   }
+  if (cell.url) { location.replace(cell.url); return; }
   document.title = `${cell.title} — XPACE`;
   document.documentElement.style.setProperty('--accent', cell.color || '#7ee0d0');
   document.getElementById('cell-label').textContent = cell.title;

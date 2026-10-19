@@ -1,6 +1,6 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
-import { loadData, imageUrl, esc } from './data.js?v=11';
+import { loadData, imageUrl, esc } from './data.js?v=12';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -259,7 +259,7 @@ function enter(p) {
   document.body.classList.add('landing');
   wipe.style.background = p.cell.color || '#7ee0d0';
   setTimeout(() => wipe.classList.add('on'), 900);
-  setTimeout(() => { location.href = `cell.html?id=${encodeURIComponent(p.cell.id)}`; }, 1400);
+  setTimeout(() => { location.href = p.cell.url || `cell.html?id=${encodeURIComponent(p.cell.id)}`; }, 1400);
 }
 
 // ---------- 루프 ----------
@@ -362,7 +362,7 @@ addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelec
   cells.forEach((c, i) => makePlanet(c, i, cells.length));
   document.getElementById('cell-list').innerHTML = cells.map((c, i) => `
     <li class="${c.status === 'open' ? '' : 'is-coming'}" style="--accent:${esc(c.color || '#7ee0d0')}">
-      ${c.status === 'open' ? `<a href="cell.html?id=${encodeURIComponent(c.id)}">` : '<div>'}
+      ${c.status === 'open' ? `<a href="${esc(c.url || 'cell.html?id=' + encodeURIComponent(c.id))}">` : '<div>'}
         <span class="no">${code(i)}</span>
         <span class="t">${esc(shortTitle(c.title) || 'Coming soon')}</span>
         <span class="m">${esc([c.artist, c.period].filter(Boolean).join(' · '))}</span>
