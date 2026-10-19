@@ -1,4 +1,4 @@
-import { CONFIG } from './config.js';
+import { CONFIG } from './config.js?v=11';
 
 // 공개 구글 시트를 gviz JSON 엔드포인트로 읽어 [{col: value}] 배열로 변환
 async function fetchSheet(id) {
@@ -25,6 +25,19 @@ export async function loadData() {
   try {
     [cells, blocks] = await Promise.all([fetchSheet(CONFIG.cellsSheetId), fetchSheet(CONFIG.blocksSheetId)]);
     if (!cells.length || !('id' in cells[0])) throw new Error('empty');
+    // 시트에 아직 블록이 입력되지 않은 전시는 저장소의 백업 데이터로 채움 (새 전시 미리 공개용)
+    try {
+      const fb = await (await fetch(CONFIG.fallbackUrl)).json();
+      const has = new Set(blocks.map((b) => b.cell_id));
+      fb.cells.forEach((fc) => {
+        if (has.has(fc.id)) return;
+        const fbBlocks = fb.blocks.filter((b) => b.cell_id === fc.id);
+        if (!fbBlocks.length) return;
+        const i = cells.findIndex((c) => c.id === fc.id);
+        if (i >= 0) cells[i] = { ...cells[i], ...fc }; else cells.push(fc);
+        blocks = blocks.concat(fbBlocks);
+      });
+    } catch (e2) {}
   } catch (e) {
     console.warn('[THE CELL] 드라이브 시트를 읽지 못해 백업 데이터를 사용합니다:', e.message);
     const fb = await (await fetch(CONFIG.fallbackUrl)).json();

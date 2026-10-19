@@ -1,4 +1,4 @@
-import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js';
+import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=11';
 
 const story = document.getElementById('story');
 const wipe = document.getElementById('wipe');
@@ -12,7 +12,7 @@ const media = (src, alt = '') => src
 const R = {
   cover: (b, c, i) => `
     <section class="b-cover ${b.align ? 'is-' + esc(b.align) : ''}" style="${b.bg ? `--bg:${esc(b.bg)}` : ''}">
-      ${b.align === 'cosmos' ? '<canvas class="star-cv" data-mode="drift"></canvas>' : ''}${b.align === 'light' ? '<canvas class="beam-cv"></canvas>' : ''}${b.align === 'sound' ? '<canvas class="rip-cv"></canvas>' : ''}
+      ${b.align === 'cosmos' ? '<canvas class="star-cv" data-mode="drift"></canvas>' : ''}${b.align === 'light' ? '<canvas class="beam-cv"></canvas>' : ''}${b.align === 'sound' ? '<canvas class="rip-cv"></canvas>' : ''}${b.align === 'rice' ? '<canvas class="rice-cv"></canvas>' : ''}
       ${b.media ? `<div class="cover-media parallax" data-speed="0.3">${media(b.media)}</div>` : '<div class="cover-planet"><i class="pl-ring back"></i><i class="pl-body"></i><i class="pl-ring front"></i></div>'}
       <div class="cover-text">
         <p class="eyebrow">X-${String(i + 1).padStart(3, '0')}</p>
@@ -110,6 +110,73 @@ const R = {
         <div class="q-hud"><span class="listen-state">대기 중</span><span class="listen-db"></span></div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
+  // chapter: 챕터 표지 (챕터 메뉴에 자동 등록). title=제목, caption=챕터 라벨(예: CHAPTER 01), media=배경 이미지
+  chapter: (b) => `
+    <section class="b-chapter" data-chapter="${esc(b.caption || '')}" data-title="${esc(b.title || '')}">
+      ${b.media ? `<div class="ch-bg parallax" data-speed="0.15">${media(b.media)}</div>` : ''}
+      <div class="ch-text reveal"><p class="eyebrow">${esc(b.caption || '')}</p><h2>${esc(b.title || '')}</h2>${paras(b.body)}</div>
+    </section>`,
+  // records: 항목을 골라 기록 열람. body = "항목::내용||항목::내용"
+  records: (b) => {
+    const items = String(b.body || '').split('||').map((s) => s.split('::')).filter((x) => x[0]);
+    return `<section class="b-records"><div class="wrap reveal">
+      ${b.title ? `<h2>${esc(b.title)}</h2>` : ''}
+      <div class="rec-tabs" role="tablist">${items.map((it, k) => `<button role="tab" aria-selected="${k === 0}" data-k="${k}">${esc(it[0].trim())}</button>`).join('')}</div>
+      <div class="rec-panels">${items.map((it, k) => `<article class="rec-card" data-k="${k}" ${k ? 'hidden' : ''}><h3>${esc(it[0].trim())}</h3>${paras(it[1])}</article>`).join('')}</div>
+      ${b.caption ? `<p class="caption src">${esc(b.caption)}</p>` : ''}
+    </div></section>`;
+  },
+  // ricebowl: 쌀알을 그릇으로 옮기면(또는 버튼) 기록이 하나씩 열림. body = "기록|기록|..."
+  ricebowl: (b) => {
+    const items = String(b.body || '').split('|').map((s) => s.trim()).filter(Boolean);
+    return `<section class="b-ricebowl"><div class="wrap">
+      <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}<p>쌀알을 아래 그릇으로 끌어 옮기거나, ‘기록 펼치기’를 눌러 보세요.</p></div>
+      <div class="rb-grid">
+        <div class="lab-stage rb-stage"><canvas class="rb-cv" aria-hidden="true"></canvas><button class="rb-btn">기록 펼치기 <span class="rb-count">0 / ${items.length}</span></button></div>
+        <ol class="rb-list" aria-live="polite">${items.map((s) => `<li hidden>${esc(s)}</li>`).join('')}</ol>
+      </div>
+      ${b.caption ? `<p class="caption src">${esc(b.caption)}</p>` : ''}
+    </div></section>`;
+  },
+  // boundary: 경계·안내 화면. align=warn 이면 민감 내용 안내. caption = 요약 텍스트
+  boundary: (b) => `
+    <section class="b-boundary ${b.align === 'warn' ? 'is-warn' : ''}">
+      <div class="bd-inner reveal">
+        ${b.align === 'warn' ? '<p class="eyebrow warn">관람 안내</p>' : ''}
+        <h2>${esc(b.title || '')}</h2>${paras(b.body)}
+        <div class="bd-actions">
+          <button data-act="continue">계속 보기</button>
+          ${b.caption ? '<button data-act="summary">요약만 보기</button>' : ''}
+          <button data-act="next">다음 장으로</button>
+        </div>
+        ${b.caption ? `<div class="bd-summary" hidden>${paras(b.caption)}</div>` : ''}
+      </div>
+    </section>`,
+  // facts: 펼쳐 읽는 기록 카드. body = "제목::내용||제목::내용", caption = 출처
+  facts: (b) => {
+    const items = String(b.body || '').split('||').map((s) => s.split('::')).filter((x) => x[0]);
+    return `<section class="b-facts"><div class="wrap">
+      ${b.title ? `<h2 class="reveal">${esc(b.title)}</h2>` : ''}
+      <div class="fact-list">${items.map((it, k) => `<details class="fact reveal" ${k === 0 ? 'open' : ''}><summary><span>${String(k + 1).padStart(2, '0')}</span>${esc(it[0].trim())}</summary>${paras(it[1])}</details>`).join('')}</div>
+      ${b.caption ? `<p class="caption src">${esc(b.caption)}</p>` : ''}
+    </div></section>`;
+  },
+  // memory: 한 문장을 남기면 빛이 됨 (이 브라우저에만 저장)
+  memory: (b) => `
+    <section class="b-memory">
+      <canvas class="mem-cv" aria-hidden="true"></canvas>
+      <div class="mem-inner reveal">
+        ${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}
+        <form class="mem-form">
+          <label class="sr" for="mem-in">기억을 위한 한 문장</label>
+          <textarea id="mem-in" maxlength="120" rows="2" placeholder="오늘 기억하고 싶은 것을 한 문장으로 (120자 이내, 이름은 적지 않아도 됩니다)"></textarea>
+          <div class="mem-row"><span class="mem-len">0 / 120</span>
+            <button type="button" class="mem-quiet">조용히 머물기</button>
+            <button type="submit" class="mem-go">빛으로 남기기</button></div>
+        </form>
+        <p class="mem-note">${esc(b.caption || '남긴 문장은 이 브라우저에만 저장되며 다른 사람에게 공개되지 않습니다.')}</p>
+      </div>
+    </section>`,
   // timeline: body = "연도 내용|연도 내용|..."
   timeline: (b) => {
     const items = String(b.body || '').split(/\||\n/).map((s) => s.trim()).filter(Boolean);
@@ -171,6 +238,12 @@ const R = {
   setupRippleCover();
   setupSoundmap();
   setupListen();
+  setupRiceCover();
+  setupChapters();
+  setupRecords();
+  setupRicebowl();
+  setupBoundary();
+  setupMemory();
   setupBgm(cell);
 })();
 
@@ -877,5 +950,197 @@ function setupListen() {
       } catch (e) { stEl.textContent = '마이크를 사용할 수 없어요 (권한을 확인해 주세요)'; stop(); stEl.textContent = '마이크 권한이 없어요'; }
     });
     addEventListener('pagehide', stop);
+  });
+}
+
+// ================= X-005 빛쌀 인터랙션 =================
+// --- 커버: 어둠 속 한 톨의 쌀알이 커서를 따라 움직임 ---
+function riceGrain(g, x, y, len, rot, alpha = 1, glow = 18) {
+  g.save(); g.translate(x, y); g.rotate(rot);
+  g.shadowColor = `rgba(255,248,230,${0.8 * alpha})`; g.shadowBlur = glow;
+  const grd = g.createLinearGradient(-len, 0, len, 0);
+  grd.addColorStop(0, `rgba(235,226,205,${alpha})`); grd.addColorStop(0.5, `rgba(255,253,246,${alpha})`); grd.addColorStop(1, `rgba(225,214,190,${alpha})`);
+  g.fillStyle = grd; g.beginPath(); g.ellipse(0, 0, len, len * 0.42, 0, 0, 6.283); g.fill();
+  g.restore();
+}
+function setupRiceCover() {
+  document.querySelectorAll('.rice-cv').forEach((cv) => {
+    const sec = cv.closest('section');
+    const p = { x: 0, y: 0, vx: 0, vy: 0, rot: 0.4 };
+    const dust = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), s: Math.random() * 1.2 + 0.3, v: Math.random() * 0.01 + 0.002 }));
+    let init = false;
+    const zoomBtn = document.createElement('button');
+    zoomBtn.className = 'rice-zoom'; zoomBtn.textContent = '가까이 보기';
+    zoomBtn.addEventListener('click', () => { const nx = sec.nextElementSibling; nx && nx.scrollIntoView({ behavior: 'smooth' }); });
+    sec.querySelector('.cover-text')?.appendChild(zoomBtn);
+    canvasLoop(cv, (g, st, t) => {
+      const { w, h } = st;
+      if (!init) { p.x = w / 2; p.y = h * 0.28; init = true; }
+      g.fillStyle = '#050505'; g.fillRect(0, 0, w, h);
+      for (const d of dust) { d.y -= d.v * 0.016; if (d.y < 0) d.y = 1; g.fillStyle = `rgba(255,245,225,${0.15 + 0.2 * Math.sin(t + d.x * 20) ** 2})`; g.fillRect(d.x * w, d.y * h, d.s, d.s); }
+      const tx = st.inside ? st.mx : w / 2 + Math.sin(t * 0.5) * 30, ty = st.inside ? st.my : h * 0.28 + Math.cos(t * 0.7) * 10;
+      p.vx += (tx - p.x) * 0.004; p.vy += (ty - p.y) * 0.004; p.vx *= 0.9; p.vy *= 0.9; p.x += p.vx; p.y += p.vy;
+      p.rot += (Math.atan2(p.vy, p.vx || 0.001) * 0.2 - p.rot) * 0.02 + 0.002;
+      const halo = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, 140);
+      halo.addColorStop(0, 'rgba(255,240,210,.18)'); halo.addColorStop(1, 'rgba(255,240,210,0)');
+      g.fillStyle = halo; g.fillRect(p.x - 140, p.y - 140, 280, 280);
+      riceGrain(g, p.x, p.y, 16 + Math.sin(t * 1.2) * 0.8, p.rot, 1, 26);
+    }, { host: sec });
+  });
+}
+
+// --- 챕터 메뉴 ---
+function setupChapters() {
+  const chs = [...document.querySelectorAll('.b-chapter')];
+  if (!chs.length) return;
+  const nav = document.createElement('nav');
+  nav.className = 'ch-nav'; nav.setAttribute('aria-label', '챕터 메뉴');
+  nav.innerHTML = `<button class="ch-toggle" aria-expanded="false">CHAPTERS</button><ol>${chs.map((c, k) => { c.id = 'ch-' + (k + 1); return `<li><a href="#ch-${k + 1}"><span>${String(k + 1).padStart(2, '0')}</span>${esc(c.dataset.title)}</a></li>`; }).join('')}</ol>`;
+  document.body.appendChild(nav);
+  const tg = nav.querySelector('.ch-toggle');
+  tg.addEventListener('click', () => { const o = nav.classList.toggle('open'); tg.setAttribute('aria-expanded', String(o)); });
+  nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); e.stopImmediatePropagation(); document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); nav.classList.remove('open'); }, true));
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const k = chs.indexOf(e.target);
+    nav.querySelectorAll('li').forEach((li, j) => li.classList.toggle('on', j === k));
+    tg.textContent = `${String(k + 1).padStart(2, '0')} / ${String(chs.length).padStart(2, '0')}  CHAPTERS`;
+  }), { rootMargin: '-40% 0px -55% 0px' });
+  chs.forEach((c) => io.observe(c));
+  // 각 챕터 구간(다음 챕터 전까지)도 현재 위치로 인식
+  addEventListener('scroll', () => {
+    let k = -1; chs.forEach((c, j) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = j; });
+    nav.classList.toggle('show', k >= 0);
+    if (k >= 0) { nav.querySelectorAll('li').forEach((li, j) => li.classList.toggle('on', j === k)); tg.textContent = `${String(k + 1).padStart(2, '0')} / ${String(chs.length).padStart(2, '0')}  CHAPTERS`; }
+  }, { passive: true });
+}
+
+// --- 기록 탭 ---
+function setupRecords() {
+  document.querySelectorAll('.b-records').forEach((sec) => {
+    const tabs = [...sec.querySelectorAll('[role=tab]')], cards = [...sec.querySelectorAll('.rec-card')];
+    const show = (k) => { tabs.forEach((t, j) => t.setAttribute('aria-selected', String(j === k))); cards.forEach((c, j) => (c.hidden = j !== k)); };
+    tabs.forEach((t, k) => {
+      t.addEventListener('click', () => show(k));
+      t.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = (k + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length; show(n); tabs[n].focus(); } });
+    });
+  });
+}
+
+// --- 쌀알 옮기기 ---
+function setupRicebowl() {
+  document.querySelectorAll('.b-ricebowl').forEach((sec) => {
+    const cv = sec.querySelector('.rb-cv'), btn = sec.querySelector('.rb-btn'), cnt = sec.querySelector('.rb-count');
+    const lis = [...sec.querySelectorAll('.rb-list li')];
+    let opened = 0, drag = null;
+    const open = () => {
+      if (opened >= lis.length) return;
+      lis[opened].hidden = false; lis[opened].classList.add('in'); opened++;
+      cnt.textContent = `${opened} / ${lis.length}`;
+      if (opened >= lis.length) { btn.disabled = true; btn.firstChild.textContent = '모든 기록을 펼쳤습니다 '; }
+    };
+    btn.addEventListener('click', open);
+    let grains = [];
+    const st = canvasLoop(cv, (g, st, t) => {
+      const { w, h } = st;
+      if (!grains.length && w) grains = Array.from({ length: 28 }, () => ({ x: w * (0.1 + Math.random() * 0.8), y: h * (0.08 + Math.random() * 0.35), r: Math.random() * 6.28, home: true, fall: 0 }));
+      g.fillStyle = '#0a0806'; g.fillRect(0, 0, w, h);
+      const bx = w / 2, by = h * 0.82, bw = Math.min(w * 0.36, 220);
+      // 그릇
+      g.strokeStyle = 'rgba(255,248,230,.55)'; g.lineWidth = 2;
+      g.beginPath(); g.ellipse(bx, by - 30, bw, 18, 0, 0, 6.283); g.stroke();
+      g.beginPath(); g.moveTo(bx - bw, by - 30); g.quadraticCurveTo(bx, by + 60, bx + bw, by - 30); g.stroke();
+      const fill = Math.min(1, opened / Math.max(1, lis.length));
+      if (fill > 0) { g.fillStyle = `rgba(255,246,225,${0.12 + fill * 0.2})`; g.beginPath(); g.ellipse(bx, by - 26 + (1 - fill) * 20, bw * (0.55 + fill * 0.4), 12, 0, 0, 6.283); g.fill(); }
+      for (const gr of grains) {
+        if (gr.inBowl) { gr.fall = Math.min(1, gr.fall + 0.05); }
+        riceGrain(g, gr.x, gr.y, 7, gr.r, gr.inBowl ? 0.85 : 1, drag === gr ? 22 : 10);
+      }
+      g.fillStyle = 'rgba(242,241,236,.4)'; g.font = '12px Pretendard, sans-serif'; g.textAlign = 'center';
+      g.fillText('그릇', bx, by + 52);
+      st.bowl = { bx, by, bw };
+    });
+    const pos = (e) => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    cv.parentElement.addEventListener('pointerdown', (e) => {
+      if (e.target === btn || btn.contains(e.target)) return;
+      const p = pos(e);
+      drag = grains.filter((g) => !g.inBowl).sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y))[0];
+      if (drag && Math.hypot(drag.x - p.x, drag.y - p.y) > 40) drag = null;
+      if (drag) cv.parentElement.setPointerCapture(e.pointerId);
+    });
+    cv.parentElement.addEventListener('pointermove', (e) => { if (!drag) return; const p = pos(e); drag.x = p.x; drag.y = p.y; drag.r += 0.05; });
+    cv.parentElement.addEventListener('pointerup', () => {
+      if (!drag) return;
+      const b = st.bowl;
+      if (b && Math.abs(drag.x - b.bx) < b.bw && drag.y > b.by - 80 && drag.y < b.by + 40) {
+        drag.inBowl = true; drag.x = b.bx + (Math.random() - 0.5) * b.bw * 1.2; drag.y = b.by - 26 + (Math.random() - 0.5) * 12; open();
+      }
+      drag = null;
+    });
+  });
+}
+
+// --- 경계·안내 화면 ---
+function setupBoundary() {
+  document.querySelectorAll('.b-boundary').forEach((sec) => {
+    sec.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+      const act = b.dataset.act;
+      if (act === 'continue') { const nx = sec.nextElementSibling; nx && nx.scrollIntoView({ behavior: 'smooth' }); }
+      if (act === 'summary') { const s = sec.querySelector('.bd-summary'); s.hidden = !s.hidden; b.textContent = s.hidden ? '요약만 보기' : '요약 닫기'; if (!s.hidden) s.focus?.(); }
+      if (act === 'next') {
+        let n = sec.nextElementSibling;
+        while (n && !n.classList.contains('b-chapter') && !n.classList.contains('b-end')) n = n.nextElementSibling;
+        n && n.scrollIntoView({ behavior: 'smooth' });
+      }
+    }));
+  });
+}
+
+// --- 기억 한 문장 → 빛 ---
+function setupMemory() {
+  document.querySelectorAll('.b-memory').forEach((sec) => {
+    const cv = sec.querySelector('.mem-cv'), form = sec.querySelector('.mem-form'), ta = sec.querySelector('textarea');
+    const len = sec.querySelector('.mem-len'), note = sec.querySelector('.mem-note');
+    const KEY = 'xpace-bitssal-memories';
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+    const lights = Array.from({ length: 70 }, () => ({ x: Math.random(), y: 0.25 + Math.random() * 0.7, r: Math.random() * 1.6 + 0.6, ph: Math.random() * 6.28, mine: false }));
+    saved.forEach((s) => lights.push({ x: s.x, y: s.y, r: 3, ph: Math.random() * 6.28, mine: true, text: s.text }));
+    let born = null, hover = null;
+    ta.addEventListener('input', () => { len.textContent = `${ta.value.length} / 120`; });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = ta.value.trim().slice(0, 120);
+      if (!text) { ta.focus(); return; }
+      const l = { x: Math.random() < 0.5 ? 0.08 + Math.random() * 0.17 : 0.75 + Math.random() * 0.17, y: 0.25 + Math.random() * 0.6, r: 3, ph: 0, mine: true, text, t0: performance.now() };
+      lights.push(l); born = l;
+      try { saved.push({ x: l.x, y: l.y, text }); localStorage.setItem(KEY, JSON.stringify(saved.slice(-30))); } catch (e2) {}
+      ta.value = ''; len.textContent = '0 / 120';
+      note.textContent = '당신의 문장이 빛이 되었습니다. 빛 위에 마우스를 올리면 문장을 다시 볼 수 있어요. (이 브라우저에만 저장됩니다)';
+    });
+    sec.querySelector('.mem-quiet').addEventListener('click', () => { form.classList.add('quiet'); note.textContent = '잠시 머물러도 좋습니다. 빛은 계속 이곳에 있습니다.'; });
+    cv.parentElement.addEventListener('pointermove', (e) => {
+      const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      hover = lights.filter((l) => l.mine).find((l) => Math.hypot((l.x - x) * r.width, (l.y - y) * r.height) < 16) || null;
+    });
+    canvasLoop(cv, (g, st, t) => {
+      const { w, h } = st;
+      g.fillStyle = 'rgba(5,5,5,.35)'; g.fillRect(0, 0, w, h);
+      for (const l of lights) {
+        const tw = 0.5 + 0.5 * Math.sin(t * 1.3 + l.ph);
+        let rr = l.r * (l.mine ? 1.4 + tw * 0.6 : 0.8 + tw * 0.5);
+        if (l.t0) { const k = Math.min(1, (performance.now() - l.t0) / 1800); rr *= 1 + (1 - k) * 2.5; }
+        const gr = g.createRadialGradient(l.x * w, l.y * h, 0, l.x * w, l.y * h, rr * 6);
+        gr.addColorStop(0, l.mine ? 'rgba(255,250,235,.95)' : `rgba(255,240,215,${0.35 + tw * 0.3})`); gr.addColorStop(1, 'rgba(255,240,215,0)');
+        g.fillStyle = gr; g.beginPath(); g.arc(l.x * w, l.y * h, rr * 6, 0, 6.283); g.fill();
+        l.y -= 0.00004;
+        if (l.y < 0.05) l.y = 0.95;
+      }
+      const sh = hover || (born && performance.now() - born.t0 < 5000 ? born : null);
+      if (sh) {
+        g.font = '15px Pretendard, sans-serif'; g.textAlign = 'center'; g.fillStyle = 'rgba(255,250,235,.95)';
+        g.fillText('“' + sh.text + '”', Math.min(w - 160, Math.max(160, sh.x * w)), sh.y * h - 26);
+      }
+    }, { host: sec });
   });
 }

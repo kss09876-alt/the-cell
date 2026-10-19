@@ -1,6 +1,6 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
-import { loadData, imageUrl, esc } from './data.js';
+import { loadData, imageUrl, esc } from './data.js?v=11';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -56,6 +56,13 @@ function planetTexture(cell, kind) {
   return canvasTex(512, 256, (g, w, h) => {
     let seed = [...(cell.id || 'x')].reduce((a, ch) => a + ch.charCodeAt(0), 0);
     const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+    if (kind === 'rice') { // 빛쌀: 어둠 위에 흩어진 흰 쌀알
+      g.fillStyle = '#16120d'; g.fillRect(0, 0, w, h);
+      const gl = g.createLinearGradient(0, 0, 0, h); gl.addColorStop(0, 'rgba(255,246,228,.85)'); gl.addColorStop(0.45, 'rgba(255,246,228,.25)'); gl.addColorStop(1, 'rgba(20,16,12,0)');
+      g.fillStyle = gl; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 900; i++) { const x = rnd() * w, y = Math.pow(rnd(), 1.6) * h; g.save(); g.translate(x, y); g.rotate(rnd() * 6.28); g.fillStyle = `rgba(255,252,240,${0.5 + rnd() * 0.5})`; g.beginPath(); g.ellipse(0, 0, 3, 1.3, 0, 0, 6.283); g.fill(); g.restore(); }
+      return;
+    }
     if (kind === 'stars') {
       g.fillStyle = '#0a1030'; g.fillRect(0, 0, w, h);
       for (let i = 0; i < 6; i++) { const x = rnd() * w, y = rnd() * h, r = 40 + rnd() * 90; const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `hsla(${220 + rnd() * 60},80%,60%,.45)`); gr.addColorStop(1, 'hsla(240,80%,40%,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); }
@@ -137,6 +144,7 @@ function makePlanet(cell, i, total) {
   const group = new THREE.Group();
   const tex = planetTexture(cell, fx);
   const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0, transparent: !open, opacity: open ? 1 : 0.55 });
+  if (fx === 'rice') { mat.emissiveMap = tex; mat.emissive = new THREE.Color('#fff4e0'); mat.emissiveIntensity = 0.35; }
   if (fx === 'stars') { mat.emissiveMap = tex; mat.emissive = new THREE.Color('#ffffff'); mat.emissiveIntensity = 0.55; }
   const body = new THREE.Mesh(sphereGeo, mat);
   body.scale.setScalar(radius);
@@ -146,6 +154,16 @@ function makePlanet(cell, i, total) {
   group.add(atmo);
   const extra = {};
   if (fx === 'prism') { extra.ring = ringMesh(radius * 1.4, radius * 2.3); group.add(extra.ring); }
+  if (fx === 'rice') {
+    const n = 90, p = new Float32Array(n * 3);
+    for (let k = 0; k < n; k++) { const r = radius * (1.25 + Math.random() * 0.9), th = Math.random() * 6.283, ph = Math.acos(2 * Math.random() - 1); p.set([r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th)], k * 3); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    extra.dust = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.08, map: glow('#fff4e0', 1), color: '#fff4e0', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    group.add(extra.dust);
+    const pts = []; for (let a = 0; a <= 96; a++) { const t = (a / 96) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(t) * radius * 1.6, 0, Math.sin(t) * radius * 1.6)); }
+    extra.redline = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#c8382f', transparent: true, opacity: 0.7 }));
+    extra.redline.rotation.x = 0.35; group.add(extra.redline);
+  }
   if (fx === 'stars') {
     const n = 120, p = new Float32Array(n * 3);
     for (let k = 0; k < n; k++) { const r = radius * (1.3 + Math.random() * 0.8), th = Math.random() * 6.283, ph = Math.acos(2 * Math.random() - 1); p.set([r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th)], k * 3); }
@@ -272,6 +290,7 @@ function tick(now) {
     p.atmo.material.opacity = ((p.open ? 0.4 : 0.12) + p.hover * 0.45 + Math.sin(t * 1.5 + p.i) * 0.05) * e;
     p.orbit.material.opacity = (0.12 + p.hover * 0.45) * e;
     if (p.extra.ring) { p.extra.ring.rotation.z += dt * 0.15; p.extra.ring.material.opacity = (0.75 + p.hover * 0.25) * e; }
+    if (p.extra.redline) { p.extra.redline.rotation.y += dt * 0.2; p.extra.redline.material.opacity = (0.45 + p.hover * 0.5) * e; }
     if (p.extra.dust) { p.extra.dust.rotation.y += dt * 0.4; p.extra.dust.material.size = 0.07 + Math.abs(Math.sin(t * 3)) * 0.05; }
     if (p.extra.waves) p.extra.waves.forEach((l) => { const ph = (t * 0.45 + l.userData.k / 3) % 1; l.scale.setScalar(p.radius * (1.1 + ph * 1.8)); l.material.opacity = (1 - ph) * 0.6 * e; });
   });
