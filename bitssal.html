@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>X-005 · 빛쌀 — 80년의 기억 | XPACE</title>
+  <meta name="description" content="한 톨의 쌀을 따라 1946년 대구10월사건과 1950년 경산 코발트광산 사건을 걷는 인터랙티브 전시. 진시영 · 김동선 《빛쌀》." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="css/bitssal.css?v=1" />
+</head>
+<body>
+  <header class="bs-top">
+    <a class="bs-logo" href="./"><span class="x"></span>XPACE</a>
+    <span class="bs-title">X-005 · 빛쌀</span>
+    <button class="bs-menu-btn" aria-expanded="false" aria-controls="bs-menu">이야기 목차</button>
+  </header>
+  <nav id="bs-menu" class="bs-menu" hidden aria-label="장면 목차"></nav>
+  <div class="bs-progress" aria-hidden="true"></div>
+
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <svg id="glass" class="glass" viewBox="0 0 300 520" aria-hidden="true">
+    <ellipse cx="150" cy="40" rx="130" ry="18" />
+    <path d="M24 44 Q150 110 142 120 Q138 200 146 300 Q150 340 140 380" />
+    <path d="M276 44 Q150 110 158 120 Q162 200 154 300 Q150 340 160 380" />
+    <path d="M60 400 Q150 520 240 400" />
+    <ellipse cx="150" cy="398" rx="92" ry="14" />
+  </svg>
+  <div id="hud" aria-hidden="true">
+    <div class="hud-clock"></div>
+    <div class="hud-count"></div>
+    <div class="hud-year"></div>
+    <div class="hud-depth"></div>
+    <div class="hud-tip"></div>
+  </div>
+  <div id="labels" aria-hidden="true"></div>
+
+  <main id="story"></main>
+
+  <div class="bs-loader"><span></span></div>
+  <script type="module" src="js/bitssal.js?v=1"></script>
+</body>
+</html>
