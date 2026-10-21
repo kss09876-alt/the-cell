@@ -18,12 +18,12 @@ const vid = (id, cap, title) => ({ kind: 'vid', id, cap, title });
 // ---------------- 장면 정의 ----------------
 // cards: at = 장면 안에서의 위치(0~1), kind = text | record | reveal | correct | choice | input | photo | vid | carousel | archive
 const SCENES = [
-  { id: 'prologue', title: '한 톨', h: 170, cards: [
+  { id: 'prologue', title: '한 톨의 쌀', h: 170, cards: [
     { at: 0.06, html: '<p class="kicker">X-005 · 진시영 · 김동선 《빛쌀》</p><h1>빛쌀</h1><p class="lead">한 톨의 쌀.<br>당신에게는 어떤 의미인가요?</p><p class="hint">어둠 속 쌀알에 커서를 가져가 보세요. 눌러서 따라가면 이야기가 시작됩니다.</p>' },
     { at: 0.55, html: '<p>이 쌀알은 유리 조형물 《빛쌀》의 맨 위, 넓은 밥상에서 출발합니다. 좁은 유리 통로를 지나 아래의 둥근 그릇에 닿기까지, 이 전시는 한 톨이 지나온 길을 따라갑니다.</p><p class="note">1946년 대구10월사건과 1950년 경산 코발트광산 사건은 서로 다른 사건입니다. 이 전시는 두 사건을 구분해 전합니다.</p>' },
   ] },
-  { id: 'work', title: '작품', h: 230, cards: [
-    { at: 0.05, html: '<p class="kicker">작품 《빛쌀》</p><h2>유리 위에 맺힌 빛</h2><p>유리 조형물 위로 쌀과 빛의 영상이 흐릅니다. 사진을 넘기며 작품의 네 부분을 먼저 둘러보세요.</p>' },
+  { id: 'work', title: '작품 속으로', h: 230, cards: [
+    { at: 0.05, html: '<p class="kicker">02 · 작품 《빛쌀》</p><h2>유리 위에 맺힌 빛</h2><p>유리 조형물 위로 쌀과 빛의 영상이 흐릅니다. 이 작품의 네 부분은 전시 전체의 공간이 됩니다. 사진을 넘긴 뒤, 작품 영상을 통해 쌀과 빛의 움직임을 만나보세요.</p>' },
     { at: 0.28, kind: 'carousel', items: [
       { id: PH[0], t: '01 · 밥상', d: '넓은 윗부분. 쌀알이 모여 한 사람의 하루가 되는 자리.' },
       { id: PH[1], t: '02 · 통로', d: '좁아지는 유리 목. 삶이 좁은 길로 내몰리는 시간.' },
@@ -32,80 +32,81 @@ const SCENES = [
     ] },
     { at: 0.66, ...vid(VD.main, `${WORK}, 가변 크기, 유리 오브제 위 단채널 영상 프로젝션`, '작품 영상') },
   ] },
-  { id: 'life', title: '밥상', h: 250, cards: [
-    { at: 0.06, html: '<p class="chap">01 · 한 톨의 삶</p><h2>1946년, 대구</h2><p>해방 이듬해. 쌀 한 톨은 곧 한 사람의 하루였습니다. 밥을 짓고, 도시락을 싸고, 함께 둘러앉는 평범한 밥상.</p>' },
+  { id: 'life', title: '평범했던 밥상', h: 250, cards: [
+    { at: 0.06, html: '<p class="chap">03 · 평범했던 밥상</p><h2>1946년, 대구</h2><p>해방 이듬해. 쌀 한 톨은 곧 한 사람의 하루였습니다. 밥을 짓고, 도시락을 싸고, 함께 둘러앉는 평범한 밥상.</p>' },
     { at: 0.34, html: '<p><b>그릇을 눌러 밥을 담아 보세요.</b> 열 개의 그릇이 모두 차면 한 집의 하루가 됩니다.</p><p class="legend share">차린 그릇 <b class="bowl-n">0</b> / 10</p><p class="note">밥상 장면은 이해를 돕기 위한 일러스트입니다.</p>' },
     { at: 0.66, ...photo(4) },
   ] },
-  { id: 'hunger', title: '굶주림', h: 300, cards: [
-    { at: 0.04, html: '<p class="chap">02 · 해방 이후, 굶주림</p><h2>그릇이 비어 갑니다</h2><p>스크롤을 내리면 그릇의 쌀이 하나씩 빠져나갑니다.</p><p class="try">화면을 <b>길게 누르고</b> 있으면 쌀을 붙잡을 수 있습니다. 그러나 오래 버티지는 못합니다.</p>' },
+  { id: 'hunger', title: '사라지는 밥', h: 300, cards: [
+    { at: 0.04, html: '<p class="chap">04 · 사라지는 밥</p><h2>그릇이 비어 갑니다</h2><p>스크롤을 내리면 그릇의 쌀이 하나씩 빠져나갑니다.</p><p class="try">화면을 <b>길게 누르고</b> 있으면 쌀을 붙잡을 수 있습니다. 그러나 오래 버티지는 못합니다.</p>' },
     { at: 0.26, kind: 'record', title: '미곡수집령', html: '<p>미군정은 「미곡수집령」을 발표해 쌀을 거두고 제한 배급을 실시했다. 여름 보리(하곡)까지 수집했고, 경북에서는 양곡 수집이 특히 강압적으로 진행되었다.</p>', src: SRC1 },
     { at: 0.43, kind: 'record', title: '돌아온 사람들', html: '<p>해외에서 돌아온 동포가 늘면서 식량난은 더 심해졌다.</p>', src: SRC1 },
     { at: 0.58, kind: 'record', title: '콜레라와 수해', html: '<p>1946년 5월 콜레라가 퍼지고 6월에는 수해가 겹쳤다. 방역을 위한 교통 차단으로 많은 주민이 기아 상태에 놓였고, 청송 등 북부 산간지역에서는 굶어 죽는 사람도 나왔다.</p>', src: SRC1 },
     { at: 0.76, ...vid(VD.acc, '작품 영상 — 쌀의 축적과 부족. 작품의 장면이며 당시 기록 영상이 아닙니다.', '쌀의 축적과 부족') },
   ] },
-  { id: 'demand', title: '요구', h: 320, cards: [
-    { at: 0.05, html: '<p class="chap">03 · 우리는 쌀을 원했다</p><h2>흩어진 쌀알이 모입니다</h2><p>커서를 움직여 보세요. 쌀알들이 당신 쪽으로 모여듭니다.</p><p class="legend"><i></i> 쌀알 하나 = 10명</p>' },
+  { id: 'demand', title: '우리는 쌀을 원했다', h: 320, cards: [
+    { at: 0.05, html: '<p class="chap">05 · 우리는 쌀을 원했다</p><h2>흩어진 쌀알이 모입니다</h2><p>커서를 움직여 보세요. 쌀알들이 당신 쪽으로 모여듭니다.</p><p class="legend"><i></i> 쌀알 하나 = 10명 (시각화 단위 · 실제 인원과 구분)</p>' },
     { at: 0.24, html: '<p>당신의 한 톨도 보탤 수 있습니다.</p><button class="act-btn add-voice">한 톨 보태기</button><p class="legend share">보탠 쌀알 <b class="voice-n">0</b></p>' },
     { at: 0.42, kind: 'record', title: '1946년 9월', html: '<p>9월 23일 대구의 노동조합들이 파업에 들어갔고, 27일 남조선총파업대구시투쟁위원회가 결성되었다. 미군정은 경찰과 우익청년단 등을 동원해 진압하고 노동자 약 1,200명을 검거했다.</p>', src: SRC1 },
     { at: 0.58, kind: 'record', title: '10월 1일 오전, 대구부청 앞', html: '<p>시민 1,000여 명이 쌀을 요구하는 시위를 벌였다.</p>', src: SRC1 },
     { at: 0.72, kind: 'record', title: '10월 1일, 대구역 앞', html: '<p>노동자들의 시위대는 대구역과 공회당 주변에 모였고, 그 수는 수천 명에서 1만 5천 명으로 불어났다.</p>', src: SRC1 },
     { at: 0.86, ...photo(6) },
   ] },
-  { id: 'street', title: '거리', h: 470, cards: [
-    { at: 0.03, html: '<p class="chap">04 · 1946년 10월, 거리</p><h2>시간을 따라 걷습니다</h2><p>스크롤이 시계가 됩니다. 지도 위 장소를 누르면 그곳의 기록이 열립니다.</p><p class="note">지도는 위치 관계를 단순화한 약도입니다.</p>' },
+  { id: 'street', title: '1946년 10월', h: 470, cards: [
+    { at: 0.03, html: '<p class="chap">06 · 1946년 10월</p><h2>시간을 따라 걷습니다</h2><p>스크롤이 시계가 됩니다. 지도 위 장소를 누르면 그곳의 기록이 열립니다.</p><p class="note">지도는 위치 관계를 단순화한 약도입니다.</p>' },
     { at: 0.18, ...photo(7) },
     { at: 0.38, kind: 'record', title: '10월 1일 오후 7시쯤', html: '<p>대구역 앞에서 경찰과 철도노조원이 충돌한 뒤, 경찰이 발포해 철도노조원 김용태 등 두 명이 사망했다.</p><p class="quiet">이 전시는 그 순간을 재현하지 않습니다. 잠시 멈춥니다.</p>', src: SRC1, tone: 'red' },
     { at: 0.56, kind: 'record', title: '10월 2일', html: '<p>대구의전 학생들이 숨진 노동자의 시신을 들것에 싣고 대구경찰서로 행진했다. 학생대표단은 구금자 석방과 발포 중지를 요구했고, 경찰서장이 무력 해산 명령을 거부하자 경찰은 철수했다. 군중은 경찰서를 점거했다.</p>', src: SRC1 },
     { at: 0.76, kind: 'record', title: '10월 2일 오후', html: '<p>미군의 명령을 받은 경찰이 발포해 민간인 17~18명과 경찰 4명이 사망했다.</p>', src: SRC1, tone: 'red' },
     { at: 0.9, kind: 'record', title: '오후 5시, 계엄령', html: '<p>미군은 장갑차와 기관총 부대를 투입하고 오후 5시 계엄령을 선포했다. 저녁 7시부터 통행금지가 시행되었다.</p>', src: SRC1 },
   ] },
-  { id: 'spread', title: '확산', h: 280, cards: [
-    { at: 0.06, html: '<p class="chap">04 · 1946년 가을</p><h2>번져 간 불빛</h2><p>스크롤하면 날짜가 흐르고, 사건이 번진 지역에 불이 켜집니다. 지역 이름을 누르면 날짜로 이동합니다.</p><p class="note">점의 개수는 지역별 규모를 뜻하지 않습니다.</p>' },
+  { id: 'spread', title: '전국으로 번진 외침', h: 280, cards: [
+    { at: 0.06, html: '<p class="chap">07 · 전국으로 번진 외침</p><h2>번져 간 불빛</h2><p>스크롤하면 날짜가 흐르고, 사건이 번진 지역에 불이 켜집니다. 지역 이름을 누르면 날짜로 이동합니다.</p><p class="note">점의 개수는 지역별 규모를 뜻하지 않습니다.</p>' },
     { at: 0.45, kind: 'record', title: '10월 1일~3일', html: '<p>달성군에서 시작해 칠곡·고령, 성주·영일 등 경북 19개 군으로 번졌다.</p>', src: SRC1 },
     { at: 0.8, kind: 'record', title: '12월 중순까지', html: '<p>경남, 충남·충북, 경기·황해, 강원, 전남, 전북으로 확산되었고, 농민들의 추수봉기와 결합해 12월 중순까지 전국 73개 시군으로 퍼졌다.</p>', src: SRC1 },
   ] },
-  { id: 'erased', title: '지워진 이름', h: 320, cards: [
-    { at: 0.05, html: '<p class="chap">05 · 항쟁 이후, 지워진 이름</p><h2>흐려진 기록을 읽습니다</h2><p>거리의 충돌 뒤에도 탄압과 감시는 이어졌습니다.</p><p class="try">오른쪽 문서 위를 <b>커서로 문질러</b> 흐려진 글줄을 되살려 보세요. 아래 기록 카드도 눌러 읽을 수 있습니다.</p>' },
+  { id: 'erased', title: '지워진 이름들', h: 320, cards: [
+    { at: 0.05, html: '<p class="chap">08 · 지워진 이름들</p><h2>흐려진 기록을 읽습니다</h2><p>거리의 충돌 뒤에도 탄압과 감시는 이어졌습니다.</p><p class="try">오른쪽 문서 위를 <b>커서로 문질러</b> 흐려진 글줄을 되살려 보세요. 아래 기록 카드도 눌러 읽을 수 있습니다.</p>' },
     { at: 0.26, kind: 'reveal', title: '진압과 토벌', html: '<p>사건 관련자들은 현장에서 살해되거나 검거되어 감옥에 갔고, 일부는 산으로 들어갔다. 1948년 정부 수립 때까지 토벌이 이어졌고, 그 과정에서 관련 없는 주민도 희생되었다.</p>', src: SRC1 },
     { at: 0.46, kind: 'correct', title: '1946년 10월 5일, 칠곡 금암동', html: '<p>경찰이 마을로 총을 쏘며 들어와 주민 박○도를 사살했다. 그는 이후 신원조사 기록에 <s class="wrong">남로당 가입자</s>로 기재되었다.</p>', fix: '이 기록은 잘못 기재된 것이었습니다.', src: SRC1 },
     { at: 0.66, kind: 'reveal', title: '2010년 3월 30일, 진실규명 결정', html: '<p>진실화해위원회는 대구·칠곡·영천·경주의 일부만 조사했음에도 민간인 60명 정도의 희생을 추산했고, 실제 희생자는 더 많을 것으로 보았다.</p>', src: SRC1 },
     { at: 0.84, ...photo(8) },
   ] },
-  { id: 'boundary', title: '1950', h: 200, cards: [
-    { at: 0.15, html: '<h2 class="big">4년 뒤,<br>다른 사건</h2><p>1946년 대구10월사건과 1950년 경산 코발트광산 사건은 시점과 피해 대상, 가해 구조가 다릅니다.</p><p>한국전쟁이 일어난 뒤 10월사건 관련자와 그 가족 일부가 보도연맹원으로 예비검속되어 희생되기도 했습니다. 그러나 이 연결을 모든 희생자에게 일반화하지 않습니다.</p>' },
+  { id: 'boundary', title: '4년 뒤, 다른 비극', h: 200, cards: [
+    { at: 0.15, html: '<p class="chap">09 · 사건의 경계</p><h2 class="big">4년 뒤,<br>다른 사건</h2><p>1946년 대구10월사건과 1950년 경산 코발트광산 사건은 시점과 피해 대상, 가해 구조가 다릅니다.</p><p>한국전쟁이 일어난 뒤 10월사건 관련자와 그 가족 일부가 보도연맹원으로 예비검속되어 희생되기도 했습니다. 그러나 이 연결을 모든 희생자에게 일반화하지 않습니다.</p>' },
     { at: 0.6, kind: 'choice', html: '<p class="warn">다음 장은 민간인 집단희생을 다룹니다.</p><p>사진이나 잔혹한 장면 없이 공식 조사 기록으로 전합니다.</p>', summary: '1950년 7~8월, 경북 경산 코발트광산 등지에서 국민보도연맹원·요시찰 대상자·대구형무소 재소자 등이 적법한 절차 없이 집단 희생되었습니다. 진실화해위원회는 2009년 11월 17일 진실규명을 결정했습니다.' },
   ] },
-  { id: 'mine', title: '광산', h: 520, cards: [
-    { at: 0.03, html: '<p class="chap">06 · 바닥 없는 어둠</p><h2>좁은 통로 아래로</h2><p>스크롤할수록 깊이 내려갑니다. 관람객이 무언가를 떨어뜨리는 조작은 없습니다.</p><p class="try">어둠 속에서는 <b>커서가 손전등</b>이 됩니다. 비추는 곳에서만 빛이 보입니다.</p>' },
+  { id: 'mine', title: '경산 코발트광산', h: 520, cards: [
+    { at: 0.03, html: '<p class="chap">10 · 바닥 없는 어둠</p><h2>좁은 통로 아래로</h2><p>스크롤할수록 깊이 내려갑니다. 관람객이 무언가를 떨어뜨리는 조작은 없습니다.</p><p class="try">어둠 속에서는 <b>커서가 손전등</b>이 됩니다. 비추는 곳에서만 빛이 보입니다.</p>' },
     { at: 0.17, kind: 'record', title: '시기와 장소', html: '<p>1950년 7월 중·하순부터 8월 중순경까지. 경북 경산시 평산동의 코발트광산. 일제강점기에 개발된 광산으로 수직굴과 수평갱도가 이어져 있었다.</p>', src: SRC2 },
     { at: 0.31, kind: 'record', title: '끌려온 사람들', html: '<p>경산·청도·영동, 대구형무소 등지에서 끌려온 국민보도연맹원과 요시찰 대상자, 그리고 대구형무소 재소자 상당수가 희생되었다.</p>', src: SRC2 },
     { at: 0.44, kind: 'record', title: '가해 주체', html: '<p>경산·청도 지역 경찰, 경북지구CIC 경산·청도 파견대, 국군 제22헌병대.</p>', src: SRC2 },
     { at: 0.58, kind: 'record', title: '희생 규모', html: '<p>진실화해위원회는 1,800명을 웃돌 것으로 추정했지만 정확한 전체 수는 확인되지 않았다. 유족회와 시민사회는 3,500명 이상으로 추정한다. 신원이 확인된 사람은 127명이다.</p><p class="quiet">희미한 점은 추정치, 밝은 점은 신원이 확인된 사람입니다. 두 숫자는 서로 다른 지표입니다.</p>', src: SRC2 },
-    { at: 0.73, ...vid(VD.dark, '작품 영상 — 원형 시점과 어둠. 실제 장소가 아닌 작품의 상징적 장면입니다.', '원형 시점과 어둠') },
-    { at: 0.92, html: '<p class="center">확인되지 않은 이름까지,<br>기억의 밖에 둘 수는 없습니다.</p><p class="note center">전시 문안</p>' },
+    { at: 0.70, html: '<p class="quiet-pause" role="note">이 장면은 비극을 재현하지 않습니다.<br>잠시 머물며, 기록된 삶을 기억합니다.</p>' },
+    { at: 0.79, ...vid(VD.dark, '작품 영상 — 원형 시점과 어둠. 실제 장소가 아닌 작품의 상징적 장면입니다.', '원형 시점과 어둠') },
+    { at: 0.94, html: '<p class="center">확인되지 않은 이름까지,<br>기억의 밖에 둘 수는 없습니다.</p><p class="note center">전시 문안</p>' },
   ] },
-  { id: 'truth', title: '진실규명', h: 330, cards: [
-    { at: 0.05, html: '<p class="chap">07 · 묻혀 있던 진실</p><h2>오래 걸린 시간</h2><p>연도를 지날 때마다 바닥의 빛이 조금씩 떠오릅니다. 위쪽의 연도를 눌러도 됩니다.</p>' },
+  { id: 'truth', title: '묻혀 있던 진실', h: 330, cards: [
+    { at: 0.05, html: '<p class="chap">11 · 묻혀 있던 진실</p><h2>오래 걸린 시간</h2><p>연도를 지날 때마다 바닥의 빛이 조금씩 떠오릅니다. 위쪽의 연도를 눌러도 됩니다.</p>' },
     { at: 0.22, kind: 'record', title: '1993년', html: '<p>지역 언론이 사건을 알리기 시작했다.</p>', src: SRC2 },
     { at: 0.36, kind: 'record', title: '2000년 · 2001년', html: '<p>2000년 경산유족회가 결성되었다. 2001년 시멘트로 봉인된 갱도 입구가 열렸고, 3일간 유해 40구를 수습했다.</p>', src: SRC2 },
     { at: 0.52, kind: 'record', title: '2007년 · 2009년', html: '<p>2007년 진실화해위원회의 공식 유해 발굴 조사가 시작되었고, 2009년 11월 17일 진실규명이 결정되었다.</p>', src: SRC2 },
     { at: 0.68, ...photo(1) },
     { at: 0.88, html: '<p>그러나 지금까지도 모든 유해를 수습하지 못했습니다. 바닥에 남은 빛은 아직 돌아오지 못한 사람들입니다.</p>' },
   ] },
-  { id: 'share', title: '나눔', h: 250, cards: [
-    { at: 0.06, html: '<p class="chap">08 · 쌀은 다시 나눔이 되었다</p><h2>대구에서 광주로</h2><p>대구에서 삶을 위해 요구했던 쌀은, 1980년 5월 광주에서 시민들이 서로를 살리기 위해 나누는 주먹밥이 되었습니다.</p>' },
+  { id: 'share', title: '나눔이 된 쌀', h: 250, cards: [
+    { at: 0.06, html: '<p class="chap">12 · 나눔이 된 쌀</p><h2>대구에서 광주로</h2><p>대구에서 삶을 위해 요구했던 쌀은, 1980년 5월 광주에서 시민들이 서로를 살리기 위해 나누는 주먹밥이 되었습니다.</p>' },
     { at: 0.4, html: '<p>주먹밥을 눌러 옆 사람에게 건네 보세요.</p><p class="legend share">나눈 주먹밥 <b class="share-n">0</b>개</p>' },
     { at: 0.72, html: '<blockquote>대구에서 삶을 위해 요구했던 쌀은 광주에서 서로를 살리기 위해 나누는 음식이 되었다.</blockquote><p class="note">진시영 · 김동선, 《빛쌀》 작업노트 중에서</p>' },
   ] },
-  { id: 'light', title: '빛', h: 360, cards: [
-    { at: 0.04, html: '<p class="chap">08 · 기억은 다시 빛이 된다</p><h2>처음 보았던 한 톨이,<br>지금은 어떻게 보이나요?</h2><p class="try">어둠 어디든 <b>눌러서</b> 작은 빛을 켤 수 있습니다.</p><p class="legend share">켜진 빛 <b class="lamp-n">0</b></p>' },
+  { id: 'light', title: '기억은 빛이 된다', h: 360, cards: [
+    { at: 0.04, html: '<p class="chap">13 · 기억은 다시 빛이 된다</p><h2>처음 보았던 한 톨이,<br>지금은 어떻게 보이나요?</h2><p class="try">어둠 어디든 <b>눌러서</b> 작은 빛을 켤 수 있습니다.</p><p class="legend share">켜진 빛 <b class="lamp-n">0</b></p>' },
     { at: 0.24, kind: 'input' },
     { at: 0.45, ...vid(VD.light, '작품 영상 — 입자의 확산과 빛', '입자의 확산과 빛') },
     { at: 0.66, ...photo(3) },
     { at: 0.88, html: '<p class="center big-quote">LIFE remains in LIGHT.</p><p class="note center">어둠 속에 묻힌 삶은 기억하는 사람들의 빛 속에서 다시 한 톨의 이름이 된다 — 《빛쌀》 설치계획 중에서</p>' },
   ] },
-  { id: 'archive', title: '아카이브', h: 270, cards: [
+  { id: 'archive', title: '작품 아카이브', h: 270, cards: [
     { at: 0.06, kind: 'archive' },
   ] },
 ];
@@ -124,17 +125,17 @@ story.innerHTML = SCENES.map((s, si) => `<section class="scene" id="s-${s.id}" d
 function cardHTML(s, c, si, ci) {
   const pos = `style="top:${c.at * 100}%"`;
   const src = c.src ? `<p class="src">출처: ${esc(c.src)}</p>` : '';
-  if (c.kind === 'record') return `<article class="card rec ${c.tone || ''}" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3>${c.html}${src}</article>`;
+  if (c.kind === 'record') return `<article class="card rec ${c.tone || ''}" ${pos}><p class="rec-label">기록 · 원문 출처</p><h3>${esc(c.title)}</h3><details class="record-detail"><summary>기록 자세히 보기 <span aria-hidden="true">＋</span></summary><div class="record-body">${c.html}${src}</div></details></article>`;
   if (c.kind === 'reveal') return `<article class="card rec reveal-rec" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">기록 읽기</button>${src}</article>`;
   if (c.kind === 'correct') return `<article class="card rec reveal-rec correct" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">기록 읽기</button><button class="fix-btn" hidden>기록 바로잡기</button><p class="fix-note" hidden>${esc(c.fix)}</p>${src}</article>`;
   if (c.kind === 'choice') return `<article class="card choice" ${pos}>${c.html}<div class="ch-btns"><button data-go="mine">계속 보기</button><button data-sum>요약만 보기</button><button data-go="truth">다음 장으로</button></div><div class="ch-sum" hidden><p>${esc(c.summary)}</p></div></article>`;
-  if (c.kind === 'input') return `<article class="card mem" ${pos}><h3>기억을 위한 한 문장</h3><p>한 문장을 남기면 작은 빛이 되어 떠오릅니다. 쓰지 않아도 끝까지 볼 수 있어요.</p><form class="mem-f"><textarea maxlength="120" rows="2" placeholder="오늘 기억하고 싶은 것 (120자 이내, 이름은 적지 않아도 됩니다)" aria-label="기억을 위한 한 문장"></textarea><div class="mem-r"><span class="mem-n">0 / 120</span><button type="submit">빛으로 남기기</button></div></form><p class="note">남긴 문장은 이 브라우저에만 저장되며 공개되지 않습니다.</p></article>`;
+  if (c.kind === 'input') return `<article class="card mem" ${pos}><h3>기억을 위한 한 문장</h3><p>한 문장을 남기면 작은 빛이 되어 떠오릅니다. 쓰지 않아도 끝까지 볼 수 있어요.</p><form class="mem-f"><textarea maxlength="120" rows="2" placeholder="오늘 기억하고 싶은 것 (120자 이내, 이름은 적지 않아도 됩니다)" aria-label="기억을 위한 한 문장"></textarea><div class="mem-r"><span class="mem-n">0 / 120</span><button type="submit">빛으로 남기기</button></div></form><p class="note">남긴 문장은 이 브라우저에만 저장되며 다른 관람객에게 공개되지 않습니다.</p></article>`;
   if (c.kind === 'photo') return `<figure class="card ph" ${pos}><button class="ph-btn" data-lb-img="${c.id}" aria-label="사진 크게 보기"><img src="${img(c.id, 1000)}" alt="${esc(c.cap)}" loading="lazy"></button><figcaption>${esc(c.cap)}</figcaption></figure>`;
   if (c.kind === 'vid') return `<figure class="card vd" ${pos}>${vidHTML(c.id, c.title)}<figcaption>${esc(c.cap)}</figcaption></figure>`;
   if (c.kind === 'carousel') return `<div class="card car" ${pos}><div class="car-view">${c.items.map((it, k) => `<button class="car-slide${k ? '' : ' on'}" data-lb-img="${it.id}" aria-label="${esc(it.t)} 크게 보기"><img src="${img(it.id, 1200)}" alt="${esc(it.t)}" loading="lazy"></button>`).join('')}</div>
     <div class="car-txt">${c.items.map((it, k) => `<div class="car-cap${k ? '' : ' on'}"><b>${esc(it.t)}</b><span>${esc(it.d)}</span></div>`).join('')}</div>
     <div class="car-nav"><button class="car-prev" aria-label="이전 사진">←</button>${c.items.map((_, k) => `<i class="${k ? '' : 'on'}"></i>`).join('')}<button class="car-next" aria-label="다음 사진">→</button></div><p class="note">작품 사진 — ${WORK} · 사진을 누르면 크게 볼 수 있습니다.</p></div>`;
-  if (c.kind === 'archive') return `<div class="card arch" ${pos}><p class="kicker">ARCHIVE</p><h2>작품의 기록</h2><p>《빛쌀》이 만들어진 과정과 다큐멘터리, 작업 영상과 사진을 모았습니다. 눌러서 재생하세요.</p>
+  if (c.kind === 'archive') return `<div class="card arch" ${pos}><p class="kicker">14 · ARCHIVE</p><h2>작품의 기록</h2><p>《빛쌀》이 만들어진 과정과 다큐멘터리, 작업 영상과 사진을 모았습니다. 눌러서 재생하세요.</p>
     <div class="arch-doc">${vidHTML(VD.doc, '《빛쌀》 다큐멘터리')}<p class="note">《빛쌀》 다큐멘터리 · 용량이 커서 재생까지 시간이 걸릴 수 있습니다.</p></div>
     <h3>작업 영상</h3><div class="arch-grid">${['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].map((k, i) => `<button class="arch-v" data-lb-vid="${VD[k]}"><img src="${thumb(VD[k])}" alt="" loading="lazy" onerror="this.remove()"><span>▶ 작업 영상 ${String(i + 1).padStart(2, '0')}</span></button>`).join('')}</div>
     <h3>사진</h3><div class="arch-grid ph6">${PH.map((id, i) => `<button class="arch-p" data-lb-img="${id}" aria-label="작품 사진 ${i + 1} 크게 보기"><img src="${img(id, 500)}" alt="" loading="lazy"></button>`).join('')}</div>
@@ -142,15 +143,16 @@ function cardHTML(s, c, si, ci) {
   return `<article class="card ${c.kind || ''}" ${pos}>${c.html}</article>`;
 }
 function vidHTML(id, title) {
-  return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay"><span>▶</span>${esc(title || '영상 재생')}</button></div>`;
+  return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay" aria-label="${esc(title || '영상 재생')} 재생"><span aria-hidden="true">▶</span>${esc(title || '영상 재생')}</button></div>`;
 }
 
 // 목차 / 진행 막대
 const menu = document.getElementById('bs-menu'), menuBtn = document.querySelector('.bs-menu-btn');
 menu.innerHTML = `<ol>${SCENES.map((s, i) => `<li><a href="#s-${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${esc(s.title)}</a></li>`).join('')}</ol>`;
 menuBtn.addEventListener('click', () => { menu.hidden = !menu.hidden; menuBtn.setAttribute('aria-expanded', String(!menu.hidden)); });
-menu.addEventListener('click', (e) => { const a = e.target.closest('a'); if (!a) return; e.preventDefault(); jump(a.getAttribute('href').slice(3)); menu.hidden = true; });
+menu.addEventListener('click', (e) => { const a = e.target.closest('a'); if (!a) return; e.preventDefault(); jump(a.getAttribute('href').slice(3)); menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); });
 const prog = document.querySelector('.bs-progress');
+const sceneStatus = document.getElementById('bs-scene-status');
 prog.style.gridTemplateColumns = `repeat(${SCENES.length}, 1fr)`;
 prog.innerHTML = SCENES.map((s, i) => `<button title="${esc(s.title)}" data-id="${s.id}"><i></i></button>`).join('');
 prog.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) jump(b.dataset.id); });
@@ -548,6 +550,7 @@ let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = now / 1000;
   measure();
+  if (sceneStatus) sceneStatus.textContent = `${String(cur + 1).padStart(2, '0')} / ${SCENES.length} · ${SCENES[cur].title}`;
   const sc = SCENES[cur], id = sc.id, p = curP;
   TARGETS[id](p);
   document.body.dataset.scene = id;
