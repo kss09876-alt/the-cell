@@ -225,3 +225,37 @@ body[data-scene="light"] { cursor: crosshair; }
 html[data-lang="zh"] body { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
 html[data-lang="ja"] body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; }
 html[data-lang="en"] .card p, html[data-lang="en"] p { word-break: normal; }
+
+/* ---------- 모바일 최적화 ---------- */
+#stage { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+body[data-scene="hunger"], body[data-scene="erased"], body[data-scene="mine"] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+@media (max-width: 820px) {
+  .bs-top { gap: 8px; padding: 12px 14px; padding-top: max(12px, env(safe-area-inset-top)); }
+  .bs-logo { font-size: 13px; letter-spacing: .12em; }
+  .bs-snd { margin-left: auto; padding: 7px 10px; }
+  .bs-snd span { display: none; }
+  .bs-menu-btn { margin-left: 0; padding: 7px 11px; font-size: 11px; letter-spacing: .04em; white-space: nowrap; }
+  .lang-sw .lang-btn { padding: 7px 10px; font-size: 11px; min-width: 0; }
+  .bs-progress { top: 52px; left: 14px; right: 14px; gap: 2px; }
+  .bs-menu { top: 64px; right: 14px; max-height: 70vh; overflow: auto; }
+  .card p { font-size: 15.5px; line-height: 1.75; }
+  .card h1 { font-size: 64px; }
+  .card h2 { font-size: 27px; }
+  .card h2.big { font-size: 38px; }
+  .rec { padding: 18px 18px; }
+  .rec p { font-size: 15px; }
+  .hud-clock b { font-size: 30px; } .hud-count b { font-size: 32px; } .hud-depth b { font-size: 34px; }
+  .hud-clock, .hud-count, .hud-depth { top: 66px; right: 14px; }
+  .hud-tip { max-width: calc(100vw - 28px); }
+  .lab { font-size: 11px; padding: 6px 10px; }
+  .act-btn { padding: 14px 22px; }
+  .ch-btns button { padding: 12px 16px; }
+  .car-view { aspect-ratio: 4 / 3; max-height: 46vh; }
+  .ph-btn img { max-height: 46vh; }
+  .arch-grid.ph6 { grid-template-columns: repeat(3, 1fr); }
+  .lb { padding: 56px 8px 16px; }
+  .lb-x { top: max(10px, env(safe-area-inset-top)); right: 10px; }
+  .bs-credits { padding: 80px 16px calc(40px + env(safe-area-inset-bottom)); }
+  .snd-gate .g-t { font-size: 26px; }
+}
+@media (max-width: 380px) { .bs-logo { font-size: 12px; } .bs-menu-btn { font-size: 10px; padding: 7px 9px; } }

@@ -482,3 +482,39 @@ figcaption, .caption { margin-top: 14px; font-size: 13px; color: var(--muted); l
 html[data-lang="zh"] body { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
 html[data-lang="ja"] body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; }
 html[data-lang="en"] .card p, html[data-lang="en"] p { word-break: normal; }
+
+/* ---------- 모바일 최적화 ---------- */
+@media (hover: none) { .hover-card { display: none !important; } }
+@media (max-width: 640px) {
+  .topbar { padding: 12px 14px; padding-top: max(12px, env(safe-area-inset-top)); gap: 8px; }
+  .logo { font-size: 13px; letter-spacing: .12em; flex-shrink: 0; }
+  .topbar nav { gap: 4px; }
+  .nav-btn { padding: 7px 10px; font-size: 10px; letter-spacing: .08em; }
+  .nav-btn.snd span { display: none; }
+  .nav-btn.snd { padding: 7px 10px; }
+  .lang-sw .lang-btn { padding: 7px 10px; font-size: 10px; min-width: 0; }
+  .cell-label { font-size: 10px; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cell-label .room-tag { margin: 0 4px; padding: 1px 6px; font-size: 9px; }
+  .hero-copy { left: 16px; right: 16px; bottom: max(22px, env(safe-area-inset-bottom)); }
+  .hero-copy h1 { font-size: 54px; margin: 6px 0 10px; }
+  .hero-copy .lede { font-size: 13px; }
+  .hint { display: none; }
+  .p-label { font-size: 11px; padding: 4px 8px 4px 7px; }
+  .panel-inner { padding: 80px 18px 40px; }
+  /* 전시 페이지 */
+  .q-head { text-align: left; }
+  .q-head h2 { font-size: 28px; }
+  .q-head p { font-size: 15.5px; line-height: 1.8; }
+  .q-stage, .lab-stage { height: 58vh; border-left: 0; border-right: 0; border-radius: 0; }
+  .lab-stage { touch-action: pan-y; }
+  .q-hud { font-size: 10px; }
+  .bgm { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .bgm-btn { padding: 9px 11px; }
+  .bgm-btn .lbl { display: none; }
+  .bgm-panel { display: none; }
+  .sound-gate .sg-inner { padding: 0 20px; }
+  .b-end .end-rooms { flex-direction: column; align-items: stretch; padding: 0 16px; }
+  .b-end .next { margin: 0 16px; }
+  .snd-gate .g-t { font-size: 30px; }
+}
+@media (max-width: 360px) { .nav-btn { padding: 6px 8px; } .logo { font-size: 12px; } }
