@@ -1,6 +1,7 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
 import { loadData, imageUrl, esc } from './data.js?v=12';
+import { hsound } from './home-sound.js?v=1';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -237,11 +238,16 @@ function pick() {
   const hits = ray.intersectObjects(planets.map((p) => p.body), false);
   return hits.length ? hits[0].object.userData.planet : null;
 }
+const sv = new THREE.Vector3();
 function setHover(p) {
   if (state.hovered === p) return;
   state.hovered = p;
   canvas.style.cursor = p && p.open ? 'pointer' : 'grab';
   planets.forEach((q) => q.label && q.label.classList.toggle('on', q === p));
+  if (p) {
+    p.group.getWorldPosition(sv); sv.project(camera);
+    hsound.hover(p.i, p.open, p.open ? p.cell.fx || '' : 'coming', Math.max(-0.9, Math.min(0.9, sv.x)));
+  } else hsound.unhover();
   if (p) {
     const c = p.cell;
     card.querySelector('.hc-no').textContent = code(p.i);
@@ -255,7 +261,7 @@ function setHover(p) {
 function enter(p) {
   if (state.entering) return;
   state.entering = { p, t: performance.now(), from: camera.position.clone() };
-  card.classList.remove('on');
+  card.classList.remove('on'); hsound.enter(p.i);
   document.body.classList.add('landing');
   wipe.style.background = p.cell.color || '#7ee0d0';
   setTimeout(() => wipe.classList.add('on'), 900);
@@ -323,6 +329,7 @@ function tick(now) {
     p.label.style.transform = `translate(-50%,-100%) translate(${(v.x * 0.5 + 0.5) * innerWidth}px,${(-v.y * 0.5 + 0.5) * innerHeight}px)`;
   });
 
+  hsound.update({ drag: Math.abs(state.tAz - state.az) + Math.abs(state.tEl - state.el), zoom: (state.dist - state.baseDist * 0.45) / (state.baseDist * 1.15), t, hovering: !!state.hovered, entering: !!state.entering });
   renderer.render(scene, camera);
   requestAnimationFrame(tick);
 }
@@ -346,13 +353,26 @@ function bindPanel(btnId, panelId) {
     const open = panel.hidden;
     document.querySelectorAll('.panel').forEach((p) => (p.hidden = true));
     document.querySelectorAll('.nav-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
-    panel.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open; btn.setAttribute('aria-expanded', String(open)); hsound.ui(open);
   });
   panel.addEventListener('click', (e) => { if (e.target === panel) panel.hidden = true; });
 }
 bindPanel('btn-index', 'index-panel');
 bindPanel('btn-about', 'about-panel');
 addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.panel').forEach((p) => (p.hidden = true)); });
+
+// ---------- 사운드 ----------
+const sndBtn = document.getElementById('btn-sound');
+function sndUI() { sndBtn.classList.toggle('on', hsound.on); sndBtn.setAttribute('aria-pressed', String(hsound.on)); sndBtn.querySelector('span').textContent = hsound.on ? 'SOUND ON' : 'SOUND OFF'; }
+sndBtn.addEventListener('click', () => { hsound.toggle(); setTimeout(sndUI, 30); });
+const GEST = ['pointerdown', 'keydown', 'touchstart'];
+const firstGesture = (e) => {
+  if (e.target && e.target.closest && e.target.closest('#btn-sound')) return;
+  GEST.forEach((ev) => removeEventListener(ev, firstGesture));
+  if (hsound.pref !== 'off' && !hsound.on) hsound.start().then(sndUI).catch(() => {});
+};
+GEST.forEach((ev) => addEventListener(ev, firstGesture, { passive: true }));
+document.querySelectorAll('.cell-list').forEach((l) => l.addEventListener('pointerover', (e) => { const li = e.target.closest('li'); if (li && li !== l._last) { l._last = li; hsound.tick(); } }));
 
 // ---------- 시작 ----------
 (async () => {

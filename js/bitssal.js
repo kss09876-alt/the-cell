@@ -148,9 +148,9 @@ function vidHTML(id, title) {
 
 // 사운드: 첫 터치/클릭/키 입력에서 시작 (브라우저 자동재생 정책), 상단 버튼으로 켜고 끄기
 const sndBtn = document.querySelector('.bs-snd');
-let sndUserOff = false;
+let sndUserOff = (() => { try { return localStorage.getItem('xpace-sound') === 'off'; } catch (e) { return false; } })();
 function sndUI() { sndBtn.classList.toggle('on', sound.on); sndBtn.setAttribute('aria-pressed', String(sound.on)); sndBtn.querySelector('span').textContent = sound.on ? '소리 켜짐' : '소리 켜기'; }
-sndBtn.addEventListener('click', (e) => { e.stopPropagation(); const v = sound.toggle(); sndUserOff = !v; setTimeout(sndUI, 30); });
+sndBtn.addEventListener('click', (e) => { e.stopPropagation(); const v = sound.toggle(); sndUserOff = !v; try { localStorage.setItem('xpace-sound', v ? 'on' : 'off'); } catch (e2) {} setTimeout(sndUI, 30); });
 const GEST = ['pointerdown', 'keydown', 'touchstart'];
 const firstGesture = (e) => {
   if (e.target && e.target.closest && e.target.closest('.bs-snd')) return; // 버튼은 자체 처리
