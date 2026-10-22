@@ -84,6 +84,7 @@ function planetVoice(i, open, fx, pan) {
   else if (fx === 'stars') { osc('sine', NOTE(m - 12), 0.6); osc('triangle', NOTE(m), 0.25, 4); const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = 7; lg.gain.value = 0.3; l.connect(lg); lg.connect(out.gain); l.start(); nodes.push(l); }
   else if (fx === 'prism') { [1, 1.5, 2, 3].forEach((h, k) => osc('sine', NOTE(m - 12) * h, 0.5 / (k + 1), k * 3)); }
   else if (fx === 'ripple') { const o = osc('sine', NOTE(m - 12), 0.7); const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = 2.2; lg.gain.value = 18; l.connect(lg); lg.connect(o.detune); l.start(); nodes.push(l); osc('sine', NOTE(m - 5), 0.2); }
+  else if (fx === 'trio') { [0, 4, 7, 12].forEach((iv, k) => osc(k === 1 ? 'triangle' : 'sine', NOTE(m - 12 + iv), 0.45 / (k + 1), k * 2)); const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = 0.8; lg.gain.value = 0.25; l.connect(lg); lg.connect(out.gain); l.start(); nodes.push(l); }
   else if (fx === 'rice') { osc('sine', NOTE(m - 12), 0.6); osc('sine', NOTE(m - 5), 0.25, 3); osc('triangle', NOTE(m - 24), 0.3); }
   else { osc('sine', NOTE(m - 12), 0.6); osc('sine', NOTE(m - 5), 0.3); }
   return { out, nodes };

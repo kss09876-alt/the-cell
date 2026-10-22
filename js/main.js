@@ -1,7 +1,7 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
-import { loadData, imageUrl, esc } from './data.js?v=12';
-import { hsound } from './home-sound.js?v=2';
+import { loadData, imageUrl, esc } from './data.js?v=13';
+import { hsound } from './home-sound.js?v=3';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -62,6 +62,14 @@ function planetTexture(cell, kind) {
       const gl = g.createLinearGradient(0, 0, 0, h); gl.addColorStop(0, 'rgba(255,246,228,.85)'); gl.addColorStop(0.45, 'rgba(255,246,228,.25)'); gl.addColorStop(1, 'rgba(20,16,12,0)');
       g.fillStyle = gl; g.fillRect(0, 0, w, h);
       for (let i = 0; i < 900; i++) { const x = rnd() * w, y = Math.pow(rnd(), 1.6) * h; g.save(); g.translate(x, y); g.rotate(rnd() * 6.28); g.fillStyle = `rgba(255,252,240,${0.5 + rnd() * 0.5})`; g.beginPath(); g.ellipse(0, 0, 3, 1.3, 0, 0, 6.283); g.fill(); g.restore(); }
+      return;
+    }
+    if (kind === 'trio') { // 최초의 행성: 우주(푸른 어둠) · 빛(금빛 띠) · 소리(붉은 물결)
+      const gl = g.createLinearGradient(0, 0, 0, h); gl.addColorStop(0, '#0c1236'); gl.addColorStop(0.45, '#1b2a66'); gl.addColorStop(0.55, '#3a3060'); gl.addColorStop(1, '#0a0e28'); g.fillStyle = gl; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 500; i++) { g.fillStyle = `rgba(230,238,255,${0.3 + rnd() * 0.7})`; g.fillRect(rnd() * w, rnd() * h, 1, 1); }
+      const gb = g.createLinearGradient(0, h * 0.38, 0, h * 0.52); gb.addColorStop(0, 'rgba(242,193,78,0)'); gb.addColorStop(0.5, 'rgba(242,193,78,.75)'); gb.addColorStop(1, 'rgba(242,193,78,0)'); g.fillStyle = gb; g.fillRect(0, h * 0.38, w, h * 0.14);
+      g.strokeStyle = 'rgba(239,111,108,.55)'; g.lineWidth = 2;
+      for (let k = 0; k < 4; k++) { g.beginPath(); for (let x = 0; x <= w; x += 4) g.lineTo(x, h * 0.66 + k * 9 + Math.sin(x / 26 + k) * 5); g.stroke(); }
       return;
     }
     if (kind === 'stars') {
@@ -140,12 +148,13 @@ function ringMesh(inner, outer) {
 function makePlanet(cell, i, total) {
   const open = cell.status === 'open';
   const fx = open ? cell.fx || '' : 'coming';
-  const radius = open ? 0.55 + ((i * 37) % 5) * 0.06 : 0.38;
+  const radius = fx === 'trio' ? 0.78 : open ? 0.55 + ((i * 37) % 5) * 0.06 : 0.38;
   const orbitR = 3.2 + i * 1.55;
   const group = new THREE.Group();
   const tex = planetTexture(cell, fx);
   const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0, transparent: !open, opacity: open ? 1 : 0.55 });
   if (fx === 'rice') { mat.emissiveMap = tex; mat.emissive = new THREE.Color('#fff4e0'); mat.emissiveIntensity = 0.35; }
+  if (fx === 'trio') { mat.emissiveMap = tex; mat.emissive = new THREE.Color('#ffffff'); mat.emissiveIntensity = 0.45; }
   if (fx === 'stars') { mat.emissiveMap = tex; mat.emissive = new THREE.Color('#ffffff'); mat.emissiveIntensity = 0.55; }
   const body = new THREE.Mesh(sphereGeo, mat);
   body.scale.setScalar(radius);
@@ -177,6 +186,19 @@ function makePlanet(cell, i, total) {
       const pts = []; for (let a = 0; a <= 64; a++) { const t = (a / 64) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(t), 0, Math.sin(t))); }
       const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: cell.color, transparent: true, opacity: 0.5 }));
       l.userData.k = k; group.add(l); return l;
+    });
+  }
+  if (fx === 'trio' && cell.rooms) { // 세 개의 방 = 세 개의 위성
+    extra.moons = cell.rooms.map((r, k) => {
+      const mm = new THREE.Mesh(sphereGeo, new THREE.MeshStandardMaterial({ color: r.color || '#ffffff', emissive: new THREE.Color(r.color || '#ffffff'), emissiveIntensity: 0.55, roughness: 0.7 }));
+      mm.scale.setScalar(radius * 0.22);
+      const halo = sprite(glow(r.color || '#ffffff', 0.9), [radius * 1.1, radius * 1.1], 0.5);
+      const mg = new THREE.Group(); mg.add(mm); mg.add(halo); group.add(mg);
+      const pts = []; const rr = radius * (1.75 + k * 0.42);
+      for (let a = 0; a <= 72; a++) { const t = (a / 72) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(t) * rr, 0, Math.sin(t) * rr)); }
+      const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: r.color, transparent: true, opacity: 0.22 }));
+      ring.rotation.x = 0.25 + k * 0.18; ring.rotation.z = (k - 1) * 0.2; group.add(ring);
+      return { mg, ring, rr, a: k * 2.1, sp: 0.9 - k * 0.22 };
     });
   }
   const orbit = orbitLine(orbitR, cell.color || '#ffffff');
@@ -253,7 +275,7 @@ function setHover(p) {
     card.querySelector('.hc-no').textContent = code(p.i);
     card.querySelector('.hc-title').textContent = p.open ? shortTitle(c.title) : 'Coming soon';
     card.querySelector('.hc-sub').textContent = p.open ? c.subtitle || '' : '아직 빛나지 않은 행성';
-    card.querySelector('.hc-meta').textContent = [c.artist, c.period].filter(Boolean).join(' · ');
+    card.querySelector('.hc-meta').textContent = c.rooms ? `ROOMS · ${c.rooms.map((r) => r.short).join(' · ')}` : [c.artist, c.period].filter(Boolean).join(' · ');
     card.style.setProperty('--accent', c.color || '#7ee0d0');
     card.classList.add('on');
   } else card.classList.remove('on');
@@ -297,6 +319,7 @@ function tick(now) {
     p.orbit.material.opacity = (0.12 + p.hover * 0.45) * e;
     if (p.extra.ring) { p.extra.ring.rotation.z += dt * 0.15; p.extra.ring.material.opacity = (0.75 + p.hover * 0.25) * e; }
     if (p.extra.redline) { p.extra.redline.rotation.y += dt * 0.2; p.extra.redline.material.opacity = (0.45 + p.hover * 0.5) * e; }
+    if (p.extra.moons) p.extra.moons.forEach((m) => { m.a += dt * m.sp * (1 + p.hover); const v3 = new THREE.Vector3(Math.cos(m.a) * m.rr, 0, Math.sin(m.a) * m.rr).applyEuler(m.ring.rotation); m.mg.position.copy(v3); m.ring.material.opacity = (0.18 + p.hover * 0.4) * e; });
     if (p.extra.dust) { p.extra.dust.rotation.y += dt * 0.4; p.extra.dust.material.size = 0.07 + Math.abs(Math.sin(t * 3)) * 0.05; }
     if (p.extra.waves) p.extra.waves.forEach((l) => { const ph = (t * 0.45 + l.userData.k / 3) % 1; l.scale.setScalar(p.radius * (1.1 + ph * 1.8)); l.material.opacity = (1 - ph) * 0.6 * e; });
   });
@@ -411,6 +434,7 @@ document.querySelectorAll('.cell-list').forEach((l) => l.addEventListener('point
         <span class="t">${esc(shortTitle(c.title) || 'Coming soon')}</span>
         <span class="m">${esc([c.artist, c.period].filter(Boolean).join(' · '))}</span>
       ${c.status === 'open' ? '</a>' : '</div>'}
+      ${c.rooms ? `<ol class="rooms">${c.rooms.map((r, k) => `<li style="--accent:${esc(r.color || '#fff')}"><a href="cell.html?id=${encodeURIComponent(r.id)}"><span class="no">ROOM ${String(k + 1).padStart(2, '0')}</span><span class="t">${esc(r.short)}</span><span class="m">${esc(r.subtitle || '')}</span></a></li>`).join('')}</ol>` : ''}
     </li>`).join('');
   resize();
   t0 = last = performance.now();

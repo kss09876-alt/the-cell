@@ -1,4 +1,4 @@
-// X-005 · 빛쌀 — 한 톨의 쌀을 따라가는 연속 스크롤 이야기
+// X-003 · 빛쌀 — 한 톨의 쌀을 따라가는 연속 스크롤 이야기
 // 사실 서술 출처: 진실·화해를위한과거사정리위원회 「대구10월사건 관련 민간인 희생 사건」(jinsil.go.kr/KoreanWar/30.do),
 //                「경산 코발트광산 사건」(jinsil.go.kr/KoreanWar/36.do)
 import { sound } from './bitssal-sound.js?v=2';
@@ -20,7 +20,7 @@ const vid = (id, cap, title) => ({ kind: 'vid', id, cap, title });
 // cards: at = 장면 안에서의 위치(0~1), kind = text | record | reveal | correct | choice | input | photo | vid | carousel | archive
 const SCENES = [
   { id: 'prologue', title: '한 톨', h: 170, cards: [
-    { at: 0.06, html: '<p class="kicker">X-005 · 진시영 · 김동선 《빛쌀》</p><h1>빛쌀</h1><p class="lead">한 톨의 쌀.<br>당신에게는 어떤 의미인가요?</p><p class="hint">어둠 속 쌀알에 커서를 가져가 보세요. 눌러서 따라가면 이야기가 시작됩니다.</p>' },
+    { at: 0.06, html: '<p class="kicker">X-003 · 진시영 · 김동선 《빛쌀》</p><h1>빛쌀</h1><p class="lead">한 톨의 쌀.<br>당신에게는 어떤 의미인가요?</p><p class="hint">어둠 속 쌀알에 커서를 가져가 보세요. 눌러서 따라가면 이야기가 시작됩니다.</p>' },
     { at: 0.55, html: '<p>이 쌀알은 유리 조형물 《빛쌀》의 맨 위, 넓은 밥상에서 출발합니다. 좁은 유리 통로를 지나 아래의 둥근 그릇에 닿기까지, 이 전시는 한 톨이 지나온 길을 따라갑니다.</p><p class="note">1946년 대구10월사건과 1950년 경산 코발트광산 사건은 서로 다른 사건입니다. 이 전시는 두 사건을 구분해 전합니다.</p>' },
   ] },
   { id: 'work', title: '작품', h: 230, cards: [
@@ -176,7 +176,7 @@ function autoSound() {
   if (sndUserOff) return;
   sound.tryAuto().then((ok) => {
     if (ok) { GEST.forEach((ev) => removeEventListener(ev, firstGesture)); sndUI(); return; }
-    closeGate = sndGate('X-005 · 진시영 · 김동선', '빛쌀 — 80년의 기억', (withSound) => {
+    closeGate = sndGate('X-003 · 진시영 · 김동선', '빛쌀 — 80년의 기억', (withSound) => {
       GEST.forEach((ev) => removeEventListener(ev, firstGesture));
       if (withSound) sound.start().then(sndUI);
       else { sndUserOff = true; sndUI(); }

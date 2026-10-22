@@ -1,4 +1,4 @@
-import { CONFIG } from './config.js?v=12';
+import { CONFIG } from './config.js?v=13';
 
 // 공개 구글 시트를 gviz JSON 엔드포인트로 읽어 [{col: value}] 배열로 변환
 async function fetchSheet(id) {
@@ -47,7 +47,32 @@ export async function loadData() {
     .filter((c) => c.id && c.status !== 'hidden')
     .sort((a, b) => Number(a.order) - Number(b.order));
   blocks = blocks.filter((b) => b.cell_id).sort((a, b) => Number(a.order) - Number(b.order));
-  cache = { cells, blocks, source };
+  // 기획전 묶기: 멤버 전시는 행성 목록에서 빠지고, 첫 멤버 자리에 기획전 행성이 들어감
+  const all = cells.slice(), top = [];
+  const groups = (CONFIG.groups || []).map((g) => ({ ...g, status: 'open', isGroup: true, rooms: [] }));
+  cells.forEach((c) => {
+    const g = groups.find((x) => x.members.includes(c.id));
+    if (!g) { top.push(c); return; }
+    if (!g.rooms.length) top.push(g);
+    g.rooms.push(c);
+  });
+  groups.forEach((g) => g.rooms.sort((a, b) => g.members.indexOf(a.id) - g.members.indexOf(b.id)));
+  // 번호 다시 매기기 (X-001, X-002 …)
+  top.forEach((c, i) => {
+    const code = 'X-' + String(i + 1).padStart(3, '0');
+    c.code = code;
+    const name = String(c.title || '').replace(/^\s*(?:CELL|X)[-\s]?\d+\s*[·:|-]\s*/i, '');
+    c.title = `${code} · ${name}`;
+    if (c.isGroup) g_rooms(c, code);
+  });
+  function g_rooms(g, code) {
+    g.rooms.forEach((r, k) => {
+      r.group = g; r.room = k + 1; r.code = `${code}-${k + 1}`;
+      r.short = String(r.title || '').replace(/^\s*(?:CELL|X)[-\s]?\d+\s*[·:|-]\s*/i, '');
+      r.title = `${g.title} · ROOM ${String(k + 1).padStart(2, '0')} — ${r.short}`;
+    });
+  }
+  cache = { cells: top, all, groups, blocks, source };
   return cache;
 }
 

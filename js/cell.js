@@ -1,4 +1,4 @@
-import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=12';
+import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=13';
 
 const story = document.getElementById('story');
 const wipe = document.getElementById('wipe');
@@ -15,7 +15,7 @@ const R = {
       ${b.align === 'cosmos' ? '<canvas class="star-cv" data-mode="drift"></canvas>' : ''}${b.align === 'light' ? '<canvas class="beam-cv"></canvas>' : ''}${b.align === 'sound' ? '<canvas class="rip-cv"></canvas>' : ''}${b.align === 'rice' ? '<canvas class="rice-cv"></canvas>' : ''}
       ${b.media ? `<div class="cover-media parallax" data-speed="0.3">${media(b.media)}</div>` : '<div class="cover-planet"><i class="pl-ring back"></i><i class="pl-body"></i><i class="pl-ring front"></i></div>'}
       <div class="cover-text">
-        <p class="eyebrow">X-${String(i + 1).padStart(3, '0')}</p>
+        <p class="eyebrow">${c.group ? `${esc(c.group.code)} ${esc(c.group.title.replace(/^X-\d+ · /, ''))} · ROOM ${String(c.room).padStart(2, '0')}` : esc(c.code || '')}</p>
         <h1 class="split">${esc(b.title || c.title)}</h1>
         <p class="sub reveal">${esc(b.body || c.subtitle)}</p>
         <p class="meta reveal">${esc([c.artist, c.period].filter(Boolean).join(' · '))}</p>
@@ -199,19 +199,34 @@ const R = {
       </div>
     </section>`,
   end: (b, c, i, all) => {
-    const open = all.filter((x) => x.status === 'open');
+    const href = (x) => x.url || `cell.html?id=${encodeURIComponent(x.id)}`;
+    if (c.group) {
+      const g = c.group, nextRoom = g.rooms[c.room];
+      const top = TOP.filter((x) => x.status === 'open'), gi = top.indexOf(g), nextPlanet = top[(gi + 1) % top.length];
+      return `<section class="b-end">
+        <p class="eyebrow">END OF ROOM ${String(c.room).padStart(2, '0')} · ${esc(g.title)}</p>
+        ${nextRoom ? `<a class="next" href="${href(nextRoom)}" style="--accent:${esc(nextRoom.color)}"><span>다음 방으로 · ROOM ${String(c.room + 1).padStart(2, '0')}</span><strong>${esc(nextRoom.short)}</strong></a>`
+          : `<a class="next" href="${href(g)}" style="--accent:${esc(g.color)}"><span>세 개의 방을 모두 지났습니다</span><strong>${esc(g.title)}으로 돌아가기</strong></a>
+             ${nextPlanet && nextPlanet !== g ? `<a class="next" href="${href(nextPlanet)}" style="--accent:${esc(nextPlanet.color)}"><span>다음 행성으로</span><strong>${esc(nextPlanet.title)}</strong></a>` : ''}`}
+        <a class="back" href="${href(g)}">← ${esc(g.title)}</a>
+        <a class="back" href="./">← 행성계로 돌아가기</a>
+      </section>`;
+    }
+    const open = TOP.filter((x) => x.status === 'open');
     const pos = open.findIndex((x) => x.id === c.id);
     const next = open[(pos + 1) % open.length];
     return `<section class="b-end">
-      <p class="eyebrow">END OF X-${String(i + 1).padStart(3, '0')}</p>
-      ${next && next.id !== c.id ? `<a class="next" href="cell.html?id=${encodeURIComponent(next.id)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || '다음 행성으로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
+      <p class="eyebrow">END OF ${esc(c.code || '')}</p>
+      ${next && next.id !== c.id ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || '다음 행성으로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
       <a class="back" href="./">← 행성계로 돌아가기</a>
     </section>`;
   },
 };
 
+let TOP = [];
 (async () => {
-  const { cells, blocks } = await loadData();
+  const { cells: top, all: cells, blocks } = await loadData();
+  TOP = top;
   const idx = cells.findIndex((c) => c.id === id);
   const cell = cells[idx];
   if (!cell || cell.status !== 'open') {
@@ -221,7 +236,9 @@ const R = {
   if (cell.url) { location.replace(cell.url); return; }
   document.title = `${cell.title} — XPACE`;
   document.documentElement.style.setProperty('--accent', cell.color || '#7ee0d0');
-  document.getElementById('cell-label').textContent = cell.title;
+  const lab = document.getElementById('cell-label');
+  if (cell.group) lab.innerHTML = `<a href="${esc(cell.group.url)}">${esc(cell.group.title)}</a> · ROOM ${String(cell.room).padStart(2, '0')} — ${esc(cell.short)}`;
+  else lab.textContent = cell.title;
   let bs = blocks.filter((b) => b.cell_id === cell.id);
   if (!bs.some((b) => b.type === 'cover')) bs = [{ type: 'cover' }, ...bs];
   if (!bs.some((b) => b.type === 'end')) bs.push({ type: 'end' });
