@@ -2,18 +2,20 @@
 // 사실 서술 출처: 진실·화해를위한과거사정리위원회 「대구10월사건 관련 민간인 희생 사건」(jinsil.go.kr/KoreanWar/30.do),
 //                「경산 코발트광산 사건」(jinsil.go.kr/KoreanWar/36.do)
 import { sound } from './bitssal-sound.js?v=2';
-const SRC1 = '진실·화해를위한과거사정리위원회, 「대구10월사건 관련 민간인 희생 사건」';
-const SRC2 = '진실·화해를위한과거사정리위원회, 「경산 코발트광산 사건」';
+import { lang, tr, langSwitcher } from './i18n.js?v=1';
+const BX = lang !== 'ko' ? (await import(`./bitssal-i18n-${lang}.js?v=1`)).default : null;
+const SRC1 = tr('진실·화해를위한과거사정리위원회, 「대구10월사건 관련 민간인 희생 사건」');
+const SRC2 = tr('진실·화해를위한과거사정리위원회, 「경산 코발트광산 사건」');
 const RICE = [255, 248, 230], DIM = [92, 86, 76], RED = [200, 56, 47], WARM = [255, 214, 150];
 
 // ---------------- 미디어 (드라이브 공개 폴더) ----------------
 const PH = ['15d1sLu91hipfxO8ddm25u4n7qco7alsc','1MY-CUpUsRSLZhghj0w4i4Hs9bEIZyedL','1ngIx4QLpCHLUA4gwIs5opQ3-g_Uvly5F','1TmD4uyMaMPUqZ5cmIoXWmJeug_JH4n-r','1b4IlSDkHVz2AL_8yG5RsFD62BuCJUcxB','1BHTfhpn-EvynJodo8UQmRpupzAh210pR','1eCURrQmRTLJ-FGiTsDyi0gMN497RFX6P','1YffnDcS7W363-XxsYjjfisna8hSVAn-u','1W0tIK-Gyjw_SCmZQllLGlt2v1ApChOTQ','12FADaTqwJsGPUoeIyqiBeXA-f6rMaZZ7'];
 const VD = { main: '1IskIt7_532XzkI-EFmp4HIVoULe07rLm', acc: '1IhotvWTDYgaouAzXPX6IeqXgYHuP4oK-', dark: '1LVBEhxrpaSxzqn0ySEGwjK_WLLLcJ6uZ', light: '1sOsHOO04lWBDgpbmUepU-k42aVMKaksF', doc: '1Ri0vh-D6Hi3DG4noeNJVElIxuYVJLzZi',
   p1: '1eUCOhBt45uu0yZlK_c6Vz0jqUCBbeiBr', p2: '1dMtHJBziALi63Wsqe0ZXONfMbJuNlzjD', p3: '1seN9QKF6RN7IsgijglWuXJYn1K-QFpRh', p4: '1lt1-A70xBVklii3ASgWHdZsjNP_c1xo8', p5: '1mHd8BkmPC2keoUjIaxlUcn2Jc024PxXg', p6: '1GI-K6Pog-J2UPQ9Ns4r07qOTaStNG8Kw' };
-const WORK = '진시영 · 김동선, 《빛쌀》, 2026';
+const WORK = tr('진시영 · 김동선, 《빛쌀》, 2026');
 const img = (id, w = 1400) => `https://lh3.googleusercontent.com/d/${id}=w${w}`;
 const thumb = (id) => `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-const photo = (k, cap) => ({ kind: 'photo', id: PH[k], cap: cap || `작품 사진 — ${WORK}` });
+const photo = (k, cap) => ({ kind: 'photo', id: PH[k], cap: cap || tr('작품 사진 — {w}', { w: WORK }) });
 const vid = (id, cap, title) => ({ kind: 'vid', id, cap, title });
 
 // ---------------- 장면 정의 ----------------
@@ -110,12 +112,14 @@ const SCENES = [
     { at: 0.06, kind: 'archive' },
   ] },
 ];
+// 번역 덮어쓰기 (장면 id · 카드 순서 기준)
+if (BX) SCENES.forEach((sc) => { const t = BX[sc.id]; if (!t) return; if (t.t) sc.title = t.t; (t.c || []).forEach((tc, j) => { const c = sc.cards[j]; if (!tc || !c) return; if (tc.items && c.items) { tc.items.forEach((it, k) => c.items[k] && Object.assign(c.items[k], it)); } const { items, ...rest } = tc; Object.assign(c, rest); }); });
 const CREDITS = `<footer class="bs-credits"><div>
-  <h3>출처와 안내</h3>
-  <p>역사 서술: ${SRC1}(jinsil.go.kr/KoreanWar/30.do), ${SRC2}(jinsil.go.kr/KoreanWar/36.do)</p>
-  <p>밥상·약도·광산 통로 장면은 이해를 돕기 위한 일러스트이며 실제 장소나 인물을 재현하지 않습니다. ‘전시 문안’으로 표시된 문장은 창작 문안으로, 희생자나 유족의 실제 발언이 아닙니다.</p>
-  <p>작품: 진시영 · 김동선, 《빛쌀》, 2026 · 기획: XPACE (VALIX LAB)</p>
-  <a class="bs-back" href="./">← XPACE 행성계로 돌아가기</a></div></footer>`;
+  <h3>${tr('출처와 안내')}</h3>
+  <p>${tr('역사 서술: ')}${SRC1}(jinsil.go.kr/KoreanWar/30.do), ${SRC2}(jinsil.go.kr/KoreanWar/36.do)</p>
+  <p>${tr('밥상·약도·광산 통로 장면은 이해를 돕기 위한 일러스트이며 실제 장소나 인물을 재현하지 않습니다. ‘전시 문안’으로 표시된 문장은 창작 문안으로, 희생자나 유족의 실제 발언이 아닙니다.')}</p>
+  <p>${tr('작품: 진시영 · 김동선, 《빛쌀》, 2026 · 기획: XPACE (VALIX LAB)')}</p>
+  <a class="bs-back" href="./">${tr('← XPACE 행성계로 돌아가기')}</a></div></footer>`;
 
 // ---------------- DOM 구성 ----------------
 const story = document.getElementById('story');
@@ -124,33 +128,33 @@ story.innerHTML = SCENES.map((s, si) => `<section class="scene" id="s-${s.id}" d
 
 function cardHTML(s, c, si, ci) {
   const pos = `style="top:${c.at * 100}%"`;
-  const src = c.src ? `<p class="src">출처: ${esc(c.src)}</p>` : '';
-  if (c.kind === 'record') return `<article class="card rec ${c.tone || ''}" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3>${c.html}${src}</article>`;
-  if (c.kind === 'reveal') return `<article class="card rec reveal-rec" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">기록 읽기</button>${src}</article>`;
-  if (c.kind === 'correct') return `<article class="card rec reveal-rec correct" ${pos}><p class="rec-label">기록</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">기록 읽기</button><button class="fix-btn" hidden>기록 바로잡기</button><p class="fix-note" hidden>${esc(c.fix)}</p>${src}</article>`;
-  if (c.kind === 'choice') return `<article class="card choice" ${pos}>${c.html}<div class="ch-btns"><button data-go="mine">계속 보기</button><button data-sum>요약만 보기</button><button data-go="truth">다음 장으로</button></div><div class="ch-sum" hidden><p>${esc(c.summary)}</p></div></article>`;
-  if (c.kind === 'input') return `<article class="card mem" ${pos}><h3>기억을 위한 한 문장</h3><p>한 문장을 남기면 작은 빛이 되어 떠오릅니다. 쓰지 않아도 끝까지 볼 수 있어요.</p><form class="mem-f"><textarea maxlength="120" rows="2" placeholder="오늘 기억하고 싶은 것 (120자 이내, 이름은 적지 않아도 됩니다)" aria-label="기억을 위한 한 문장"></textarea><div class="mem-r"><span class="mem-n">0 / 120</span><button type="submit">빛으로 남기기</button></div></form><p class="note">남긴 문장은 이 브라우저에만 저장되며 공개되지 않습니다.</p></article>`;
-  if (c.kind === 'photo') return `<figure class="card ph" ${pos}><button class="ph-btn" data-lb-img="${c.id}" aria-label="사진 크게 보기"><img src="${img(c.id, 1000)}" alt="${esc(c.cap)}" loading="lazy"></button><figcaption>${esc(c.cap)}</figcaption></figure>`;
+  const src = c.src ? `<p class="src">${tr('출처: ')}${esc(c.src)}</p>` : '';
+  if (c.kind === 'record') return `<article class="card rec ${c.tone || ''}" ${pos}><p class="rec-label">${tr('기록')}</p><h3>${esc(c.title)}</h3>${c.html}${src}</article>`;
+  if (c.kind === 'reveal') return `<article class="card rec reveal-rec" ${pos}><p class="rec-label">${tr('기록')}</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">${tr('기록 읽기')}</button>${src}</article>`;
+  if (c.kind === 'correct') return `<article class="card rec reveal-rec correct" ${pos}><p class="rec-label">${tr('기록')}</p><h3>${esc(c.title)}</h3><div class="blur">${c.html}</div><button class="rv-btn">${tr('기록 읽기')}</button><button class="fix-btn" hidden>${tr('기록 바로잡기')}</button><p class="fix-note" hidden>${esc(c.fix)}</p>${src}</article>`;
+  if (c.kind === 'choice') return `<article class="card choice" ${pos}>${c.html}<div class="ch-btns"><button data-go="mine">${tr('계속 보기')}</button><button data-sum>${tr('요약만 보기')}</button><button data-go="truth">${tr('다음 장으로')}</button></div><div class="ch-sum" hidden><p>${esc(c.summary)}</p></div></article>`;
+  if (c.kind === 'input') return `<article class="card mem" ${pos}><h3>${tr('기억을 위한 한 문장')}</h3><p>${tr('한 문장을 남기면 작은 빛이 되어 떠오릅니다. 쓰지 않아도 끝까지 볼 수 있어요.')}</p><form class="mem-f"><textarea maxlength="120" rows="2" placeholder="${tr('오늘 기억하고 싶은 것 (120자 이내, 이름은 적지 않아도 됩니다)')}" aria-label="${tr('기억을 위한 한 문장')}"></textarea><div class="mem-r"><span class="mem-n">0 / 120</span><button type="submit">${tr('빛으로 남기기')}</button></div></form><p class="note">${tr('남긴 문장은 이 브라우저에만 저장되며 공개되지 않습니다.')}</p></article>`;
+  if (c.kind === 'photo') return `<figure class="card ph" ${pos}><button class="ph-btn" data-lb-img="${c.id}" aria-label="${tr('사진 크게 보기')}"><img src="${img(c.id, 1000)}" alt="${esc(c.cap)}" loading="lazy"></button><figcaption>${esc(c.cap)}</figcaption></figure>`;
   if (c.kind === 'vid') return `<figure class="card vd" ${pos}>${vidHTML(c.id, c.title)}<figcaption>${esc(c.cap)}</figcaption></figure>`;
-  if (c.kind === 'carousel') return `<div class="card car" ${pos}><div class="car-view">${c.items.map((it, k) => `<button class="car-slide${k ? '' : ' on'}" data-lb-img="${it.id}" aria-label="${esc(it.t)} 크게 보기"><img src="${img(it.id, 1200)}" alt="${esc(it.t)}" loading="lazy"></button>`).join('')}</div>
+  if (c.kind === 'carousel') return `<div class="card car" ${pos}><div class="car-view">${c.items.map((it, k) => `<button class="car-slide${k ? '' : ' on'}" data-lb-img="${it.id}" aria-label="${esc(it.t)}"><img src="${img(it.id, 1200)}" alt="${esc(it.t)}" loading="lazy"></button>`).join('')}</div>
     <div class="car-txt">${c.items.map((it, k) => `<div class="car-cap${k ? '' : ' on'}"><b>${esc(it.t)}</b><span>${esc(it.d)}</span></div>`).join('')}</div>
-    <div class="car-nav"><button class="car-prev" aria-label="이전 사진">←</button>${c.items.map((_, k) => `<i class="${k ? '' : 'on'}"></i>`).join('')}<button class="car-next" aria-label="다음 사진">→</button></div><p class="note">작품 사진 — ${WORK} · 사진을 누르면 크게 볼 수 있습니다.</p></div>`;
-  if (c.kind === 'archive') return `<div class="card arch" ${pos}><p class="kicker">ARCHIVE</p><h2>작품의 기록</h2><p>《빛쌀》이 만들어진 과정과 다큐멘터리, 작업 영상과 사진을 모았습니다. 눌러서 재생하세요.</p>
-    <div class="arch-doc">${vidHTML(VD.doc, '《빛쌀》 다큐멘터리')}<p class="note">《빛쌀》 다큐멘터리 · 용량이 커서 재생까지 시간이 걸릴 수 있습니다.</p></div>
-    <h3>작업 영상</h3><div class="arch-grid">${['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].map((k, i) => `<button class="arch-v" data-lb-vid="${VD[k]}"><img src="${thumb(VD[k])}" alt="" loading="lazy" onerror="this.remove()"><span>▶ 작업 영상 ${String(i + 1).padStart(2, '0')}</span></button>`).join('')}</div>
-    <h3>사진</h3><div class="arch-grid ph6">${PH.map((id, i) => `<button class="arch-p" data-lb-img="${id}" aria-label="작품 사진 ${i + 1} 크게 보기"><img src="${img(id, 500)}" alt="" loading="lazy"></button>`).join('')}</div>
-    <p class="note">영상·사진: ${WORK}</p></div>`;
+    <div class="car-nav"><button class="car-prev" aria-label="${tr('이전 사진')}">←</button>${c.items.map((_, k) => `<i class="${k ? '' : 'on'}"></i>`).join('')}<button class="car-next" aria-label="${tr('다음 사진')}">→</button></div><p class="note">${tr('작품 사진 — {w}', { w: WORK })} · ${tr('사진을 누르면 크게 볼 수 있습니다.')}</p></div>`;
+  if (c.kind === 'archive') return `<div class="card arch" ${pos}><p class="kicker">ARCHIVE</p><h2>${tr('작품의 기록')}</h2><p>${tr('《빛쌀》이 만들어진 과정과 다큐멘터리, 작업 영상과 사진을 모았습니다. 눌러서 재생하세요.')}</p>
+    <div class="arch-doc">${vidHTML(VD.doc, tr('《빛쌀》 다큐멘터리'))}<p class="note">${tr('《빛쌀》 다큐멘터리 · 용량이 커서 재생까지 시간이 걸릴 수 있습니다.')}</p></div>
+    <h3>${tr('작업 영상')}</h3><div class="arch-grid">${['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].map((k, i) => `<button class="arch-v" data-lb-vid="${VD[k]}"><img src="${thumb(VD[k])}" alt="" loading="lazy" onerror="this.remove()"><span>▶ ${tr('작업 영상 {n}', { n: String(i + 1).padStart(2, '0') })}</span></button>`).join('')}</div>
+    <h3>${tr('사진')}</h3><div class="arch-grid ph6">${PH.map((id, i) => `<button class="arch-p" data-lb-img="${id}" aria-label="${tr('사진 크게 보기')} ${i + 1}"><img src="${img(id, 500)}" alt="" loading="lazy"></button>`).join('')}</div>
+    <p class="note">${tr('영상·사진: ')}${WORK}</p></div>`;
   return `<article class="card ${c.kind || ''}" ${pos}>${c.html}</article>`;
 }
 function vidHTML(id, title) {
-  return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay"><span>▶</span>${esc(title || '영상 재생')}</button></div>`;
+  return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay"><span>▶</span>${esc(title || tr('영상 재생'))}</button></div>`;
 }
 
 
 // ---------- 자동 재생 / 입장 화면 ----------
 function sndGate(kicker, title, onStart) {
-  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', '소리와 함께 입장');
-  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>입장하기</button><button class="g-s">소리 없이 보기</button><p class="g-n">헤드폰을 권장합니다</p></div>`;
+  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', tr('소리와 함께 입장'));
+  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>${tr('입장하기')}</button><button class="g-s">${tr('소리 없이 보기')}</button><p class="g-n">${tr('헤드폰을 권장합니다')}</p></div>`;
   document.body.appendChild(g);
   const close = () => { g.classList.add('out'); setTimeout(() => g.remove(), 1000); };
   g.querySelector('.g-s').addEventListener('click', (e) => { e.stopPropagation(); onStart(false); close(); });
@@ -161,7 +165,7 @@ function sndGate(kicker, title, onStart) {
 // 사운드: 첫 터치/클릭/키 입력에서 시작 (브라우저 자동재생 정책), 상단 버튼으로 켜고 끄기
 const sndBtn = document.querySelector('.bs-snd');
 let sndUserOff = (() => { try { return localStorage.getItem('xpace-sound') === 'off'; } catch (e) { return false; } })();
-function sndUI() { sndBtn.classList.toggle('on', sound.on); sndBtn.setAttribute('aria-pressed', String(sound.on)); sndBtn.querySelector('span').textContent = sound.on ? '소리 켜짐' : '소리 켜기'; }
+function sndUI() { sndBtn.classList.toggle('on', sound.on); sndBtn.setAttribute('aria-pressed', String(sound.on)); sndBtn.querySelector('span').textContent = sound.on ? tr('소리 켜짐') : tr('소리 켜기'); }
 sndBtn.addEventListener('click', (e) => { e.stopPropagation(); const v = sound.toggle(); sndUserOff = !v; try { localStorage.setItem('xpace-sound', v ? 'on' : 'off'); } catch (e2) {} setTimeout(sndUI, 30); });
 const GEST = ['pointerdown', 'keydown', 'touchstart'];
 const firstGesture = (e) => {
@@ -176,12 +180,21 @@ function autoSound() {
   if (sndUserOff) return;
   sound.tryAuto().then((ok) => {
     if (ok) { GEST.forEach((ev) => removeEventListener(ev, firstGesture)); sndUI(); return; }
-    closeGate = sndGate('X-003 · 진시영 · 김동선', '빛쌀 — 80년의 기억', (withSound) => {
+    closeGate = sndGate(tr('X-003 · 진시영 · 김동선'), tr('빛쌀 — 80년의 기억'), (withSound) => {
       GEST.forEach((ev) => removeEventListener(ev, firstGesture));
       if (withSound) sound.start().then(sndUI);
       else { sndUserOff = true; sndUI(); }
     });
   });
+}
+
+// 언어 선택 · 상단 문구
+langSwitcher(document.querySelector('.bs-top'), { before: document.querySelector('.bs-menu-btn'), cls: 'bs-lang' });
+if (lang !== 'ko') {
+  document.querySelector('.bs-menu-btn').textContent = tr('이야기 목차');
+  document.querySelector('.bs-title').textContent = 'X-003 · ' + tr('빛쌀 — 80년의 기억').split(' — ')[0];
+  document.title = `X-003 · ${tr('빛쌀 — 80년의 기억')} | XPACE`;
+  sndUI();
 }
 
 // 목차 / 진행 막대
@@ -208,7 +221,7 @@ document.querySelectorAll('.reveal-rec').forEach((c) => {
 // 선택 카드
 document.querySelectorAll('.choice').forEach((c) => {
   c.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => jump(b.dataset.go)));
-  c.querySelector('[data-sum]').addEventListener('click', (e) => { const s = c.querySelector('.ch-sum'); s.hidden = !s.hidden; e.target.textContent = s.hidden ? '요약만 보기' : '요약 닫기'; });
+  c.querySelector('[data-sum]').addEventListener('click', (e) => { const s = c.querySelector('.ch-sum'); s.hidden = !s.hidden; e.target.textContent = s.hidden ? tr('요약만 보기') : tr('요약 닫기'); });
 });
 
 // 영상: 눌렀을 때만 불러오기
@@ -216,16 +229,16 @@ document.querySelectorAll('.bs-video').forEach((v) => v.querySelector('.vplay').
   v.innerHTML = `<iframe src="https://drive.google.com/file/d/${v.dataset.vid}/preview" allow="autoplay; fullscreen" allowfullscreen title="영상"></iframe>`; v.classList.add('playing'); sound.duck(0.15);
 }));
 // 라이트박스
-const lb = document.createElement('div'); lb.className = 'lb'; lb.hidden = true; lb.innerHTML = '<button class="lb-x" aria-label="닫기">×</button><div class="lb-in"></div>'; document.body.appendChild(lb);
+const lb = document.createElement('div'); lb.className = 'lb'; lb.hidden = true; lb.innerHTML = '<button class="lb-x" aria-label="' + tr('닫기') + '">×</button><div class="lb-in"></div>'; document.body.appendChild(lb);
 function openLB(html) { lb.querySelector('.lb-in').innerHTML = html; lb.hidden = false; document.body.classList.add('lb-open'); }
 function closeLB() { sound.duck(1); lb.hidden = true; lb.querySelector('.lb-in').innerHTML = ''; document.body.classList.remove('lb-open'); }
 lb.addEventListener('click', (e) => { if (e.target === lb || e.target.closest('.lb-x')) closeLB(); });
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lb.hidden) closeLB(); });
 document.addEventListener('click', (e) => {
   const i = e.target.closest('[data-lb-img]'), v = e.target.closest('[data-lb-vid]');
-  if (i) openLB(`<img src="${img(i.dataset.lbImg, 2200)}" alt="작품 사진"><p>작품 사진 — ${WORK}</p>`);
+  if (i) openLB(`<img src="${img(i.dataset.lbImg, 2200)}" alt=""><p>${tr('작품 사진 — {w}', { w: WORK })}</p>`);
   if (v) sound.duck(0.15);
-  if (v) openLB(`<div class="lb-vid"><iframe src="https://drive.google.com/file/d/${v.dataset.lbVid}/preview" allow="autoplay; fullscreen" allowfullscreen title="작업 영상"></iframe></div><p>작업 영상 — ${WORK}</p>`);
+  if (v) openLB(`<div class="lb-vid"><iframe src="https://drive.google.com/file/d/${v.dataset.lbVid}/preview" allow="autoplay; fullscreen" allowfullscreen title="작업 영상"></iframe></div><p>${tr('작업 영상')} — ${WORK}</p>`);
 });
 // 캐러셀
 document.querySelectorAll('.car').forEach((c) => {
@@ -277,16 +290,16 @@ try { state.memories = JSON.parse(localStorage.getItem('xpace-bitssal-v2') || '[
 
 // 지도 노드 (약도, 상대 좌표)
 const DAEGU = [
-  { k: 'station', name: '대구역', x: -0.15, y: -0.55, text: '10월 1일 저녁, 경찰과 철도노조원이 충돌하고 경찰이 발포한 곳.' },
-  { k: 'hall', name: '공회당 · 시투 사무실', x: 0.35, y: -0.25, text: '노동자 시위대가 모여든 곳. 10월 2일 오후에도 이 일대에서 발포가 있었다.' },
-  { k: 'city', name: '대구부청', x: -0.6, y: 0.1, text: '10월 1일 오전, 시민 1,000여 명이 쌀을 요구한 곳.' },
-  { k: 'police', name: '대구경찰서', x: 0.15, y: 0.42, text: '10월 2일, 학생과 시민이 행진해 점거한 곳.' },
+  { k: 'station', name: tr('대구역'), x: -0.15, y: -0.55, text: tr('10월 1일 저녁, 경찰과 철도노조원이 충돌하고 경찰이 발포한 곳.') },
+  { k: 'hall', name: tr('공회당 · 시투 사무실'), x: 0.35, y: -0.25, text: tr('노동자 시위대가 모여든 곳. 10월 2일 오후에도 이 일대에서 발포가 있었다.') },
+  { k: 'city', name: tr('대구부청'), x: -0.6, y: 0.1, text: tr('10월 1일 오전, 시민 1,000여 명이 쌀을 요구한 곳.') },
+  { k: 'police', name: tr('대구경찰서'), x: 0.15, y: 0.42, text: tr('10월 2일, 학생과 시민이 행진해 점거한 곳.') },
 ];
 const REGIONS = [
-  { name: '경북', x: 0.38, y: 0.02, day: 1 }, { name: '경남', x: 0.2, y: 0.55, day: 7 },
-  { name: '충북', x: -0.02, y: -0.3, day: 17 }, { name: '충남', x: -0.45, y: -0.25, day: 17 },
-  { name: '경기 · 황해', x: -0.35, y: -0.75, day: 20 }, { name: '강원', x: 0.3, y: -0.7, day: 29 },
-  { name: '전남', x: -0.5, y: 0.6, day: 29 }, { name: '전북', x: -0.5, y: 0.18, day: 79 },
+  { name: tr('경북'), x: 0.38, y: 0.02, day: 1 }, { name: tr('경남'), x: 0.2, y: 0.55, day: 7 },
+  { name: tr('충북'), x: -0.02, y: -0.3, day: 17 }, { name: tr('충남'), x: -0.45, y: -0.25, day: 17 },
+  { name: tr('경기 · 황해'), x: -0.35, y: -0.75, day: 20 }, { name: tr('강원'), x: 0.3, y: -0.7, day: 29 },
+  { name: tr('전남'), x: -0.5, y: 0.6, day: 29 }, { name: tr('전북'), x: -0.5, y: 0.18, day: 79 },
 ];
 const YEARS = [{ y: 1993, at: 0.25 }, { y: 2000, at: 0.36 }, { y: 2001, at: 0.44 }, { y: 2007, at: 0.6 }, { y: 2009, at: 0.68 }];
 const labelEls = {};
@@ -306,7 +319,7 @@ function showTip(title, text, el) {
 }
 
 // 밥상 그릇 (일러스트)
-const BOWLS = ['아침 밥상', '도시락', '장터의 국밥', '공장 점심', '아이의 밥그릇', '제삿밥', '새참', '저녁 밥상', '나눠 먹는 한 그릇', '빈 그릇'].map((t, k) => ({ t, a: (k / 10) * Math.PI * 2 - Math.PI / 2 }));
+const BOWLS = ['아침 밥상', '도시락', '장터의 국밥', '공장 점심', '아이의 밥그릇', '제삿밥', '새참', '저녁 밥상', '나눠 먹는 한 그릇', '빈 그릇'].map((t, k) => ({ t: tr(t), a: (k / 10) * Math.PI * 2 - Math.PI / 2 }));
 const bowlPos = (k) => ({ x: CX + Math.cos(BOWLS[k].a) * R * 0.85, y: CY + Math.sin(BOWLS[k].a) * R * 0.62 });
 // 주먹밥
 function initBalls() { state.balls = Array.from({ length: 10 }, (_, k) => ({ a: (k / 10) * Math.PI * 2, r: 0.75, tr: 0.75, ta: (k / 10) * Math.PI * 2, size: 1 })); }
@@ -370,7 +383,7 @@ const TARGETS = {
       else { const a = R1[i] * 6.28; setT(i, CX + Math.cos(a) * Math.max(W, H), CY + Math.sin(a) * Math.max(W, H), 0, 0); }
     }
     for (let j = 0; j < state.voice; j++) { const i = 1500 + j, a = j * 2.39996 + 0.7, r = Math.sqrt((j + 0.5) / 200) * rc * 0.6; setT(i, ax + Math.cos(a) * r, ay + Math.sin(a) * r, 1, 3); }
-    hud.count.innerHTML = `<b>${(n * 10).toLocaleString()}</b>명 <small>${n < 400 ? '10월 1일 오전 · 대구부청 앞' : '10월 1일 · 대구역 앞'}</small>`;
+    hud.count.innerHTML = `${tr('{n}명', { n: `<b>${(n * 10).toLocaleString()}</b>` })} <small>${n < 400 ? tr('10월 1일 오전 · 대구부청 앞') : tr('10월 1일 · 대구역 앞')}</small>`;
   },
   street(p) {
     const node = (k) => { const n = DAEGU.find((d) => d.k === k); return { x: CX + n.x * R, y: CY + n.y * R }; };
@@ -397,7 +410,7 @@ const TARGETS = {
     // 시계
     const T = [[0, '10월 1일', '오전'], [0.12, '10월 1일', '낮'], [0.3, '10월 1일', '오후 6시'], [0.36, '10월 1일', '오후 7시'], [0.48, '10월 2일', '아침'], [0.66, '10월 2일', '경찰서 점거'], [0.72, '10월 2일', '오후'], [0.86, '10월 2일', '오후 5시 · 계엄령'], [0.94, '10월 2일', '저녁 7시 · 통행금지']];
     let cur = T[0]; T.forEach((t) => { if (p >= t[0]) cur = t; });
-    hud.clock.innerHTML = `<small>1946년</small><b>${cur[1]}</b><span>${cur[2]}</span>`;
+    hud.clock.innerHTML = `<small>${tr('1946년')}</small><b>${tr(cur[1])}</b><span>${tr(cur[2])}</span>`;
     hud.clock.classList.toggle('red', fire1 || (p >= 0.72 && p < 0.86));
   },
   spread(p) {
@@ -409,7 +422,7 @@ const TARGETS = {
     });
     hideAll(gi);
     const d = new Date(1946, 9, day);
-    hud.clock.innerHTML = `<small>1946년</small><b>${d.getMonth() + 1}월 ${d.getDate()}일</b><span>${day >= 76 ? '전국 73개 시군' : REGIONS.filter((r) => day >= r.day).length + '개 지역'}</span>`;
+    hud.clock.innerHTML = `<small>${tr('1946년')}</small><b>${tr('{m}월 {d}일', { m: d.getMonth() + 1, d: d.getDate() })}</b><span>${day >= 76 ? tr('전국 73개 시군') : tr('{n}개 지역', { n: REGIONS.filter((r) => day >= r.day).length })}</span>`;
     hud.clock.classList.remove('red');
   },
   erased(p) {
@@ -439,7 +452,7 @@ const TARGETS = {
       else setT(i, CX + (R1[i] - 0.5) * 16, -20, 0, 1);
     }
     hideAll(1800);
-    hud.depth.innerHTML = `<small>깊이</small><b>${Math.round(seg(p, 0, 0.9) * 100)}</b>`;
+    hud.depth.innerHTML = `<small>${tr('깊이')}</small><b>${Math.round(seg(p, 0, 0.9) * 100)}</b>`;
     state.torch = seg(p, 0.05, 0.2);
   },
   truth(p) {
@@ -515,7 +528,7 @@ function drawBackdrop(id, p, t) {
       const sx = CX + R * 1.05, sy = CY + R * 0.75, k = seg(p, 0.05, 0.3);
       g.strokeStyle = `rgba(255,248,230,${0.45 * k})`;
       g.beginPath(); g.moveTo(sx - 36, sy - 30); g.quadraticCurveTo(sx - 46, sy + 30, sx, sy + 34); g.quadraticCurveTo(sx + 46, sy + 30, sx + 36, sy - 30); g.closePath(); g.stroke();
-      g.fillStyle = `rgba(255,248,230,${0.55 * k})`; g.font = '12px Pretendard, sans-serif'; g.textAlign = 'center'; g.fillText('수집', sx, sy - 40);
+      g.fillStyle = `rgba(255,248,230,${0.55 * k})`; g.font = '12px Pretendard, sans-serif'; g.textAlign = 'center'; g.fillText(tr('수집'), sx, sy - 40);
       // 콜레라·수해: 물결 (p 0.6~)
       const wv = seg(p, 0.6, 0.8);
       if (wv > 0) { g.strokeStyle = `rgba(150,180,200,${0.25 * wv})`; for (let k2 = 0; k2 < 4; k2++) { g.beginPath(); for (let x = 0; x <= W; x += 12) g.lineTo(x, H - 30 - k2 * 14 + Math.sin(x / 40 + t * 1.5 + k2) * 5); g.stroke(); } }
@@ -530,7 +543,7 @@ function drawBackdrop(id, p, t) {
     g.beginPath(); g.moveTo(...P(-100, 175)); g.quadraticCurveTo(...P(0, 260), ...P(100, 175)); g.stroke();
     const parts = [[-230, '밥상'], [-60, '통로'], [90, '어둠'], [205, '그릇']];
     g.font = '12px Pretendard, sans-serif'; g.textAlign = 'left';
-    parts.forEach(([yy, nm], k) => { const on = state.carK === k; g.fillStyle = `rgba(255,248,230,${on ? 0.95 : 0.35})`; g.fillText(`0${k + 1} ${nm}`, CX + 160 * sc, CY + yy * sc + 4); g.strokeStyle = `rgba(255,248,230,${on ? 0.6 : 0.15})`; g.beginPath(); g.moveTo(CX + 150 * sc, CY + yy * sc); g.lineTo(CX + 110 * sc, CY + yy * sc); g.stroke(); });
+    parts.forEach(([yy, nm0], k) => { const nm = tr(nm0); const on = state.carK === k; g.fillStyle = `rgba(255,248,230,${on ? 0.95 : 0.35})`; g.fillText(`0${k + 1} ${nm}`, CX + 160 * sc, CY + yy * sc + 4); g.strokeStyle = `rgba(255,248,230,${on ? 0.6 : 0.15})`; g.beginPath(); g.moveTo(CX + 150 * sc, CY + yy * sc); g.lineTo(CX + 110 * sc, CY + yy * sc); g.stroke(); });
     g.lineWidth = 1;
   }
   if (id === 'street') {
@@ -631,7 +644,7 @@ addEventListener('click', (e) => {
   const id = SCENES[cur].id;
   if (id === 'prologue' && Math.hypot(e.clientX - X[0], e.clientY - Y[0]) < 60) { state.entered = true; sound.ping('enter'); setTimeout(() => window.scrollTo({ top: sections[0].offsetTop + sections[0].offsetHeight * 0.55, behavior: 'smooth' }), 300); }
   if (id === 'life') {
-    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 36 && state.bowls[k] < 1) { state.bowls[k] = Math.min(1, state.bowls[k] + 0.5); const done = state.bowls.filter((v) => v >= 1).length; sound.ping(done === 10 && state.bowls[k] >= 1 ? 'bowlsDone' : 'bowl'); document.querySelectorAll('.bowl-n').forEach((n) => (n.textContent = done)); if (done === 10) showTip('한 집의 하루', '열 그릇이 모두 찼습니다. 이 평범한 밥상이 다음 장면에서 비어 갑니다.', { getBoundingClientRect: () => ({ left: CX - 120, top: CY + R * 0.7 }) }); else showTip(b.t, state.bowls[k] >= 1 ? '한 그릇을 다 담았습니다.' : '한 번 더 누르면 가득 찹니다.', { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
+    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 36 && state.bowls[k] < 1) { state.bowls[k] = Math.min(1, state.bowls[k] + 0.5); const done = state.bowls.filter((v) => v >= 1).length; sound.ping(done === 10 && state.bowls[k] >= 1 ? 'bowlsDone' : 'bowl'); document.querySelectorAll('.bowl-n').forEach((n) => (n.textContent = done)); if (done === 10) showTip(tr('한 집의 하루'), tr('열 그릇이 모두 찼습니다. 이 평범한 밥상이 다음 장면에서 비어 갑니다.'), { getBoundingClientRect: () => ({ left: CX - 120, top: CY + R * 0.7 }) }); else showTip(b.t, state.bowls[k] >= 1 ? tr('한 그릇을 다 담았습니다.') : tr('한 번 더 누르면 가득 찹니다.'), { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
   }
   if (id === 'light' && state.lamps.length < 60) { sound.ping('lamp'); state.lamps.push({ x: e.clientX, y: e.clientY, v: 0.25 + Math.random() * 0.35, ph: Math.random() * 6 }); document.querySelectorAll('.lamp-n').forEach((n) => (n.textContent = state.lamps.length)); }
   if (id === 'share') {
@@ -644,12 +657,12 @@ addEventListener('click', (e) => {
 addEventListener('pointermove', (e) => {
   const id = SCENES[cur].id;
   if (id === 'life') {
-    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 30 && hud._last !== k) { hud._last = k; showTip(b.t, '그해의 평범한 한 끼 (일러스트) · 눌러서 밥을 담아 보세요', { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
+    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 30 && hud._last !== k) { hud._last = k; showTip(b.t, tr('그해의 평범한 한 끼 (일러스트) · 눌러서 밥을 담아 보세요'), { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
   }
   if (id === 'mine' || id === 'truth') {
-    for (let i = 0; i < 1800; i += 14) { if (C[i] === 3 && A[i] > 0.5 && Math.hypot(e.clientX - X[i], e.clientY - Y[i]) < 8) { if (hud._last !== i) { hud._last = i; showTip('신원이 확인된 사람', '127명 가운데 한 사람입니다. 이 전시는 이름을 표시하지 않습니다.', { getBoundingClientRect: () => ({ left: X[i] - 20, top: Y[i] }) }); } break; } }
+    for (let i = 0; i < 1800; i += 14) { if (C[i] === 3 && A[i] > 0.5 && Math.hypot(e.clientX - X[i], e.clientY - Y[i]) < 8) { if (hud._last !== i) { hud._last = i; showTip(tr('신원이 확인된 사람'), tr('127명 가운데 한 사람입니다. 이 전시는 이름을 표시하지 않습니다.'), { getBoundingClientRect: () => ({ left: X[i] - 20, top: Y[i] }) }); } break; } }
   }
-  if (id === 'light') state.memories.forEach((m) => { if (m._x && Math.hypot(e.clientX - m._x, e.clientY - m._y) < 20) showTip('남긴 문장', m.text, { getBoundingClientRect: () => ({ left: m._x - 60, top: m._y }) }); });
+  if (id === 'light') state.memories.forEach((m) => { if (m._x && Math.hypot(e.clientX - m._x, e.clientY - m._y) < 20) showTip(tr('남긴 문장'), m.text, { getBoundingClientRect: () => ({ left: m._x - 60, top: m._y }) }); });
 });
 // 첫 쌀알 호버 시 안내
 addEventListener('keydown', (e) => { if (SCENES[cur].id === 'prologue' && (e.key === 'Enter' || e.key === ' ') && !e.target.closest('textarea, button, a')) { state.entered = true; } });
@@ -662,7 +675,7 @@ document.querySelectorAll('.mem-f').forEach((f) => {
     e.preventDefault(); const text = ta.value.trim().slice(0, 120); if (!text) return ta.focus();
     state.memories.push({ text }); sound.ping('memory'); try { localStorage.setItem('xpace-bitssal-v2', JSON.stringify(state.memories.slice(-20).map((m) => ({ text: m.text })))); } catch (e2) {}
     ta.value = ''; n.textContent = '0 / 120';
-    f.parentElement.querySelector('.note').textContent = '당신의 문장이 빛이 되어 떠올랐습니다. 빛 위에 커서를 올리면 다시 볼 수 있어요. (이 브라우저에만 저장)';
+    f.parentElement.querySelector('.note').textContent = tr('당신의 문장이 빛이 되어 떠올랐습니다. 빛 위에 커서를 올리면 다시 볼 수 있어요. (이 브라우저에만 저장)');
   });
 });
 

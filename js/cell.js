@@ -1,4 +1,5 @@
-import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=14';
+import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=15';
+import { tr, langSwitcher } from './i18n.js?v=1';
 
 const story = document.getElementById('story');
 const wipe = document.getElementById('wipe');
@@ -75,22 +76,22 @@ const R = {
     <section class="b-quantum">
       <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
       <div class="q-stage reveal"><canvas class="q-cv"></canvas>
-        <div class="q-hud"><span class="q-state">상태: 중첩 (superposition)</span><span class="q-count">관측 0회</span></div>
-        <div class="q-tip">화면을 클릭해 관측하기</div></div>
+        <div class="q-hud"><span class="q-state">${tr('상태: 중첩 (superposition)')}</span><span class="q-count">${tr('관측 {n}회', { n: 0 })}</span></div>
+        <div class="q-tip">${tr('화면을 클릭해 관측하기')}</div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // prism: 프리즘 굴절 (스넬의 법칙으로 계산)
   prism: (b) => `
     <section class="b-lab b-prism">
       <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
-      <div class="lab-stage reveal"><canvas class="prism-cv"></canvas><div class="q-tip">마우스를 움직여 빛의 각도 바꾸기</div></div>
+      <div class="lab-stage reveal"><canvas class="prism-cv"></canvas><div class="q-tip">${tr('마우스를 움직여 빛의 각도 바꾸기')}</div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // shadow: 커서가 광원이 되어 그림자를 드리움
   shadow: (b) => `
     <section class="b-lab b-shadow">
       <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
-      <div class="lab-stage reveal"><canvas class="shadow-cv"></canvas><div class="q-tip">커서가 광원이 됩니다</div></div>
+      <div class="lab-stage reveal"><canvas class="shadow-cv"></canvas><div class="q-tip">${tr('커서가 광원이 됩니다')}</div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // soundmap: 지도 위 장소를 눌러 합성된 소리 풍경을 겹쳐 듣기
@@ -98,7 +99,7 @@ const R = {
     <section class="b-lab b-soundmap">
       <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
       <div class="lab-stage sm-stage reveal"><canvas class="sm-cv"></canvas><div class="sm-nodes"></div>
-        <div class="q-hud"><span class="sm-now">지도 위 장소를 눌러 소리를 켜고 끄세요</span><span class="sm-count">0 / 6</span></div></div>
+        <div class="q-hud"><span class="sm-now">${tr('지도 위 장소를 눌러 소리를 켜고 끄세요')}</span><span class="sm-count">0 / 6</span></div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // listen: 마이크 입력을 실시간 스펙트로그램으로 (녹음·전송 없음)
@@ -106,8 +107,8 @@ const R = {
     <section class="b-lab b-listen">
       <div class="q-head reveal">${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}</div>
       <div class="lab-stage listen-stage reveal"><canvas class="listen-cv"></canvas>
-        <button class="listen-btn">● 마이크 켜고 듣기</button>
-        <div class="q-hud"><span class="listen-state">대기 중</span><span class="listen-db"></span></div></div>
+        <button class="listen-btn">${tr('● 마이크 켜고 듣기')}</button>
+        <div class="q-hud"><span class="listen-state">${tr('대기 중')}</span><span class="listen-db"></span></div></div>
       ${b.caption ? `<p class="caption q-cap">${esc(b.caption)}</p>` : ''}
     </section>`,
   // chapter: 챕터 표지 (챕터 메뉴에 자동 등록). title=제목, caption=챕터 라벨(예: CHAPTER 01), media=배경 이미지
@@ -192,8 +193,8 @@ const R = {
         ${b.title ? `<h2>${esc(b.title)}</h2>` : ''}${paras(b.body)}
         <div class="piano" data-detuned="${b.align === 'detuned' ? 1 : 0}"></div>
         <div class="piano-ctl">
-          <label><input type="checkbox" class="detune-toggle" ${b.align === 'detuned' ? 'checked' : ''}/> <span>조율 풀기</span></label>
-          <span class="piano-hint">키보드 A–K · W E T Y U 로도 연주할 수 있어요</span>
+          <label><input type="checkbox" class="detune-toggle" ${b.align === 'detuned' ? 'checked' : ''}/> <span>${tr('조율 풀기')}</span></label>
+          <span class="piano-hint">${tr('키보드 A–K · W E T Y U 로도 연주할 수 있어요')}</span>
         </div>
         ${b.caption ? `<p class="caption">${esc(b.caption)}</p>` : ''}
       </div>
@@ -205,11 +206,11 @@ const R = {
       const top = TOP.filter((x) => x.status === 'open'), gi = top.indexOf(g), nextPlanet = top[(gi + 1) % top.length];
       return `<section class="b-end">
         <p class="eyebrow">END OF ROOM ${String(c.room).padStart(2, '0')} · ${esc(g.title)}</p>
-        ${nextRoom ? `<a class="next" href="${href(nextRoom)}" style="--accent:${esc(nextRoom.color)}"><span>다음 방으로 · ROOM ${String(c.room + 1).padStart(2, '0')}</span><strong>${esc(nextRoom.short)}</strong></a>`
+        ${nextRoom ? `<a class="next" href="${href(nextRoom)}" style="--accent:${esc(nextRoom.color)}"><span>${tr('다음 방으로')} · ROOM ${String(c.room + 1).padStart(2, '0')}</span><strong>${esc(nextRoom.short)}</strong></a>`
           : `<a class="next" href="${href(g)}" style="--accent:${esc(g.color)}"><span>세 개의 방을 모두 지났습니다</span><strong>${esc(g.title)}으로 돌아가기</strong></a>
-             ${nextPlanet && nextPlanet !== g ? `<a class="next" href="${href(nextPlanet)}" style="--accent:${esc(nextPlanet.color)}"><span>다음 행성으로</span><strong>${esc(nextPlanet.title)}</strong></a>` : ''}`}
+             ${nextPlanet && nextPlanet !== g ? `<a class="next" href="${href(nextPlanet)}" style="--accent:${esc(nextPlanet.color)}"><span>${tr('다음 행성으로')}</span><strong>${esc(nextPlanet.title)}</strong></a>` : ''}`}
         <a class="back" href="${href(g)}">← ${esc(g.title)}</a>
-        <a class="back" href="./">← 행성계로 돌아가기</a>
+        <a class="back" href="./">${tr('← 행성계로 돌아가기')}</a>
       </section>`;
     }
     const open = TOP.filter((x) => x.status === 'open');
@@ -217,13 +218,14 @@ const R = {
     const next = open[(pos + 1) % open.length];
     return `<section class="b-end">
       <p class="eyebrow">END OF ${esc(c.code || '')}</p>
-      ${next && next.id !== c.id ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || '다음 행성으로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
-      <a class="back" href="./">← 행성계로 돌아가기</a>
+      ${next && next.id !== c.id ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>${esc(b.title || tr('다음 행성으로'))}</span><strong>${esc(next.title)}</strong></a>` : ''}
+      <a class="back" href="./">${tr('← 행성계로 돌아가기')}</a>
     </section>`;
   },
 };
 
 let TOP = [];
+langSwitcher(document.querySelector('.topbar'));
 (async () => {
   const { cells: top, all: cells, groups, blocks } = await loadData();
   TOP = top;
@@ -235,7 +237,7 @@ let TOP = [];
   // 기획전에 속한 방을 직접 열면 기획전 페이지의 해당 방으로 이동
   if (cell && cell.group) { location.replace(`cell.html?id=${encodeURIComponent(cell.group.id)}#room-${cell.room}`); return; }
   if (!cell || cell.status !== 'open') {
-    story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>아직 열리지 않은 행성입니다.</h2><a class="back" href="./">← 돌아가기</a></section>`;
+    story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>${tr('아직 열리지 않은 행성입니다.')}</h2><a class="back" href="./">${tr('← 돌아가기')}</a></section>`;
     return finish('#7ee0d0');
   }
   if (cell.url) { location.replace(cell.url); return; }
@@ -290,8 +292,8 @@ function renderGroup(g, blocks) {
   const end = `<section class="b-end">
     <p class="eyebrow">END OF ${esc(g.title)}</p>
     <p class="end-rooms">${rooms.map((r, k) => `<a href="#room-${k + 1}" style="--accent:${esc(r.color)}">ROOM ${String(k + 1).padStart(2, '0')} · ${esc(r.short)}</a>`).join('')}</p>
-    ${next && next !== g ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>다음 행성으로</span><strong>${esc(next.title)}</strong></a>` : ''}
-    <a class="back" href="./">← 행성계로 돌아가기</a>
+    ${next && next !== g ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>${tr('다음 행성으로')}</span><strong>${esc(next.title)}</strong></a>` : ''}
+    <a class="back" href="./">${tr('← 행성계로 돌아가기')}</a>
   </section>`;
   story.innerHTML = html + end;
   setupAll(rooms[0]?.color || g.color);
@@ -338,7 +340,7 @@ function setupGroupBgm(rooms) {
   setTimeout(() => {
     if (st.some(Boolean) || userMuted) return;
     gate = document.createElement('div'); gate.className = 'sound-gate';
-    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS PLANET HAS SOUND</p><button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> 소리와 함께 입장</button><button class="sg-off">소리 없이 보기</button></div>`;
+    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS PLANET HAS SOUND</p><button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> ${tr('소리와 함께 입장')}</button><button class="sg-off">${tr('소리 없이 보기')}</button></div>`;
     document.body.appendChild(gate);
     gate.querySelector('.sg-on').addEventListener('click', () => { userMuted = false; unlocked = true; apply(); closeGate(); });
     gate.querySelector('.sg-off').addEventListener('click', () => { userMuted = true; closeGate(); ui(); });
@@ -495,8 +497,8 @@ function setupQuantum() {
       let best = P[0], bd = 1e9;
       for (let i = 0; i < 60; i++) { const p = P[(Math.random() * N) | 0]; const d = (p.x - cx) ** 2 + (p.y - cy) ** 2; if (d < bd) { bd = d; best = p; } }
       collapse = { x: best.x, y: best.y, t: performance.now() };
-      count++; countEl.textContent = `관측 ${count}회`;
-      stateEl.textContent = `상태: 붕괴 — 위치 (${((best.x / w) * 2 - 1).toFixed(2)}, ${(-(best.y / h) * 2 + 1).toFixed(2)})`;
+      count++; countEl.textContent = tr('관측 {n}회', { n: count });
+      stateEl.textContent = tr('상태: 붕괴 — 위치 ({x}, {y})', { x: ((best.x / w) * 2 - 1).toFixed(2), y: (-(best.y / h) * 2 + 1).toFixed(2) });
       tip.classList.add('hide');
       stage.classList.add('flash'); setTimeout(() => stage.classList.remove('flash'), 300);
     });
@@ -509,7 +511,7 @@ function setupQuantum() {
       if (collapse) {
         const e = (now - collapse.t) / 1000;
         k = e < 0.35 ? e / 0.35 : e < 2.2 ? 1 : Math.max(0, 1 - (e - 2.2) / 1.6);
-        if (e > 3.8) { collapse = null; stateEl.textContent = '상태: 중첩 (superposition)'; }
+        if (e > 3.8) { collapse = null; stateEl.textContent = tr('상태: 중첩 (superposition)'); }
       }
       const ease = k * k * (3 - 2 * k);
       for (const p of P) {
@@ -560,7 +562,7 @@ function setupBgm(cell) {
   if (sp) {
     const panel = document.createElement('div');
     panel.className = 'bgm-panel';
-    panel.innerHTML = `<div class="sp-host"></div><p>Spotify · 로그인하지 않으면 30초 미리듣기</p>`;
+    panel.innerHTML = `<div class="sp-host"></div><p>${tr('Spotify · 로그인하지 않으면 30초 미리듣기')}</p>`;
     box.appendChild(panel);
     let ctrl, pending = false;
     player = { play: () => (ctrl ? ctrl.play() : (pending = true)), pause: () => ctrl && ctrl.pause() };
@@ -602,8 +604,8 @@ function setupBgm(cell) {
     gate = document.createElement('div');
     gate.className = 'sound-gate';
     gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS PLANET HAS SOUND</p>
-      <button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> 소리와 함께 입장</button>
-      <button class="sg-off">소리 없이 보기</button></div>`;
+      <button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> ${tr('소리와 함께 입장')}</button>
+      <button class="sg-off">${tr('소리 없이 보기')}</button></div>`;
     document.body.appendChild(gate);
     gate.querySelector('.sg-on').addEventListener('click', () => { userMuted = false; player.play(); closeGate(); });
     gate.querySelector('.sg-off').addEventListener('click', () => { userMuted = true; closeGate(); });
@@ -923,12 +925,12 @@ function noiseBuf(ctx, sec, type = 'white') {
   return b;
 }
 const PLACES = [
-  { id: 'rain', name: '골목의 비', x: 0.22, y: 0.3 },
-  { id: 'sea', name: '바닷가', x: 0.12, y: 0.78 },
-  { id: 'subway', name: '지하철 승강장', x: 0.55, y: 0.55 },
-  { id: 'birds', name: '새벽 공원', x: 0.8, y: 0.22 },
-  { id: 'bell', name: '산사의 종', x: 0.86, y: 0.76 },
-  { id: 'steps', name: '횡단보도', x: 0.45, y: 0.2 },
+  { id: 'rain', name: tr('골목의 비'), x: 0.22, y: 0.3 },
+  { id: 'sea', name: tr('바닷가'), x: 0.12, y: 0.78 },
+  { id: 'subway', name: tr('지하철 승강장'), x: 0.55, y: 0.55 },
+  { id: 'birds', name: tr('새벽 공원'), x: 0.8, y: 0.22 },
+  { id: 'bell', name: tr('산사의 종'), x: 0.86, y: 0.76 },
+  { id: 'steps', name: tr('횡단보도'), x: 0.45, y: 0.2 },
 ];
 function makePlace(ctx, id, out) {
   const nodes = [], timers = [];
@@ -988,7 +990,7 @@ function setupSoundmap() {
           active.set(p.id, { place: makePlace(smCtx, p.id, g), g }); b.classList.add('on');
           rings.push({ p, t0: performance.now() / 1000, big: true });
         }
-        now.textContent = active.size ? '지금 듣는 곳: ' + PLACES.filter((q) => active.has(q.id)).map((q) => q.name).join(' · ') : '지도 위 장소를 눌러 소리를 켜고 끄세요';
+        now.textContent = active.size ? tr('지금 듣는 곳: ') + PLACES.filter((q) => active.has(q.id)).map((q) => q.name).join(' · ') : tr('지도 위 장소를 눌러 소리를 켜고 끄세요');
         cnt.textContent = `${active.size} / ${PLACES.length}`;
       });
       wrap.appendChild(b);
@@ -1021,7 +1023,7 @@ function setupListen() {
     const g = cv.getContext('2d');
     const size = () => { cv.width = cv.clientWidth; cv.height = cv.clientHeight; g.fillStyle = '#0e0808'; g.fillRect(0, 0, cv.width, cv.height); };
     size(); addEventListener('resize', size);
-    const stop = () => { stream && stream.getTracks().forEach((tr) => tr.stop()); stream = null; analyser = null; btn.textContent = '● 마이크 켜고 듣기'; btn.classList.remove('on'); stEl.textContent = '꺼짐'; dbEl.textContent = ''; };
+    const stop = () => { stream && stream.getTracks().forEach((tr) => tr.stop()); stream = null; analyser = null; btn.textContent = tr('● 마이크 켜고 듣기'); btn.classList.remove('on'); stEl.textContent = tr('꺼짐'); dbEl.textContent = ''; };
     btn.addEventListener('click', async () => {
       if (stream) return stop();
       try {
@@ -1030,7 +1032,7 @@ function setupListen() {
         analyser = ctx.createAnalyser(); analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.5;
         ctx.createMediaStreamSource(stream).connect(analyser); // 스피커로 내보내지 않음
         data = new Uint8Array(analyser.frequencyBinCount);
-        btn.textContent = '■ 마이크 끄기'; btn.classList.add('on'); stEl.textContent = '듣는 중 — 녹음·전송되지 않습니다';
+        btn.textContent = tr('■ 마이크 끄기'); btn.classList.add('on'); stEl.textContent = tr('듣는 중 — 녹음·전송되지 않습니다');
         const draw = () => {
           if (!analyser) return;
           analyser.getByteFrequencyData(data);
@@ -1043,11 +1045,11 @@ function setupListen() {
           }
           g.fillStyle = 'rgba(242,241,236,.6)'; g.fillRect((x + 2) % W, 0, 1, H);
           col += 2;
-          dbEl.textContent = '상대 음량 ' + Math.round((sum / H) * 100);
+          dbEl.textContent = tr('상대 음량 ') + Math.round((sum / H) * 100);
           requestAnimationFrame(draw);
         };
         draw();
-      } catch (e) { stEl.textContent = '마이크를 사용할 수 없어요 (권한을 확인해 주세요)'; stop(); stEl.textContent = '마이크 권한이 없어요'; }
+      } catch (e) { stEl.textContent = '마이크를 사용할 수 없어요 (권한을 확인해 주세요)'; stop(); stEl.textContent = tr('마이크 권한이 없어요'); }
     });
     addEventListener('pagehide', stop);
   });

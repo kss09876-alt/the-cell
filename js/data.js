@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js?v=14';
+import { lang, tr } from './i18n.js?v=1';
 
 // 공개 구글 시트를 gviz JSON 엔드포인트로 읽어 [{col: value}] 배열로 변환
 async function fetchSheet(id) {
@@ -47,9 +48,17 @@ export async function loadData() {
     .filter((c) => c.id && c.status !== 'hidden')
     .sort((a, b) => Number(a.order) - Number(b.order));
   blocks = blocks.filter((b) => b.cell_id).sort((a, b) => Number(a.order) - Number(b.order));
+  // 다국어: 시트의 title_en 같은 칸 → data/i18n.json → 한국어 원문 순서로 사용
+  if (lang !== 'ko') {
+    let tx = { cells: {}, blocks: {} };
+    try { tx = await (await fetch('data/i18n.json?v=1')).json(); } catch (e) {}
+    const loc = (row, fields, t) => { const o = { ...row }; fields.forEach((f) => { const own = row[`${f}_${lang}`]; o[f] = own != null && String(own).trim() !== '' ? own : (t && t[f]) || row[f]; }); return o; };
+    cells = cells.map((c) => loc(c, ['title', 'subtitle', 'artist', 'period'], tx.cells?.[c.id]?.[lang]));
+    blocks = blocks.map((b) => loc(b, ['title', 'body', 'caption'], tx.blocks?.[`${b.cell_id}:${b.order}`]?.[lang]));
+  }
   // 기획전 묶기: 멤버 전시는 행성 목록에서 빠지고, 첫 멤버 자리에 기획전 행성이 들어감
   const all = cells.slice(), top = [];
-  const groups = (CONFIG.groups || []).map((g) => ({ ...g, status: 'open', isGroup: true, rooms: [] }));
+  const groups = (CONFIG.groups || []).map((g) => ({ ...g, title: tr(g.title), subtitle: tr(g.subtitle), artist: tr(g.artist), status: 'open', isGroup: true, rooms: [] }));
   cells.forEach((c) => {
     const g = groups.find((x) => x.members.includes(c.id));
     if (!g) { top.push(c); return; }

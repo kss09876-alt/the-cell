@@ -1,7 +1,8 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
-import { loadData, imageUrl, esc } from './data.js?v=14';
+import { loadData, imageUrl, esc } from './data.js?v=15';
 import { hsound } from './home-sound.js?v=3';
+import { tr, lang, langSwitcher } from './i18n.js?v=1';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -274,7 +275,7 @@ function setHover(p) {
     const c = p.cell;
     card.querySelector('.hc-no').textContent = code(p.i);
     card.querySelector('.hc-title').textContent = p.open ? shortTitle(c.title) : 'Coming soon';
-    card.querySelector('.hc-sub').textContent = p.open ? c.subtitle || '' : '아직 빛나지 않은 행성';
+    card.querySelector('.hc-sub').textContent = p.open ? c.subtitle || '' : tr('아직 빛나지 않은 행성');
     card.querySelector('.hc-meta').textContent = c.rooms ? `ROOMS · ${c.rooms.map((r) => r.short).join(' · ')}` : [c.artist, c.period].filter(Boolean).join(' · ');
     card.style.setProperty('--accent', c.color || '#7ee0d0');
     card.classList.add('on');
@@ -387,13 +388,25 @@ addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelec
 
 // ---------- 자동 재생 / 입장 화면 ----------
 function sndGate(kicker, title, onStart) {
-  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', '소리와 함께 입장');
-  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>입장하기</button><button class="g-s">소리 없이 보기</button><p class="g-n">헤드폰을 권장합니다</p></div>`;
+  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', tr('소리와 함께 입장'));
+  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>${tr('입장하기')}</button><button class="g-s">${tr('소리 없이 보기')}</button><p class="g-n">${tr('헤드폰을 권장합니다')}</p></div>`;
   document.body.appendChild(g);
   const close = () => { g.classList.add('out'); setTimeout(() => g.remove(), 1000); };
   g.querySelector('.g-s').addEventListener('click', (e) => { e.stopPropagation(); onStart(false); close(); });
   g.addEventListener('click', () => { onStart(true); close(); });
   return close;
+}
+
+// ---------- 언어 ----------
+langSwitcher(document.querySelector('.topbar nav'), { before: document.getElementById('btn-sound') });
+if (lang !== 'ko') {
+  document.title = tr('XPACE 엑스페이스 — 온라인에서 마주하는 무한한 가치의 공간');
+  document.querySelector('.hero-copy .lede').innerHTML = `<strong>${tr('엑스페이스')}</strong> — ${tr('온라인에서 마주하는 무한한 가치의 공간.')}<br />${tr('행성을 골라 착륙해 보세요.')}`;
+  document.querySelector('.hint').textContent = tr('드래그해서 둘러보기 · 행성을 눌러 착륙');
+  const ap = document.querySelectorAll('#about-panel p');
+  if (ap[0]) ap[0].textContent = tr('XPACE(엑스페이스)는 온라인에서 마주하는 무한한 가치의 공간입니다.');
+  if (ap[1]) ap[1].textContent = tr(ap[1].textContent.trim());
+  if (ap[2]) ap[2].textContent = tr(ap[2].textContent.trim());
 }
 
 // ---------- 사운드 ----------

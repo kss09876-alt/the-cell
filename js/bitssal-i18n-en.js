@@ -1,0 +1,91 @@
+// X-003 · 빛쌀 — English
+export default {
+  prologue: { t: 'A grain', c: [
+    { html: '<p class="kicker">X-003 · Jin Siyoung · Kim Dongsun, Bitssal</p><h1>Bitssal</h1><p class="lead">A single grain of rice.<br>What does it mean to you?</p><p class="hint">Move your cursor to the grain in the dark. Click it to follow, and the story begins.</p>' },
+    { html: '<p>This grain starts at the top of the glass sculpture Bitssal, on its wide table. It passes through a narrow glass passage until it reaches the round bowl below. This exhibition follows the path that one grain travelled.</p><p class="note">The 1946 Daegu October Incident and the 1950 Gyeongsan Cobalt Mine Incident are separate events. This exhibition presents them separately.</p>' },
+  ] },
+  work: { t: 'The work', c: [
+    { html: '<p class="kicker">The work: Bitssal</p><h2>Light held on glass</h2><p>Images of rice and light flow over a glass sculpture. Browse the photos to look around the four parts of the work first.</p>' },
+    { items: [
+      { t: '01 · Table', d: 'The wide top. Where grains gather to become one person\'s day.' },
+      { t: '02 · Passage', d: 'The narrowing glass neck. A time when lives are pushed into a narrow path.' },
+      { t: '03 · Darkness', d: 'The deep body that continues downward.' },
+      { t: '04 · Bowl', d: 'The round bowl at the bottom. Where the light that remains gathers.' },
+    ] },
+    { title: 'Artwork video', cap: 'Jin Siyoung · Kim Dongsun, Bitssal, 2026, dimensions variable, single-channel video projection on glass object' },
+  ] },
+  life: { t: 'The table', c: [
+    { html: '<p class="chap">01 · The life of a grain</p><h2>Daegu, 1946</h2><p>The year after liberation. A grain of rice meant a person\'s day. Cooking rice, packing a lunch, sitting together around an ordinary table.</p>' },
+    { html: '<p><b>Click the bowls to fill them with rice.</b> When all ten are full, they make one household\'s day.</p><p class="legend share">Bowls filled <b class="bowl-n">0</b> / 10</p><p class="note">The table scene is an illustration to aid understanding.</p>' },
+    null,
+  ] },
+  hunger: { t: 'Hunger', c: [
+    { html: '<p class="chap">02 · After liberation, hunger</p><h2>The bowls empty out</h2><p>Scroll down and the rice slips out of the bowls, grain by grain.</p><p class="try"><b>Press and hold</b> the screen to hold on to the rice. But you cannot hold out for long.</p>' },
+    { title: 'Rice Collection Order', html: '<p>The US Military Government issued a Rice Collection Order, took in rice and imposed limited rationing. It even collected the summer barley, and in North Gyeongsang the grain collection was carried out especially forcefully.</p>' },
+    { title: 'People coming home', html: '<p>As more Koreans returned from abroad, the food shortage grew worse.</p>' },
+    { title: 'Cholera and floods', html: '<p>Cholera spread in May 1946 and floods followed in June. Traffic was cut off to stop the epidemic, leaving many residents starving; in northern mountain areas such as Cheongsong, some people died of hunger.</p>' },
+    { title: 'Accumulation and scarcity of rice', cap: 'Artwork video — accumulation and scarcity of rice. A scene from the artwork, not archival footage of the time.' },
+  ] },
+  demand: { t: 'Demand', c: [
+    { html: '<p class="chap">03 · We wanted rice</p><h2>Scattered grains gather</h2><p>Move your cursor. The grains gather toward you.</p><p class="legend"><i></i> 1 grain = 10 people</p>' },
+    { html: '<p>You can add your own grain too.</p><button class="act-btn add-voice">Add a grain</button><p class="legend share">Grains added <b class="voice-n">0</b></p>' },
+    { title: 'September 1946', html: '<p>On September 23, labor unions in Daegu went on strike, and on the 27th the Daegu City Struggle Committee of the South Korean General Strike was formed. The US Military Government mobilized police and right-wing youth groups to suppress it and arrested about 1,200 workers.</p>' },
+    { title: 'Morning of October 1, in front of Daegu City Hall', html: '<p>Over 1,000 citizens demonstrated, demanding rice.</p>' },
+    { title: 'October 1, in front of Daegu Station', html: '<p>Workers\' demonstrators gathered around Daegu Station and the public hall, and their number grew from several thousand to 15,000.</p>' },
+    null,
+  ] },
+  street: { t: 'The street', c: [
+    { html: '<p class="chap">04 · October 1946, the street</p><h2>Walking through time</h2><p>Scrolling becomes a clock. Click a place on the map to open its record.</p><p class="note">The map is a simplified sketch of locations.</p>' },
+    null,
+    { title: 'Around 7 p.m., October 1', html: '<p>After police clashed with railway union members in front of Daegu Station, police opened fire, killing two people including railway union member Kim Yong-tae.</p><p class="quiet">This exhibition does not reenact that moment. It pauses.</p>' },
+    { title: 'October 2', html: '<p>Students of Daegu Medical College carried the body of the dead worker on a stretcher and marched to Daegu Police Station. The student delegation demanded the release of detainees and an end to the shooting; when the police chief refused an order to disperse them by force, the police withdrew. The crowd occupied the police station.</p>' },
+    { title: 'Afternoon of October 2', html: '<p>Police, acting on orders from the US military, opened fire; 17 to 18 civilians and 4 police officers were killed.</p>' },
+    { title: '5 p.m., martial law', html: '<p>The US military deployed armored cars and machine-gun units and declared martial law at 5 p.m. A curfew was imposed from 7 p.m.</p>' },
+  ] },
+  spread: { t: 'Spread', c: [
+    { html: '<p class="chap">04 · Autumn 1946</p><h2>Lights that spread</h2><p>Scroll and the days pass; lights turn on in the regions the events spread to. Click a region name to jump to its date.</p><p class="note">The number of dots does not indicate the scale in each region.</p>' },
+    { title: 'October 1–3', html: '<p>Starting in Dalseong County, it spread to 19 counties in North Gyeongsang, including Chilgok, Goryeong, Seongju and Yeongil.</p>' },
+    { title: 'Until mid-December', html: '<p>It spread to South Gyeongsang, South and North Chungcheong, Gyeonggi and Hwanghae, Gangwon, South Jeolla and North Jeolla, and, combined with farmers\' harvest uprisings, reached 73 cities and counties nationwide by mid-December.</p>' },
+  ] },
+  erased: { t: 'Erased names', c: [
+    { html: '<p class="chap">05 · After the uprising, erased names</p><h2>Reading blurred records</h2><p>Even after the clashes in the street, repression and surveillance continued.</p><p class="try"><b>Rub the document</b> on the right with your cursor to bring the blurred lines back. You can also click the record cards below to read them.</p>' },
+    { title: 'Suppression and manhunts', html: '<p>People involved were killed on the spot or arrested and imprisoned, and some fled into the mountains. Manhunts continued until the government was established in 1948, and residents with no connection were also killed in the process.</p>' },
+    { title: 'October 5, 1946, Geumam-dong, Chilgok', html: '<p>Police entered the village firing their guns and shot dead a resident, Park ○-do. He was later recorded in a background check as a <s class="wrong">member of the South Korean Workers\' Party</s>.</p>', fix: 'This record had been entered incorrectly.' },
+    { title: 'March 30, 2010, truth established', html: '<p>Although it investigated only parts of Daegu, Chilgok, Yeongcheon and Gyeongju, the Truth and Reconciliation Commission estimated about 60 civilian victims and judged that the actual number was likely higher.</p>' },
+    null,
+  ] },
+  boundary: { t: '1950', c: [
+    { html: '<h2 class="big">Four years later,<br>a different event</h2><p>The 1946 Daegu October Incident and the 1950 Gyeongsan Cobalt Mine Incident differ in timing, victims and the structure of perpetration.</p><p>After the Korean War broke out, some people involved in the October Incident and their families were preventively detained as members of the National Guidance Alliance and killed. But this connection is not generalized to all victims.</p>' },
+    { html: '<p class="warn">The next chapter deals with the mass killing of civilians.</p><p>It is told through official investigation records, without photos or graphic scenes.</p>', summary: 'In July–August 1950, members of the National Guidance Alliance, people under surveillance and inmates of Daegu Prison were killed en masse without due process at the Gyeongsan Cobalt Mine in North Gyeongsang and elsewhere. The Truth and Reconciliation Commission established the truth on November 17, 2009.' },
+  ] },
+  mine: { t: 'The mine', c: [
+    { html: '<p class="chap">06 · Darkness without a floor</p><h2>Down the narrow passage</h2><p>The more you scroll, the deeper you go. There is no action in which the viewer drops anything.</p><p class="try">In the dark, <b>your cursor becomes a flashlight</b>. Light appears only where you shine it.</p>' },
+    { title: 'When and where', html: '<p>From mid-to-late July to around mid-August 1950. The cobalt mine in Pyeongsan-dong, Gyeongsan, North Gyeongsang — a mine developed during Japanese rule, with vertical shafts connected to horizontal tunnels.</p>' },
+    { title: 'People who were taken there', html: '<p>Members of the National Guidance Alliance and people under surveillance brought from Gyeongsan, Cheongdo, Yeongdong and Daegu Prison, as well as many inmates of Daegu Prison, were killed.</p>' },
+    { title: 'Perpetrators', html: '<p>Police of the Gyeongsan and Cheongdo areas, the Gyeongsan and Cheongdo detachments of the Gyeongbuk District CIC, and the ROK Army 22nd Military Police Unit.</p>' },
+    { title: 'Scale of the killings', html: '<p>The Truth and Reconciliation Commission estimated the number at over 1,800, but the exact total has not been confirmed. Bereaved families and civil society estimate more than 3,500. 127 people have been identified.</p><p class="quiet">Faint dots are the estimate; bright dots are identified people. The two numbers are different measures.</p>' },
+    { title: 'Circular view and darkness', cap: 'Artwork video — circular view and darkness. A symbolic scene from the artwork, not the actual site.' },
+    { html: '<p class="center">Even the names not yet confirmed<br>cannot be left outside memory.</p><p class="note center">Exhibition text</p>' },
+  ] },
+  truth: { t: 'Truth', c: [
+    { html: '<p class="chap">07 · Buried truth</p><h2>A long time coming</h2><p>Each year you pass, the light at the bottom rises a little. You can also click the years at the top.</p>' },
+    { title: '1993', html: '<p>Local media began to report on the incident.</p>' },
+    { title: '2000 · 2001', html: '<p>In 2000 the Gyeongsan Bereaved Families\' Association was formed. In 2001 the cement-sealed mine entrance was opened, and the remains of 40 people were recovered over three days.</p>' },
+    { title: '2007 · 2009', html: '<p>In 2007 the Truth and Reconciliation Commission began official excavations of remains, and on November 17, 2009, the truth was established.</p>' },
+    null,
+    { html: '<p>Even now, not all the remains have been recovered. The light left at the bottom is the people who have not yet come home.</p>' },
+  ] },
+  share: { t: 'Sharing', c: [
+    { html: '<p class="chap">08 · Rice became sharing again</p><h2>From Daegu to Gwangju</h2><p>The rice demanded in Daegu in order to live became, in Gwangju in May 1980, the rice balls citizens shared to keep one another alive.</p>' },
+    { html: '<p>Click a rice ball to pass it to the person next to you.</p><p class="legend share">Rice balls shared <b class="share-n">0</b></p>' },
+    { html: '<blockquote>The rice demanded in Daegu in order to live became, in Gwangju, food shared to keep one another alive.</blockquote><p class="note">From the working notes of Jin Siyoung · Kim Dongsun, Bitssal</p>' },
+  ] },
+  light: { t: 'Light', c: [
+    { html: '<p class="chap">08 · Memory becomes light again</p><h2>The grain you first saw —<br>how does it look now?</h2><p class="try"><b>Click</b> anywhere in the dark to light a small light.</p><p class="legend share">Lights lit <b class="lamp-n">0</b></p>' },
+    null,
+    { title: 'Diffusion of particles and light', cap: 'Artwork video — diffusion of particles and light' },
+    null,
+    { html: '<p class="center big-quote">LIFE remains in LIGHT.</p><p class="note center">A life buried in darkness becomes a named grain again in the light of those who remember — from the Bitssal installation plan</p>' },
+  ] },
+  archive: { t: 'Archive', c: [null] },
+};
