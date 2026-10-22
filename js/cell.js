@@ -765,6 +765,7 @@ function canvasLoop(cv, draw, opts = {}) {
   size(); addEventListener('resize', size);
   const host = opts.host || cv.parentElement;
   host.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); st.mx = e.clientX - r.left; st.my = e.clientY - r.top; st.inside = true; });
+  host.addEventListener('pointerdown', (e) => { const r = cv.getBoundingClientRect(); st.mx = e.clientX - r.left; st.my = e.clientY - r.top; st.inside = true; }); // 터치: 누른 곳으로 이동
   host.addEventListener('pointerleave', () => { st.inside = false; });
   const tick = (now) => { if (!st.visible) return; draw(g, st, now / 1000); requestAnimationFrame(tick); };
   new IntersectionObserver(([e]) => { st.visible = e.isIntersecting; if (st.visible) requestAnimationFrame(tick); }).observe(host);

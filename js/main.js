@@ -364,7 +364,7 @@ function resize() {
   camera.updateProjectionMatrix();
   const maxR = planets.length ? planets[planets.length - 1].orbitR + 1.2 : 10;
   const fit = maxR / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  state.baseDist = camera.aspect >= 1 ? fit * 0.72 : fit / camera.aspect * 0.62;
+  state.baseDist = camera.aspect >= 1 ? fit * 0.72 : fit / camera.aspect * 0.9; // 세로 화면: 바깥 행성까지 보이게
   state.tDist = state.dist = state.baseDist;
 }
 addEventListener('resize', resize);

@@ -114,6 +114,15 @@ const SCENES = [
 ];
 // 번역 덮어쓰기 (장면 id · 카드 순서 기준)
 if (BX) SCENES.forEach((sc) => { const t = BX[sc.id]; if (!t) return; if (t.t) sc.title = t.t; (t.c || []).forEach((tc, j) => { const c = sc.cards[j]; if (!tc || !c) return; if (tc.items && c.items) { tc.items.forEach((it, k) => c.items[k] && Object.assign(c.items[k], it)); } const { items, ...rest } = tc; Object.assign(c, rest); }); });
+// 터치 기기: 커서 안내 문구를 터치용으로 바꿈
+const TOUCH = matchMedia('(hover: none), (pointer: coarse)').matches;
+const TOUCH_TXT = {
+  ko: [['어둠 속 쌀알에 커서를 가져가 보세요. 눌러서 따라가면 이야기가 시작됩니다.', '어둠 속 쌀알을 눌러 보세요. 이야기가 시작됩니다.'], ['커서를 움직여 보세요. 쌀알들이 당신 쪽으로 모여듭니다.', '화면을 눌러 보세요. 쌀알들이 누른 곳으로 모여듭니다.'], ['오른쪽 문서 위를 <b>커서로 문질러</b>', '문서 위를 <b>손가락으로 톡톡 눌러</b>'], ['어둠 속에서는 <b>커서가 손전등</b>이 됩니다.', '어둠 속에서는 <b>누른 곳이 손전등처럼</b> 밝아집니다.']],
+  en: [['Move your cursor to the grain in the dark. Click it to follow, and the story begins.', 'Tap the grain in the dark, and the story begins.'], ['Move your cursor. The grains gather toward you.', 'Tap the screen. The grains gather where you touch.'], ['<b>Rub the document</b> on the right with your cursor', '<b>Tap the document</b> again and again'], ['In the dark, <b>your cursor becomes a flashlight</b>.', 'In the dark, <b>wherever you tap lights up like a flashlight</b>.']],
+  zh: [['把光标移到黑暗中的米粒上。点击它跟随，故事就开始了。', '点一下黑暗中的米粒，故事就开始了。'], ['移动光标试试。米粒会向你聚拢。', '点一下画面。米粒会向你点的地方聚拢。'], ['用光标在右边的文件上<b>擦一擦</b>', '在文件上<b>多点几下</b>'], ['在黑暗中，<b>光标会变成手电筒</b>。', '在黑暗中，<b>你点的地方会像手电筒一样亮起</b>。']],
+  ja: [['闇の中の米粒にカーソルを近づけてみてください。押してついていくと、物語が始まります。', '闇の中の米粒をタップしてください。物語が始まります。'], ['カーソルを動かしてみてください。米粒があなたのほうへ集まってきます。', '画面をタップしてみてください。米粒がタップした場所へ集まってきます。'], ['右の文書の上を<b>カーソルでこすって</b>', '文書の上を<b>指で何度かタップして</b>'], ['闇の中では、<b>カーソルが懐中電灯</b>になります。', '闇の中では、<b>タップした場所が懐中電灯</b>のように明るくなります。']],
+};
+if (TOUCH) SCENES.forEach((sc) => sc.cards.forEach((c) => { if (c.html) (TOUCH_TXT[lang] || []).forEach(([a, b]) => { c.html = c.html.split(a).join(b); }); }));
 const CREDITS = `<footer class="bs-credits"><div>
   <h3>${tr('출처와 안내')}</h3>
   <p>${tr('역사 서술: ')}${SRC1}(jinsil.go.kr/KoreanWar/30.do), ${SRC2}(jinsil.go.kr/KoreanWar/36.do)</p>
@@ -273,8 +282,11 @@ const C = new Uint8Array(N), R1 = new Float32Array(N), R2 = new Float32Array(N),
 for (let i = 0; i < N; i++) { R1[i] = Math.random(); R2[i] = Math.random(); R3[i] = Math.random(); X[i] = Math.random() * innerWidth; Y[i] = Math.random() * innerHeight; ROT[i] = Math.random() * 6.28; }
 const COLORS = [RICE, DIM, RED, WARM];
 
-const ptr = { x: -1, y: -1, in: false };
-addEventListener('pointermove', (e) => { ptr.x = e.clientX; ptr.y = e.clientY; ptr.in = true; });
+const ptr = { x: -1, y: -1, in: false, t: 0 };
+addEventListener('pointermove', (e) => { ptr.x = e.clientX; ptr.y = e.clientY; ptr.in = true; ptr.t = performance.now(); });
+// 터치: 누른 곳을 잠시(2.5초) 커서처럼 사용
+addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse' || e.target.closest('.card, .bs-top, .bs-menu, .bs-progress, .lab, .lb')) return; ptr.x = e.clientX; ptr.y = e.clientY; ptr.in = true; ptr.t = performance.now(); });
+cv.addEventListener && document.addEventListener('contextmenu', (e) => { if (TOUCH && !e.target.closest('.card, a, textarea')) e.preventDefault(); });
 document.addEventListener('pointerleave', () => { ptr.in = false; });
 
 const sm = (t) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
@@ -376,7 +388,7 @@ const TARGETS = {
   },
   demand(p) {
     const n = Math.round(lerp(100, 1500, seg(p, 0.55, 0.85)));
-    const ax = ptr.in && !mobile && ptr.x > W * 0.38 ? lerp(CX, ptr.x, 0.55) : CX, ay = ptr.in && !mobile && ptr.x > W * 0.38 ? lerp(CY, ptr.y, 0.55) : CY;
+    const att = ptr.in && (TOUCH || (!mobile && ptr.x > W * 0.38)); const ax = att ? lerp(CX, ptr.x, TOUCH ? 0.75 : 0.55) : CX, ay = att ? lerp(CY, ptr.y, TOUCH ? 0.75 : 0.55) : CY;
     const rc = R * 0.92 * Math.sqrt(n / 1500) + 14;
     for (let i = 0; i < N; i++) {
       if (i < n) { const r = Math.sqrt((i + 0.5) / n) * rc, a = i * 2.39996; setT(i, ax + Math.cos(a) * r, ay + Math.sin(a) * r, 1, 0); }
@@ -431,7 +443,7 @@ const TARGETS = {
     for (let i = 0; i < 900; i++) {
       const line = Math.floor(i / 36), col = i % 36;
       const x = bx + (col / 36) * bw * (line % 4 === 3 ? 0.6 : 1), y = by + line * (R * 1.7 / 25);
-      if (ptr.in && Math.hypot(ptr.x - x, ptr.y - y) < 46) state.rub[i] = Math.min(1, state.rub[i] + 0.12);
+      if (ptr.in && Math.hypot(ptr.x - x, ptr.y - y) < (TOUCH ? 70 : 46)) state.rub[i] = Math.min(1, state.rub[i] + 0.12);
       const rb = state.rub[i];
       setT(i, x, y, Math.min(1, 0.25 + seg(p, 0.2, 0.9) * 0.35 * (R1[i] > 0.3 ? 1 : 0) + rb * 0.75), rb > 0.5 ? 0 : 1);
     }
@@ -600,6 +612,7 @@ function placeLabels(id, p) {
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = now / 1000;
+  if (TOUCH && ptr.in && now - ptr.t > 2500) ptr.in = false;
   measure();
   const sc = SCENES[cur], id = sc.id, p = curP;
   TARGETS[id](p);
@@ -616,7 +629,8 @@ function frame(now) {
 
   g.fillStyle = id === 'mine' ? '#020202' : '#050505'; g.fillRect(0, 0, W, H);
   drawBackdrop(id, p, t);
-  const torch = id === 'mine' && ptr.in ? state.torch || 0 : 0, tx = ptr.x, ty = ptr.y;
+  const wander = TOUCH && !ptr.in; // 터치: 누르지 않을 땐 손전등이 천천히 바닥을 훑음
+  const torch = id === 'mine' && (ptr.in || TOUCH) ? state.torch || 0 : 0, tx = wander ? CX + Math.sin(t * 0.5) * R * 0.7 : ptr.x, ty = wander ? CY + R * 0.62 + Math.sin(t * 0.9) * R * 0.08 : ptr.y;
   const ease = reduced ? 1 : state.freeze ? 0 : id === 'mine' ? 0.035 : 0.075;
   for (let i = 0; i < N; i++) {
     X[i] += (TX[i] - X[i]) * ease; Y[i] += (TY[i] - Y[i]) * ease; A[i] += (TA[i] - A[i]) * 0.08;
@@ -645,6 +659,9 @@ addEventListener('click', (e) => {
   if (id === 'prologue' && Math.hypot(e.clientX - X[0], e.clientY - Y[0]) < 60) { state.entered = true; sound.ping('enter'); setTimeout(() => window.scrollTo({ top: sections[0].offsetTop + sections[0].offsetHeight * 0.55, behavior: 'smooth' }), 300); }
   if (id === 'life') {
     BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 36 && state.bowls[k] < 1) { state.bowls[k] = Math.min(1, state.bowls[k] + 0.5); const done = state.bowls.filter((v) => v >= 1).length; sound.ping(done === 10 && state.bowls[k] >= 1 ? 'bowlsDone' : 'bowl'); document.querySelectorAll('.bowl-n').forEach((n) => (n.textContent = done)); if (done === 10) showTip(tr('한 집의 하루'), tr('열 그릇이 모두 찼습니다. 이 평범한 밥상이 다음 장면에서 비어 갑니다.'), { getBoundingClientRect: () => ({ left: CX - 120, top: CY + R * 0.7 }) }); else showTip(b.t, state.bowls[k] >= 1 ? tr('한 그릇을 다 담았습니다.') : tr('한 번 더 누르면 가득 찹니다.'), { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
+  }
+  if (TOUCH && (id === 'mine' || id === 'truth')) { // 터치: 밝은 점 근처를 누르면 설명
+    for (let i = 0; i < 1800; i += 14) { if (C[i] === 3 && A[i] > 0.5 && Math.hypot(e.clientX - X[i], e.clientY - Y[i]) < 24) { showTip(tr('신원이 확인된 사람'), tr('127명 가운데 한 사람입니다. 이 전시는 이름을 표시하지 않습니다.'), { getBoundingClientRect: () => ({ left: X[i] - 20, top: Y[i] }) }); break; } }
   }
   if (id === 'light' && state.lamps.length < 60) { sound.ping('lamp'); state.lamps.push({ x: e.clientX, y: e.clientY, v: 0.25 + Math.random() * 0.35, ph: Math.random() * 6 }); document.querySelectorAll('.lamp-n').forEach((n) => (n.textContent = state.lamps.length)); }
   if (id === 'share') {
