@@ -211,3 +211,17 @@ body[data-scene="light"] { cursor: crosshair; }
 .snd-gate .g-s { font-size: 13px; color: rgba(255,255,255,.5); text-decoration: underline; text-underline-offset: 3px; background: none; border: 0; cursor: pointer; }
 .snd-gate .g-n { font-size: 12px; color: rgba(255,255,255,.4); }
 @keyframes g-eq { 50% { height: 3px; } }
+
+/* 언어 선택 */
+.lang-sw { position: relative; }
+.lang-sw .lang-btn { font-size: 12px; font-weight: 700; letter-spacing: .08em; padding: 8px 12px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; min-width: 44px; color: inherit; background: none; cursor: pointer; }
+.lang-sw .lang-btn:hover, .lang-sw .lang-btn[aria-expanded="true"] { background: #fff; color: #000; }
+.lang-sw .lang-list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; list-style: none; margin: 0; padding: 6px; min-width: 130px; background: rgba(8,9,14,.97); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; }
+.lang-sw .lang-list[hidden] { display: none; }
+.lang-sw .lang-list button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: rgba(255,255,255,.8); background: none; border: 0; cursor: pointer; }
+.lang-sw .lang-list button:hover { background: rgba(255,255,255,.08); color: #fff; }
+.lang-sw .lang-list button.on { color: #fff; font-weight: 700; }
+.lang-sw .lang-list button.on::after { content: ' ✓'; }
+html[data-lang="zh"] body { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+html[data-lang="ja"] body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+html[data-lang="en"] .card p, html[data-lang="en"] p { word-break: normal; }
