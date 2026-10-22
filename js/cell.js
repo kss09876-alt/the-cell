@@ -1,4 +1,4 @@
-import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=13';
+import { loadData, imageUrl, videoEmbed, esc, paras } from './data.js?v=14';
 
 const story = document.getElementById('story');
 const wipe = document.getElementById('wipe');
@@ -225,10 +225,15 @@ const R = {
 
 let TOP = [];
 (async () => {
-  const { cells: top, all: cells, blocks } = await loadData();
+  const { cells: top, all: cells, groups, blocks } = await loadData();
   TOP = top;
+  // 기획전 행성: 방들을 한 페이지에 이어서 보여줌
+  const grp = groups.find((x) => x.id === id);
+  if (grp) return renderGroup(grp, blocks);
   const idx = cells.findIndex((c) => c.id === id);
   const cell = cells[idx];
+  // 기획전에 속한 방을 직접 열면 기획전 페이지의 해당 방으로 이동
+  if (cell && cell.group) { location.replace(`cell.html?id=${encodeURIComponent(cell.group.id)}#room-${cell.room}`); return; }
   if (!cell || cell.status !== 'open') {
     story.innerHTML = `<section class="b-end"><p class="eyebrow">NOT FOUND</p><h2>아직 열리지 않은 행성입니다.</h2><a class="back" href="./">← 돌아가기</a></section>`;
     return finish('#7ee0d0');
@@ -243,8 +248,13 @@ let TOP = [];
   if (!bs.some((b) => b.type === 'cover')) bs = [{ type: 'cover' }, ...bs];
   if (!bs.some((b) => b.type === 'end')) bs.push({ type: 'end' });
   story.innerHTML = bs.map((b) => (R[b.type] || R.text)(b, cell, idx, cells)).join('');
+  setupAll(cell.color);
+  setupBgm(cell);
+})();
+
+function setupAll(color) {
   splitTitles();
-  finish(cell.color);
+  finish(color);
   setupScroll();
   setupWaves();
   setupPianos();
@@ -262,12 +272,83 @@ let TOP = [];
   setupRicebowl();
   setupBoundary();
   setupMemory();
-  setupBgm(cell);
-})();
+}
+
+// ---------- 기획전: 방 1 → 2 → 3 을 하나의 흐름으로 ----------
+function renderGroup(g, blocks) {
+  document.title = `${g.title} — XPACE`;
+  const rooms = g.rooms;
+  document.documentElement.style.setProperty('--accent', rooms[0]?.color || g.color);
+  const lab = document.getElementById('cell-label');
+  const html = rooms.map((r, k) => {
+    let bs = blocks.filter((b) => b.cell_id === r.id && b.type !== 'end');
+    if (!bs.some((b) => b.type === 'cover')) bs = [{ type: 'cover' }, ...bs];
+    return `<div class="room" id="room-${k + 1}" data-room="${k}" style="--accent:${esc(r.color || g.color)}">${bs.map((b) => (R[b.type] || R.text)(b, r, k, rooms)).join('')}</div>`;
+  }).join('');
+  const top = TOP.filter((x) => x.status === 'open'), gi = top.indexOf(g), next = top[(gi + 1) % top.length];
+  const href = (x) => (x.isGroup ? `cell.html?id=${encodeURIComponent(x.id)}` : x.url || `cell.html?id=${encodeURIComponent(x.id)}`);
+  const end = `<section class="b-end">
+    <p class="eyebrow">END OF ${esc(g.title)}</p>
+    <p class="end-rooms">${rooms.map((r, k) => `<a href="#room-${k + 1}" style="--accent:${esc(r.color)}">ROOM ${String(k + 1).padStart(2, '0')} · ${esc(r.short)}</a>`).join('')}</p>
+    ${next && next !== g ? `<a class="next" href="${href(next)}" style="--accent:${esc(next.color)}"><span>다음 행성으로</span><strong>${esc(next.title)}</strong></a>` : ''}
+    <a class="back" href="./">← 행성계로 돌아가기</a>
+  </section>`;
+  story.innerHTML = html + end;
+  setupAll(rooms[0]?.color || g.color);
+  // 지금 보고 있는 방: 상단 표시 · 강조색 · 배경음 전환
+  const els = [...document.querySelectorAll('.room')];
+  let cur = -1;
+  const bgm = setupGroupBgm(rooms);
+  const update = () => {
+    const mid = innerHeight * 0.5; let k = 0;
+    els.forEach((el, j) => { if (el.getBoundingClientRect().top <= mid) k = j; });
+    if (k === cur) return; cur = k;
+    const r = rooms[k];
+    lab.innerHTML = `${esc(g.title)} <span class="room-tag">ROOM ${String(k + 1).padStart(2, '0')} / ${String(rooms.length).padStart(2, '0')}</span> ${esc(r.short)}`;
+    document.documentElement.style.setProperty('--accent', r.color || g.color);
+    bgm && bgm.room(k);
+  };
+  addEventListener('scroll', update, { passive: true }); update();
+  if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 300);
+  document.querySelectorAll('.end-rooms a').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); e.stopImmediatePropagation(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' }); }, true));
+}
+
+// 방마다 다른 앰비언트 (bgm 칸이 ambient:* 인 방), 스크롤로 넘어가면 교차 전환
+function setupGroupBgm(rooms) {
+  const kinds = rooms.map((r) => ((r.bgm || '').startsWith('ambient') ? r.bgm.split(':')[1] || 'cosmos' : null));
+  if (!kinds.some(Boolean)) return null;
+  const box = document.createElement('div'); box.className = 'bgm';
+  box.innerHTML = `<button class="bgm-btn" aria-pressed="false"><span class="eq"><i></i><i></i><i></i></span><span class="lbl">SOUND OFF</span></button>`;
+  document.body.appendChild(box);
+  const btn = box.querySelector('.bgm-btn'), lbl = box.querySelector('.lbl');
+  let userMuted = (() => { try { return localStorage.getItem('xpace-sound') === 'off'; } catch (e) { return false; } })();
+  let cur = 0, gate = null, unlocked = false;
+  const st = kinds.map(() => false);
+  const ui = () => { const p = st.some(Boolean) || (unlocked && !userMuted); box.classList.toggle('playing', p); btn.setAttribute('aria-pressed', String(p)); lbl.textContent = p ? 'SOUND ON' : 'SOUND OFF'; if (p) closeGate(); };
+  const players = kinds.map((k, i) => (k ? createAmbient(k, (p) => { st[i] = p; if (p) unlocked = true; ui(); }) : null));
+  const apply = () => { players.forEach((p, i) => { if (!p) return; if (i === cur && !userMuted) p.play(); else if (st[i]) p.pause(); }); ui(); };
+  btn.addEventListener('click', () => { userMuted = !userMuted; try { localStorage.setItem('xpace-sound', userMuted ? 'off' : 'on'); } catch (e) {} if (userMuted) unlocked = false; apply(); });
+  const kick = (e) => {
+    if (e.target.closest && (e.target.closest('.bgm') || e.target.closest('.sound-gate'))) return;
+    unlocked = true; if (!userMuted) apply();
+    ['pointerdown', 'keydown', 'touchstart'].forEach((t) => removeEventListener(t, kick, true));
+  };
+  ['pointerdown', 'keydown', 'touchstart'].forEach((t) => addEventListener(t, kick, true));
+  function closeGate() { const g = gate; if (g) { g.classList.add('out'); setTimeout(() => g.remove(), 600); gate = null; } }
+  setTimeout(() => {
+    if (st.some(Boolean) || userMuted) return;
+    gate = document.createElement('div'); gate.className = 'sound-gate';
+    gate.innerHTML = `<div class="sg-inner"><p class="eyebrow">THIS PLANET HAS SOUND</p><button class="sg-on"><span class="eq"><i></i><i></i><i></i></span> 소리와 함께 입장</button><button class="sg-off">소리 없이 보기</button></div>`;
+    document.body.appendChild(gate);
+    gate.querySelector('.sg-on').addEventListener('click', () => { userMuted = false; unlocked = true; apply(); closeGate(); });
+    gate.querySelector('.sg-off').addEventListener('click', () => { userMuted = true; closeGate(); ui(); });
+  }, 1600);
+  return { room(k) { cur = k; apply(); } };
+}
 
 // ---------- 앰비언트 합성 엔진 ----------
 function createAmbient(kind, onState) {
-  let ctx, master, sparkleTimer, built = false;
+  let ctx, master, sparkleTimer, built = false, susT;
   const rnd = (a, b) => a + Math.random() * (b - a);
   function impulse(sec) {
     const len = ctx.sampleRate * sec, buf = ctx.createBuffer(2, len, ctx.sampleRate);
@@ -327,6 +408,7 @@ function createAmbient(kind, onState) {
     play() {
       try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
       if (!built) build();
+      clearTimeout(susT);
       return ctx.resume().then(() => {
         if (ctx.state !== 'running') return;
         master.gain.cancelScheduledValues(ctx.currentTime);
@@ -340,7 +422,7 @@ function createAmbient(kind, onState) {
       master.gain.cancelScheduledValues(ctx.currentTime);
       master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
       master.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
-      setTimeout(() => ctx.suspend(), 1300);
+      clearTimeout(susT); susT = setTimeout(() => ctx.suspend(), 1300);
       onState(false);
     },
   };

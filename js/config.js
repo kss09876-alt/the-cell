@@ -10,7 +10,7 @@ export const CONFIG = {
   // 기획전: 여러 전시(셀)를 하나의 행성으로 묶음. members 순서가 방 순서입니다.
   groups: [
     { id: 'g001', title: '최초의 행성', subtitle: '빛 · 소리 · 우주 — 세 개의 방으로 이루어진 개관 기획전', artist: 'XPACE 기획전', period: '2026.10 – 2026.12',
-      color: '#c9d6ff', fx: 'trio', url: 'first.html', members: ['c001', 'c002', 'c003'] },
+      color: '#c9d6ff', fx: 'trio', members: ['c001', 'c002', 'c003'] },
   ],
   // 메인 그리드 최소 큐브 수 (모자라면 빈 셀로 채움)
   minCubes: 12,

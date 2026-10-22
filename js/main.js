@@ -1,6 +1,6 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
-import { loadData, imageUrl, esc } from './data.js?v=13';
+import { loadData, imageUrl, esc } from './data.js?v=14';
 import { hsound } from './home-sound.js?v=3';
 
 const canvas = document.getElementById('stage');
@@ -434,7 +434,7 @@ document.querySelectorAll('.cell-list').forEach((l) => l.addEventListener('point
         <span class="t">${esc(shortTitle(c.title) || 'Coming soon')}</span>
         <span class="m">${esc([c.artist, c.period].filter(Boolean).join(' · '))}</span>
       ${c.status === 'open' ? '</a>' : '</div>'}
-      ${c.rooms ? `<ol class="rooms">${c.rooms.map((r, k) => `<li style="--accent:${esc(r.color || '#fff')}"><a href="cell.html?id=${encodeURIComponent(r.id)}"><span class="no">ROOM ${String(k + 1).padStart(2, '0')}</span><span class="t">${esc(r.short)}</span><span class="m">${esc(r.subtitle || '')}</span></a></li>`).join('')}</ol>` : ''}
+      ${c.rooms ? `<ol class="rooms">${c.rooms.map((r, k) => `<li style="--accent:${esc(r.color || '#fff')}"><a href="cell.html?id=${encodeURIComponent(c.id)}#room-${k + 1}"><span class="no">ROOM ${String(k + 1).padStart(2, '0')}</span><span class="t">${esc(r.short)}</span><span class="m">${esc(r.subtitle || '')}</span></a></li>`).join('')}</ol>` : ''}
     </li>`).join('');
   resize();
   t0 = last = performance.now();
