@@ -1,0 +1,702 @@
+{
+ "_note": "XPACE 번역 데이터. 시트에 title_en, body_zh 같은 칸이 있으면 그 칸이 우선합니다. 키: 셀ID:순서",
+ "cells": {
+  "c001": {
+   "en": {
+    "title": "The First Room",
+    "subtitle": "Quantum universe — everything began from a single point",
+    "artist": "XPACE Exhibition",
+    "period": ""
+   },
+   "zh": {
+    "title": "最初的房间",
+    "subtitle": "量子宇宙 — 一切都始于一个点",
+    "artist": "XPACE 特展",
+    "period": ""
+   },
+   "ja": {
+    "title": "最初の部屋",
+    "subtitle": "量子宇宙 — すべてはひとつの点から始まった",
+    "artist": "XPACE 企画展",
+    "period": ""
+   }
+  },
+  "c002": {
+   "en": {
+    "title": "Cross-sections of Light",
+    "subtitle": "A record of light held in a rectangle",
+    "artist": "XPACE Exhibition",
+    "period": ""
+   },
+   "zh": {
+    "title": "光的截面",
+    "subtitle": "关在方框里的光的记录",
+    "artist": "XPACE 特展",
+    "period": ""
+   },
+   "ja": {
+    "title": "光の断面",
+    "subtitle": "四角の中に閉じこめた光の記録",
+    "artist": "XPACE 企画展",
+    "period": ""
+   }
+  },
+  "c003": {
+   "en": {
+    "title": "Map of Sound",
+    "subtitle": "Putting the sounds of a city on a planet",
+    "artist": "XPACE Exhibition",
+    "period": ""
+   },
+   "zh": {
+    "title": "声音的地图",
+    "subtitle": "把城市的声音装进行星",
+    "artist": "XPACE 特展",
+    "period": ""
+   },
+   "ja": {
+    "title": "音の地図",
+    "subtitle": "街の音を惑星に込める",
+    "artist": "XPACE 企画展",
+    "period": ""
+   }
+  },
+  "c004": {
+   "en": {
+    "title": "async",
+    "subtitle": "Between noise and music: the sounds of Ryuichi Sakamoto",
+    "artist": "Ryuichi Sakamoto (1952–2023)",
+    "period": "Imagined exhibition · Demo"
+   },
+   "zh": {
+    "title": "async",
+    "subtitle": "在噪音与音乐之间，坂本龙一的声音",
+    "artist": "坂本龙一（1952–2023）",
+    "period": "虚拟特展 · 演示"
+   },
+   "ja": {
+    "title": "async",
+    "subtitle": "ノイズと音楽のあいだ、坂本龍一の音たち",
+    "artist": "坂本龍一（1952–2023）",
+    "period": "架空の企画展 · デモ"
+   }
+  },
+  "c005": {
+   "en": {
+    "title": "Bitssal",
+    "subtitle": "80 Years of Memory — October 1946 and the 1950 Gyeongsan Cobalt Mine",
+    "artist": "Jin Siyoung · Kim Dongsun",
+    "period": ""
+   },
+   "zh": {
+    "title": "光之米",
+    "subtitle": "80年的记忆 — 1946年10月与1950年庆山钴矿",
+    "artist": "Jin Siyoung · Kim Dongsun",
+    "period": ""
+   },
+   "ja": {
+    "title": "光の米",
+    "subtitle": "80年の記憶 — 1946年10月と1950年 慶山コバルト鉱山",
+    "artist": "Jin Siyoung · Kim Dongsun",
+    "period": ""
+   }
+  }
+ },
+ "blocks": {
+  "c001:1": {
+   "en": {
+    "title": "The First Room",
+    "body": "Every story began with a single point",
+    "caption": ""
+   },
+   "zh": {
+    "title": "最初的房间",
+    "body": "所有的故事，都从一个点开始",
+    "caption": ""
+   },
+   "ja": {
+    "title": "最初の部屋",
+    "body": "すべての物語は、ひとつの点から始まった",
+    "caption": ""
+   }
+  },
+  "c001:2": {
+   "en": {
+    "title": "",
+    "body": "Think of one worry that has been holding on to you today. Now fold that worry down until it is as small as a single dot. 13.8 billion years ago, the entire universe was exactly that small. Every star in tonight's sky, and you, reading this screen, were all inside it.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "",
+    "body": "想一想今天一直缠着你的一个烦恼。现在，把这个烦恼折叠起来，折到只有一个点那么小。138亿年前，整个宇宙就正好是那么小的一个点。今晚夜空中的每一颗星，还有正在看这块屏幕的你，全都在那里面。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "",
+    "body": "今日あなたをつかんで離さなかった悩みをひとつ、思い浮かべてみてください。では、その悩みを点ひとつぶんの大きさまで小さく折りたたんでみます。138億年前、宇宙全体がちょうどそれくらいの点でした。いま夜空に見えるすべての星も、この画面を見ているあなたも、全部その中に入っていたのです。",
+    "caption": ""
+   }
+  },
+  "c001:3": {
+   "en": {
+    "title": "A very, very short moment",
+    "body": "Scientists call the very first moment of the universe 10⁻⁴³ seconds, the \"Planck time.\" Split one second into a trillion pieces, do it three times over, and keep splitting — that is how short it is. What came before it, even science does not yet know. Our story begins right at that threshold.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "非常、非常短的一瞬",
+    "body": "科学家把宇宙诞生的最初一瞬称为10⁻⁴³秒，也就是“普朗克时间”。把1秒切成一万亿份，重复三次之后还要再切很久，才能到达这么短的时间。在那之前发生了什么，连科学也还不知道。我们的故事，就从那道门槛出发。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "とても、とても短い瞬間",
+    "body": "宇宙が生まれた最初の瞬間を、科学者は10⁻⁴³秒、「プランク時間」と呼びます。1秒を1兆に分けることを3回くり返し、さらにずっと分けてようやくたどり着く時間です。それより前のことは、科学もまだ知りません。私たちの物語は、まさにその入口から出発します。",
+    "caption": ""
+   }
+  },
+  "c001:4": {
+   "en": {
+    "title": "Everywhere, until you look",
+    "body": "Strange things happen in the very small world. Until someone looks, a particle floats in a state of \"maybe here, maybe there.\" Click the cloud below and observe it yourself. The blurry possibilities settle into a single point, then scatter again a moment later. Not being decided yet also means it could still become anything.",
+    "caption": "The idea that observing settles a particle into one place follows the \"Copenhagen interpretation,\" one of several interpretations of quantum mechanics."
+   },
+   "zh": {
+    "title": "在被看见之前，无处不在",
+    "body": "在极小的世界里，会发生奇怪的事。在有人观察之前，粒子一直漂浮在“可能在这里，也可能在那里”的状态。点击下面的云，亲自观测一下吧。模糊的可能性会落定成一个点，片刻之后又重新散开。还没有被决定，也意味着它还可以成为任何东西。",
+    "caption": "“一观测就被确定为一个”的说法，依据的是量子力学多种诠释中的“哥本哈根诠释”。"
+   },
+   "ja": {
+    "title": "見るまでは、どこにでも",
+    "body": "とても小さな世界では、不思議なことが起こります。粒子は誰かがのぞくまで、「ここかもしれないし、あそこかもしれない」状態でただよっています。下の雲を押して、自分で観測してみてください。ぼんやりしていた可能性がひとつの点に決まり、しばらくするとまた散らばります。まだ決まっていないということは、何にでもなれるということでもあります。",
+    "caption": "観測するとひとつに決まるという説明は、量子力学のいくつかの解釈のうち「コペンハーゲン解釈」に沿った図です。"
+   }
+  },
+  "c001:5": {
+   "en": {
+    "title": "From a point to a universe, in four scenes",
+    "body": "Flicker — Even space that looks empty is never really still. Tiny bits of energy keep appearing and vanishing.|Inflation — In a moment far shorter than a blink, the universe puffed up like a balloon, stretching those tiny flickers to the size of the cosmos.|First light — About 380,000 years later the universe became transparent, and light could travel far for the first time. We still observe that light all over the sky today. It is called the cosmic microwave background.|Us — The tiny ripples from back then gathered into galaxies and stars. And atoms forged inside stars now make up your body.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "从一个点到宇宙，四个场景",
+    "body": "涨落 — 看似空无一物的空间，其实从不安静。微小的能量不断地出现又消失。|膨胀 — 在比眨眼还要短得多的一瞬，宇宙像气球一样猛地胀大，微小的涨落也跟着被拉伸到宇宙那么大。|最初的光 — 大约38万年后，宇宙变得透明，光第一次能够飞向远方。那道光至今仍在天空各处被观测到，它叫作“宇宙微波背景辐射”。|我们 — 当时留下的微小斑纹聚集成星系、成为恒星。而在恒星里诞生的原子，如今正构成着你的身体。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "点が宇宙になるまで、四つの場面",
+    "body": "ゆらぎ — 何もないように見える空間も、実はじっとしていません。小さなエネルギーが絶えず生まれては消えています。|膨張 — まばたきよりはるかに短い瞬間、宇宙は風船のように一気にふくらみました。小さなゆらぎも一緒に宇宙ほどの大きさに引き伸ばされました。|最初の光 — 約38万年たって宇宙が透明になると、光がはじめて遠くまで飛べるようになりました。その光はいまも空のあちこちで観測されています。「宇宙マイクロ波背景放射」と呼ばれます。|わたしたち — そのときできたごく小さなむらが集まって銀河になり、星になりました。そして星の中で作られた原子が、いまあなたの体をつくっています。",
+    "caption": ""
+   }
+  },
+  "c001:6": {
+   "en": {
+    "title": "From a point to now: 13.8 billion years",
+    "body": "10⁻⁴³s The first moment — the earliest science can trace back|10⁻³²s Cosmic inflation ends|3min The first atomic nuclei (hydrogen, helium) are born. About the time it takes to cook instant noodles|380,000y The universe turns transparent and light starts to fly freely|~200My The first stars switch on, one by one|9.2By The Sun and the Earth are born|13.8By Now — you are looking at this screen",
+    "caption": ""
+   },
+   "zh": {
+    "title": "从一个点到现在，138亿年",
+    "body": "10⁻⁴³秒 最初的一瞬 — 科学所能追溯的最早时刻|10⁻³²秒 宇宙暴胀结束|3分钟 最早的原子核（氢、氦）诞生，大约是煮一包泡面的时间|38万年 宇宙变得透明，光开始自由飞行|约2亿年 第一批恒星一颗颗亮起|92亿年 太阳和地球诞生|138亿年 现在，你正在看这块屏幕",
+    "caption": ""
+   },
+   "ja": {
+    "title": "点からいままで、138億年",
+    "body": "10⁻⁴³秒 最初の瞬間 — 科学がさかのぼれるいちばん早いとき|10⁻³²秒 宇宙のインフレーションが終わる|3分 最初の原子核（水素・ヘリウム）が生まれる。カップラーメンができるくらいの時間|38万年 宇宙が透明になり、光が自由に飛びはじめる|約2億年 最初の星たちがひとつ、またひとつと灯る|92億年 太陽と地球が生まれる|138億年 いま、あなたがこの画面を見ている",
+    "caption": ""
+   }
+  },
+  "c001:7": {
+   "en": {
+    "title": "",
+    "body": "We are made of star-stuff.",
+    "caption": "Carl Sagan, Cosmos (1980)"
+   },
+   "zh": {
+    "title": "",
+    "body": "我们由星辰的物质构成。",
+    "caption": "卡尔·萨根，《宇宙》（1980）"
+   },
+   "ja": {
+    "title": "",
+    "body": "わたしたちは星のかけらでできている。",
+    "caption": "カール・セーガン『コスモス』（1980）"
+   }
+  },
+  "c001:8": {
+   "en": {
+    "title": "",
+    "body": "Today's worry is probably still there. But placed inside a 13.8-billion-year story, doesn't it look a little different? Now let's follow that first light into the next room.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "",
+    "body": "今天的烦恼大概还在那里。可是把它放进一个长达138亿年的故事里，是不是看起来有点不一样了？现在，让我们追随那最初的光，走进下一个房间。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "",
+    "body": "今日の悩みは、たぶんまだそこにあるでしょう。でも138億年の物語の中に置いてみると、少し違って見えませんか？ さあ、その最初の光を追って、次の部屋へ行きましょう。",
+    "caption": ""
+   }
+  },
+  "c001:9": {
+   "en": {
+    "title": "Next planet",
+    "body": "",
+    "caption": ""
+   },
+   "zh": {
+    "title": "前往下一颗行星",
+    "body": "",
+    "caption": ""
+   },
+   "ja": {
+    "title": "次の惑星へ",
+    "body": "",
+    "caption": ""
+   }
+  },
+  "c002:1": {
+   "en": {
+    "title": "Cross-sections of Light",
+    "body": "The stories that happen when light meets something",
+    "caption": ""
+   },
+   "zh": {
+    "title": "光的截面",
+    "body": "光遇见某样东西时发生的故事",
+    "caption": ""
+   },
+   "ja": {
+    "title": "光の断面",
+    "body": "光が何かと出会うときに生まれる物語",
+    "caption": ""
+   }
+  },
+  "c002:2": {
+   "en": {
+    "title": "When can we see light?",
+    "body": "You can't hold light in your hand. Yet, curiously, the moment it hits something, it shows itself. Pass it through glass and it becomes a rainbow; block it and it becomes a shadow. In this room, we cut out the moments when light meets the world, one scene at a time.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "光什么时候才能被看见？",
+    "body": "光是抓不住的。可是很神奇，它一碰到什么东西，就会显露出模样。穿过玻璃就变成彩虹，被什么挡住就变成影子。在这个房间里，我们把光与世界相遇的瞬间，一个场景一个场景地切下来给你看。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "光はいつ見える？",
+    "body": "光は手でつかめません。それなのに不思議なことに、何かにぶつかった瞬間、姿をあらわします。ガラスを通れば虹になり、何かにさえぎられれば影になります。この部屋では、光が世界と出会う瞬間を、一場面ずつ切り取ってお見せします。",
+    "caption": ""
+   }
+  },
+  "c002:3": {
+   "en": {
+    "title": "The rainbow hidden in white light",
+    "body": "Move the light with your mouse and shine it into the prism. Light that looked only white spreads into many colors. It happens because each color bends by a slightly different amount in glass. In the 1660s, Newton used exactly this experiment to show that white light is a mixture of many colors. Something that looks like one thing can turn out to hold many colors together.",
+    "caption": "The bending angle is calculated with Snell's law. To make the colors easy to see, the difference between colors is set larger than in real glass."
+   },
+   "zh": {
+    "title": "藏在白光里的彩虹",
+    "body": "用鼠标移动光，照向三棱镜。原本只看起来是白色的光，会展开成许多种颜色。这是因为每种颜色在玻璃里弯折的程度都略有不同。17世纪60年代，牛顿正是用这个实验证明了“白光是多种颜色混合而成的光”。看似单一的东西，仔细看，其实有许多颜色在一起。",
+    "caption": "光的折射角按斯涅尔定律计算。为了让颜色更容易看清，各颜色之间的差异设得比真实玻璃更大。"
+   },
+   "ja": {
+    "title": "白い光にかくれた虹",
+    "body": "マウスで光を動かして、プリズムに当ててみてください。白くしか見えなかった光が、いくつもの色に広がります。色ごとにガラスの中で曲がる度合いが少しずつ違うために起こることです。1660年代、ニュートンはまさにこの実験で「白い光はいろいろな色がまざった光」だと明らかにしました。ひとつに見えるものも、のぞいてみればたくさんの色が一緒にあるのです。",
+    "caption": "光が曲がる角度はスネルの法則で計算しました。色が見やすいよう、色ごとの差は実際のガラスより大きくしています。"
+   }
+  },
+  "c002:4": {
+   "en": {
+    "title": "A shadow is a slice of light",
+    "body": "This time your cursor becomes the sun. Move the light and the shadows grow long, short, and overlap. A shadow is where light could not reach — in other words, light cut out in the shape of an object. Depending on where you place the light, the same object casts a completely different shadow. Maybe thoughts are like that too?",
+    "caption": ""
+   },
+   "zh": {
+    "title": "影子是光的切片",
+    "body": "这一次，光标就是太阳。移动光，影子会变长、变短，彼此重叠。影子是光照不到的地方，也就是按物体的形状把光剪下来的截面。光放在哪里，同一个物体就会投下完全不同的影子。想法，或许也是这样吧？",
+    "caption": ""
+   },
+   "ja": {
+    "title": "影は光のかけら",
+    "body": "今度はカーソルが太陽になります。光を動かすと、影が長くなったり、短くなったり、重なったりします。影は光が届かなかった場所、いわば物のかたちに光を切り抜いた断面です。光をどこに置くかで、同じ物でもまったく違う影ができます。考えも、もしかするとそうではないでしょうか？",
+    "caption": ""
+   }
+  },
+  "c002:5": {
+   "en": {
+    "title": "Four things light does every day",
+    "body": "Bouncing (reflection) — We can see objects because light bounces off them and enters our eyes.|Bending (refraction) — A straw in a glass of water looks bent, right? Light changes speed as it enters the water, so its direction curves.|Scattering — This is why the sky is blue! Air scatters blue light in every direction far more than other colors.|Swallowing (absorption) — A red apple swallows most other colors and sends back red. The color we see is the light an object sends back.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "光每天都在做的四件事",
+    "body": "反弹（反射）— 我们之所以能看见东西，是因为光撞到物体后反弹回来，进入了我们的眼睛。|弯折（折射）— 插在水杯里的吸管看起来是弯的吧？那是因为光进入水中时速度改变，方向也跟着弯了。|散开（散射）— 天空为什么是蓝色的！因为空气把蓝光向四面八方散射得比其他颜色多得多。|吞下（吸收）— 红苹果吞下了大部分其他颜色，只把红光送回来。我们看到的颜色，是物体“送回来”的光。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "光が毎日している四つのこと",
+    "body": "はね返る（反射）— 物が見えるのは、その物にぶつかってはね返った光が目に入るからです。|曲がる（屈折）— 水の入ったコップにさしたストローが曲がって見えますよね？ 光が水に入るときに速さが変わって、向きが曲がるからです。|散らばる（散乱）— 空が青い理由！ 空気が青い光をほかの色よりずっと多く四方に散らすからです。|飲みこむ（吸収）— 赤いリンゴはほかの色をほとんど飲みこみ、赤い光を返します。わたしたちが見る色は、物が「返した」光なのです。",
+    "caption": ""
+   }
+  },
+  "c002:6": {
+   "en": {
+    "title": "When did the light you see leave?",
+    "body": "1.3s Light that left the Moon. The Moon you just saw is the Moon of 1.3 seconds ago|8m20s Light that left the Sun. The Sun you see is the Sun of 8 minutes ago|4.2y Light from the nearest star, Proxima Centauri|2.5My Light from the Andromeda Galaxy. It set out around the time our distant ancestors first made stone tools|13.8By The cosmic microwave background — the oldest light we can see",
+    "caption": ""
+   },
+   "zh": {
+    "title": "你现在看到的光，是什么时候出发的？",
+    "body": "1.3秒 从月亮出发的光。你刚刚看到的月亮，是1.3秒前的月亮|8分20秒 从太阳出发的光。你现在看到的太阳，是8分钟前的太阳|4.2年 从最近的恒星——比邻星出发的光|250万年 仙女座星系的光。它出发时，人类遥远的祖先刚刚开始用石头制造工具|138亿年 宇宙微波背景辐射，我们所能看到的最古老的光",
+    "caption": ""
+   },
+   "ja": {
+    "title": "いま見ている光は、いつ出発した？",
+    "body": "1.3秒 月から出発した光。いま見た月は1.3秒前の月です|8分20秒 太陽から出発した光。いま見える太陽は8分前の太陽です|4.2年 いちばん近い星、プロキシマ・ケンタウリから出発した光|250万年 アンドロメダ銀河の光。人類の遠い祖先がはじめて石で道具を作っていたころに出発しました|138億年 宇宙マイクロ波背景放射。わたしたちが見られるいちばん古い光です",
+    "caption": ""
+   }
+  },
+  "c002:7": {
+   "en": {
+    "title": "",
+    "body": "The night sky is an album full of light that has already passed.",
+    "caption": "Exhibition text"
+   },
+   "zh": {
+    "title": "",
+    "body": "夜空是一本装满了逝去之光的相册。",
+    "caption": "展览文案"
+   },
+   "ja": {
+    "title": "",
+    "body": "夜空は、過ぎ去った光でいっぱいのアルバムだ。",
+    "caption": "展示文"
+   }
+  },
+  "c002:8": {
+   "en": {
+    "title": "Next planet",
+    "body": "",
+    "caption": ""
+   },
+   "zh": {
+    "title": "前往下一颗行星",
+    "body": "",
+    "caption": ""
+   },
+   "ja": {
+    "title": "次の惑星へ",
+    "body": "",
+    "caption": ""
+   }
+  },
+  "c003:1": {
+   "en": {
+    "title": "Map of Sound",
+    "body": "Another world you hear when you close your eyes",
+    "caption": "Tap the screen to make ripples"
+   },
+   "zh": {
+    "title": "声音的地图",
+    "body": "闭上眼睛就能听见的另一个世界",
+    "caption": "点击画面，制造涟漪"
+   },
+   "ja": {
+    "title": "音の地図",
+    "body": "目を閉じると聞こえてくる、もうひとつの世界",
+    "caption": "画面を押して波紋をつくってみましょう"
+   }
+  },
+  "c003:2": {
+   "en": {
+    "title": "A city walked with eyes closed",
+    "body": "We usually read maps with our eyes. But a city has one more map you can't see: the sound of rain pooling in an alley, a train pulling into the platform, birds in the park at dawn. In the 1970s, the Canadian composer R. Murray Schafer called all the sounds that fill a place its \"soundscape.\" Put on your earphones and close your eyes for a moment. Shall we listen?",
+    "caption": ""
+   },
+   "zh": {
+    "title": "闭着眼睛走过的城市",
+    "body": "地图通常是用眼睛看的。可是城市里还有一张看不见的地图：雨水积在小巷里的声音，列车驶进站台的声音，黎明公园里的鸟鸣。20世纪70年代，加拿大作曲家R·默里·谢弗把充满一个地方的全部声音称为“声景”（soundscape），也就是声音的风景。戴上耳机，闭上眼睛，听一听吧？",
+    "caption": ""
+   },
+   "ja": {
+    "title": "目を閉じて歩く街",
+    "body": "地図はふつう目で見ますよね。でも街には、目に見えない地図がもうひとつあります。雨水がたまる路地の音、電車がホームに入ってくる音、夜明けの公園の鳥の声。1970年代、カナダの作曲家R・マリー・シェーファーは、ひとつの場所を満たす音のすべてを「サウンドスケープ」、つまり音の風景と呼びました。イヤホンをつけて、少しだけ目を閉じて聴いてみましょうか？",
+    "caption": ""
+   }
+  },
+  "c003:3": {
+   "en": {
+    "title": "A map drawn in sound",
+    "body": "Click the six places on the map to turn their sounds on and off. Turn on several at once and the sounds overlap into a single landscape. Places on the left sound louder in your left ear, places on the right in your right ear. Can you feel that your own voice is one line in this huge chorus?",
+    "caption": "None of the sounds are recordings; they are generated live in your browser. They sound better with earphones."
+   },
+   "zh": {
+    "title": "用声音画的地图",
+    "body": "点击地图上的六个地点，打开或关闭那里的声音。同时打开好几个地方，声音会彼此重叠，成为一片风景。左边的地点在左耳听起来更响，右边的地点在右耳更响。你能感觉到，你自己的声音也是这场宏大合唱中的一行吗？",
+    "caption": "所有声音都不是录音，而是在浏览器里实时生成的。戴上耳机听得更清楚。"
+   },
+   "ja": {
+    "title": "音で描いた地図",
+    "body": "地図の上の六つの場所を押して、そこの音をオン・オフしてみてください。いくつかの場所を一緒にオンにすると、音が重なってひとつの風景になります。左にある場所は左耳に、右の場所は右耳に大きく聞こえます。自分の声ひとつも、この大きな合唱の一行なのだと感じられますか？",
+    "caption": "すべての音は録音ではなく、ブラウザでリアルタイムに作った音です。イヤホンを使うとよりよく聞こえます。"
+   }
+  },
+  "c003:4": {
+   "en": {
+    "title": "Four ways to listen to a city",
+    "body": "Walk — Walk the same street slowly and you'll hear different sounds.|Stop — When you stop walking, sounds that were hidden behind your footsteps appear one by one.|Name — Try naming the sounds you hear. What was just \"noise\" turns into a \"landscape.\"|Map — Write down where you heard what, and you'll have a sound map that exists nowhere else in the world.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "聆听城市的四种方法",
+    "body": "走 — 同一条路，慢慢走，会听到不一样的声音。|停 — 停下脚步，被自己的脚步声盖住的声音就会一个个出现。|命名 — 给听到的声音起个名字吧。原本只是“吵”的噪音，会变成“风景”。|记在地图上 — 把在哪里听到了什么记下来，就会有一张世界上独一无二、属于你自己的声音地图。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "街を聴く四つの方法",
+    "body": "歩く — 同じ道も、ゆっくり歩けば違う音が聞こえます。|止まる — 足を止めると、自分の足音にかくれていた音がひとつ、またひとつとあらわれます。|名前をつける — 聞こえる音に名前をつけてみてください。ただの「うるささ」だった騒音が「風景」に変わります。|地図に残す — どこで何が聞こえたかを書き留めておけば、世界にひとつだけの自分の音の地図ができます。",
+    "caption": ""
+   }
+  },
+  "c003:5": {
+   "en": {
+    "title": "How loud is a sound?",
+    "body": "0dB The quietest sound a person can hear|30dB A whisper|60dB A face-to-face conversation|85dB The level where long exposure can damage your hearing|120dB A sound that starts to hurt your ears",
+    "caption": ""
+   },
+   "zh": {
+    "title": "声音有多大",
+    "body": "0dB 人能听到的最小的声音|30dB 悄悄话|60dB 面对面的交谈|85dB 长时间听可能损伤听力的标准|120dB 耳朵开始感到疼痛的声音",
+    "caption": ""
+   },
+   "ja": {
+    "title": "音の大きさ",
+    "body": "0dB 人が聞きとれるいちばん小さな音|30dB ささやき声|60dB 向かい合っての会話|85dB 長く聞くと耳を傷めるおそれがある基準|120dB 耳が痛くなりはじめる音",
+    "caption": ""
+   }
+  },
+  "c003:6": {
+   "en": {
+    "title": "The sounds around you right now",
+    "body": "Turn on the microphone and the sounds around you at this very moment are painted in color. Low sounds at the bottom, high sounds at the top. Stop talking for a moment and listen to the world the screen paints for you.",
+    "caption": "Sound is drawn only on this screen; it is never recorded or sent anywhere. If your browser asks for microphone permission, please click \"Allow.\""
+   },
+   "zh": {
+    "title": "此刻你身边的声音",
+    "body": "打开麦克风，此刻你周围的声音就会被画成颜色。下方是低音，上方是高音。先停下说话，听听屏幕为你画出的世界吧。",
+    "caption": "声音只会在这个画面上绘制，不会被录音，也不会被发送到任何地方。如果浏览器询问麦克风权限，请点击“允许”。"
+   },
+   "ja": {
+    "title": "いま、あなたのそばの音",
+    "body": "マイクをオンにすると、いまこの瞬間のあなたのまわりの音が色で描かれます。下は低い音、上は高い音です。少しだけ話すのをやめて、画面が描いてくれるあなたの世界に耳をすませてみてください。",
+    "caption": "音はこの画面に描かれるだけで、録音されたりどこかへ送られたりすることはありません。ブラウザがマイクの許可を求めたら「許可」を押してください。"
+   }
+  },
+  "c003:7": {
+   "en": {
+    "title": "",
+    "body": "Lift your head, look a little wider, listen a little farther. Your heart will widen just as much.",
+    "caption": "XPACE"
+   },
+   "zh": {
+    "title": "",
+    "body": "抬起头，看得更宽一些，听得更远一些。你的心胸也会随之变宽。",
+    "caption": "XPACE"
+   },
+   "ja": {
+    "title": "",
+    "body": "顔を上げて、もう少し広く見て、もう少し遠くまで聴いてみてください。心の幅も、そのぶん広がるはずです。",
+    "caption": "XPACE"
+   }
+  },
+  "c003:8": {
+   "en": {
+    "title": "Next planet",
+    "body": "",
+    "caption": ""
+   },
+   "zh": {
+    "title": "前往下一颗行星",
+    "body": "",
+    "caption": ""
+   },
+   "ja": {
+    "title": "次の惑星へ",
+    "body": "",
+    "caption": ""
+   }
+  },
+  "c004:1": {
+   "en": {
+    "title": "async",
+    "body": "Between noise and music: the sounds of Ryuichi Sakamoto",
+    "caption": ""
+   },
+   "zh": {
+    "title": "async",
+    "body": "在噪音与音乐之间，坂本龙一的声音",
+    "caption": ""
+   },
+   "ja": {
+    "title": "async",
+    "body": "ノイズと音楽のあいだ、坂本龍一の音たち",
+    "caption": ""
+   }
+  },
+  "c004:2": {
+   "en": {
+    "title": "",
+    "body": "A piano is a box in which people forced wood from the forest and metal from the earth into tune. This exhibition begins at the moment that tuning starts to come undone.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "",
+    "body": "钢琴是人把来自森林的木头和来自大地的金属硬凑在一起、调成同一音准的箱子。这场展览，从那份调音一点点松开的瞬间开始。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "",
+    "body": "ピアノは、森から来た木と大地から来た金属を、人が無理やり調律して合わせた箱だ。この展示は、その調律が少しずつほどけていく瞬間から始まる。",
+    "caption": ""
+   }
+  },
+  "c004:3": {
+   "en": {
+    "title": "Curatorial note",
+    "body": "For half a century, Ryuichi Sakamoto kept moving the borders of sound, from techno-pop to film scores to experiments with noise and silence. Following \"async,\" a keyword of his final years, this imagined exhibition suggests ways to listen again to sounds that lie outside fixed beats and tuning.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "策展说明",
+    "body": "半个世纪以来，坂本龙一从电子流行乐到电影配乐，再到噪音与寂静的实验，不断移动着声音的边界。这场虚拟特展循着他晚年的关键词“async（非同步）”，提出重新聆听那些处于固定节拍与调音之外的声音的方法。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "企画意図",
+    "body": "坂本龍一はテクノポップから映画音楽、そしてノイズと沈黙の実験まで、半世紀にわたって音の境界を動かし続けた。この架空の企画展は、彼の晩年のキーワード「async（非同期）」をたどり、決められた拍子と調律の外にある音を、もう一度聴く方法を提案する。",
+    "caption": ""
+   }
+  },
+  "c004:4": {
+   "en": {
+    "title": "1952 — 2023",
+    "body": "1952 Born January 17 in Nakano, Tokyo|1978 Forms Yellow Magic Orchestra with Haruomi Hosono and Yukihiro Takahashi|1983 Acts in and scores Merry Christmas, Mr. Lawrence|1988 Wins the Academy Award for Best Original Score for The Last Emperor, with David Byrne and Cong Su|2011 Great East Japan Earthquake. Afterwards he listens to a piano that was submerged by the tsunami|2014 Stops working after a throat cancer diagnosis|2015 Returns and scores The Revenant|2017 Releases async, his first solo album in eight years|2023 Releases the album 12. Dies on March 28",
+    "caption": ""
+   },
+   "zh": {
+    "title": "1952 — 2023",
+    "body": "1952 1月17日生于东京中野|1978 与细野晴臣、高桥幸宏组建 Yellow Magic Orchestra|1983 出演电影《圣诞快乐，劳伦斯先生》并担任配乐|1988 凭《末代皇帝》与大卫·拜恩、苏聪共同获得奥斯卡最佳原创配乐奖|2011 东日本大地震。此后开始倾听曾被海啸淹没的钢琴的声音|2014 被诊断出咽喉癌，暂停活动|2015 复出后为电影《荒野猎人》配乐|2017 发行时隔8年的个人专辑《async》|2023 发行专辑《12》。3月28日逝世",
+    "caption": ""
+   },
+   "ja": {
+    "title": "1952 — 2023",
+    "body": "1952 1月17日、東京・中野に生まれる|1978 細野晴臣、高橋幸宏とYellow Magic Orchestraを結成|1983 映画『戦場のメリークリスマス』に俳優として出演し、音楽を担当|1988 『ラストエンペラー』でデヴィッド・バーン、蘇聡とともにアカデミー作曲賞を受賞|2011 東日本大震災。その後、津波に浸かったピアノの音に耳を傾ける|2014 中咽頭がんの診断を受け活動を休止|2015 復帰後、映画『レヴェナント』の音楽を手がける|2017 8年ぶりのソロアルバム『async』を発表|2023 アルバム『12』を発表。3月28日逝去",
+    "caption": ""
+   }
+  },
+  "c004:5": {
+   "en": {
+    "title": "Four ways to listen to sound",
+    "body": "Don't sync — async means \"asynchronous.\" Music can happen even when sounds don't all follow the same beat.|Listen to noise — Rain, footsteps, the hiss of old keys all become part of the score.|Let the tuning go — The off-pitch notes of a submerged piano are sounds that nature took back.|Leave space — The silence between notes lingers the longest.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "聆听声音的四种方法",
+    "body": "不对齐 — async 意为“非同步”。即使所有声音不遵循同一个节拍，也能成为音乐。|聆听噪音 — 雨声、脚步声、旧琴键的杂音，都会成为乐谱的一部分。|松开调音 — 被水淹过的钢琴走了调的音高，是大自然收回的声音。|留白 — 音与音之间的寂静，留存得最久。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "音を聴く四つの方法",
+    "body": "合わせない — async は「非同期」。すべての音が同じ拍子に従わなくても音楽になる。|ノイズを聴く — 雨音、足音、古い鍵盤の雑音も楽譜の一部になる。|調律をほどく — 水に浸かったピアノのずれた音程は、自然が取り戻した音だ。|余白を残す — 音と音のあいだの沈黙が、いちばん長く残る。",
+    "caption": ""
+   }
+  },
+  "c004:6": {
+   "en": {
+    "title": "The detuned piano",
+    "body": "Press the keys. Turn on \"Detune\" and, like a piano that was once underwater, the pitch drifts slightly and a little noise mixes into each key.",
+    "caption": "Sounds are synthesized with Web Audio. They are not real recordings."
+   },
+   "zh": {
+    "title": "走了调的钢琴",
+    "body": "按下琴键试试。打开“解除调音”，音高就会像曾被水淹过的钢琴一样渐渐偏离，每个琴键还会混入一点杂音。",
+    "caption": "声音由 Web Audio 合成，并非真实录音。"
+   },
+   "ja": {
+    "title": "ずれたピアノ",
+    "body": "鍵盤を押してみてください。「調律をほどく」をオンにすると、水に浸かったピアノのように音程が少しずつずれ、鍵盤ごとに小さな雑音がまざります。",
+    "caption": "Web Audioで合成した音です。実際の録音ではありません。"
+   }
+  },
+  "c004:7": {
+   "en": {
+    "title": "",
+    "body": "Ars longa, vita brevis.",
+    "caption": "Art is long, life is short — Hippocrates. A phrase Sakamoto often quoted"
+   },
+   "zh": {
+    "title": "",
+    "body": "Ars longa, vita brevis.",
+    "caption": "艺术长久，人生短暂 — 希波克拉底。坂本常引用的格言"
+   },
+   "ja": {
+    "title": "",
+    "body": "Ars longa, vita brevis.",
+    "caption": "芸術は長く、人生は短い — ヒポクラテス。坂本が好んで引用した言葉"
+   }
+  },
+  "c004:8": {
+   "en": {
+    "title": "The last performance",
+    "body": "",
+    "caption": "Ryuichi Sakamoto | Opus (2023, dir. Neo Sora) official trailer · Modern Films"
+   },
+   "zh": {
+    "title": "最后的演奏",
+    "body": "",
+    "caption": "《坂本龙一：Opus》（2023，导演：空音央）官方预告片 · Modern Films"
+   },
+   "ja": {
+    "title": "最後の演奏",
+    "body": "",
+    "caption": "『Ryuichi Sakamoto | Opus』（2023、監督：空音央）公式予告編 · Modern Films"
+   }
+  },
+  "c004:9": {
+   "en": {
+    "title": "",
+    "body": "This is an imagined exhibition put together to demonstrate the XPACE platform. It is not affiliated with any actual exhibition or rights holder.",
+    "caption": ""
+   },
+   "zh": {
+    "title": "",
+    "body": "本展览是为展示 XPACE 平台而临时构成的虚拟特展，与任何真实展览或权利人无关。",
+    "caption": ""
+   },
+   "ja": {
+    "title": "",
+    "body": "この展示は XPACE プラットフォームのデモのために構成した架空の企画展であり、実際の展示や権利者とは関係ありません。",
+    "caption": ""
+   }
+  },
+  "c004:10": {
+   "en": {
+    "title": "Next planet",
+    "body": "",
+    "caption": ""
+   },
+   "zh": {
+    "title": "前往下一颗行星",
+    "body": "",
+    "caption": ""
+   },
+   "ja": {
+    "title": "次の惑星へ",
+    "body": "",
+    "caption": ""
+   }
+  }
+ }
+}
