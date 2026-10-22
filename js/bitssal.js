@@ -1,7 +1,7 @@
 // X-005 · 빛쌀 — 한 톨의 쌀을 따라가는 연속 스크롤 이야기
 // 사실 서술 출처: 진실·화해를위한과거사정리위원회 「대구10월사건 관련 민간인 희생 사건」(jinsil.go.kr/KoreanWar/30.do),
 //                「경산 코발트광산 사건」(jinsil.go.kr/KoreanWar/36.do)
-import { sound } from './bitssal-sound.js?v=1';
+import { sound } from './bitssal-sound.js?v=2';
 const SRC1 = '진실·화해를위한과거사정리위원회, 「대구10월사건 관련 민간인 희생 사건」';
 const SRC2 = '진실·화해를위한과거사정리위원회, 「경산 코발트광산 사건」';
 const RICE = [255, 248, 230], DIM = [92, 86, 76], RED = [200, 56, 47], WARM = [255, 214, 150];
@@ -146,6 +146,18 @@ function vidHTML(id, title) {
   return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay"><span>▶</span>${esc(title || '영상 재생')}</button></div>`;
 }
 
+
+// ---------- 자동 재생 / 입장 화면 ----------
+function sndGate(kicker, title, onStart) {
+  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', '소리와 함께 입장');
+  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>입장하기</button><button class="g-s">소리 없이 보기</button><p class="g-n">헤드폰을 권장합니다</p></div>`;
+  document.body.appendChild(g);
+  const close = () => { g.classList.add('out'); setTimeout(() => g.remove(), 1000); };
+  g.querySelector('.g-s').addEventListener('click', (e) => { e.stopPropagation(); onStart(false); close(); });
+  g.addEventListener('click', () => { onStart(true); close(); });
+  return close;
+}
+
 // 사운드: 첫 터치/클릭/키 입력에서 시작 (브라우저 자동재생 정책), 상단 버튼으로 켜고 끄기
 const sndBtn = document.querySelector('.bs-snd');
 let sndUserOff = (() => { try { return localStorage.getItem('xpace-sound') === 'off'; } catch (e) { return false; } })();
@@ -153,11 +165,24 @@ function sndUI() { sndBtn.classList.toggle('on', sound.on); sndBtn.setAttribute(
 sndBtn.addEventListener('click', (e) => { e.stopPropagation(); const v = sound.toggle(); sndUserOff = !v; try { localStorage.setItem('xpace-sound', v ? 'on' : 'off'); } catch (e2) {} setTimeout(sndUI, 30); });
 const GEST = ['pointerdown', 'keydown', 'touchstart'];
 const firstGesture = (e) => {
-  if (e.target && e.target.closest && e.target.closest('.bs-snd')) return; // 버튼은 자체 처리
+  if (e.target && e.target.closest && e.target.closest('.bs-snd, .snd-gate')) return; // 버튼은 자체 처리
   GEST.forEach((ev) => removeEventListener(ev, firstGesture));
   if (!sndUserOff && !sound.on) sound.start().then(sndUI).catch(() => {});
+  if (closeGate) { closeGate(); closeGate = null; }
 };
 GEST.forEach((ev) => addEventListener(ev, firstGesture, { passive: true }));
+let closeGate = null;
+function autoSound() {
+  if (sndUserOff) return;
+  sound.tryAuto().then((ok) => {
+    if (ok) { GEST.forEach((ev) => removeEventListener(ev, firstGesture)); sndUI(); return; }
+    closeGate = sndGate('X-005 · 진시영 · 김동선', '빛쌀 — 80년의 기억', (withSound) => {
+      GEST.forEach((ev) => removeEventListener(ev, firstGesture));
+      if (withSound) sound.start().then(sndUI);
+      else { sndUserOff = true; sndUI(); }
+    });
+  });
+}
 
 // 목차 / 진행 막대
 const menu = document.getElementById('bs-menu'), menuBtn = document.querySelector('.bs-menu-btn');
@@ -642,4 +667,4 @@ document.querySelectorAll('.mem-f').forEach((f) => {
 });
 
 // 시작
-document.fonts.ready.catch(() => {}).then(() => { document.querySelector('.bs-loader').classList.add('done'); requestAnimationFrame(frame); });
+document.fonts.ready.catch(() => {}).then(() => { document.querySelector('.bs-loader').classList.add('done'); autoSound(); requestAnimationFrame(frame); });

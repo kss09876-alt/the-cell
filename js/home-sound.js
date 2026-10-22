@@ -100,6 +100,15 @@ export const hsound = {
     // 시작 신호: 멀리서 X가 울림
     [62, 69, 74, 81].forEach((m, k) => star(m, 0.7, (k - 1.5) * 0.3, k * 0.22, 5));
   },
+  // 클릭 없이 바로 재생 시도 (브라우저가 허용하면 true)
+  async tryAuto() {
+    try {
+      if (!ctx) build();
+      await Promise.race([ctx.resume(), new Promise((r) => setTimeout(r, 450))]);
+      if (ctx.state === 'running') { await this.start(); return true; }
+    } catch (e) {}
+    return false;
+  },
   stop() { on = false; if (ctx) master.gain.setTargetAtTime(0, ctx.currentTime, 0.3); try { localStorage.setItem(KEY, 'off'); } catch (e) {} },
   toggle() { if (on) { this.stop(); return false; } this.start(); return true; },
   // 매 프레임: drag = 카메라 회전 속도, zoom = 0(가까움)~1(멂), t = 초, hovering

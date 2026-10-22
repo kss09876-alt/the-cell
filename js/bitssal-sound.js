@@ -98,6 +98,15 @@ export const sound = {
     started = true; on = true; master.gain.setTargetAtTime(0.9, ctx.currentTime, 1.5);
     setScene(cur || 'prologue');
   },
+  // 클릭 없이 바로 재생 시도 (브라우저가 허용하면 true)
+  async tryAuto() {
+    try {
+      if (!ctx) build();
+      await Promise.race([ctx.resume(), new Promise((r) => setTimeout(r, 450))]);
+      if (ctx.state === 'running') { await this.start(); return true; }
+    } catch (e) {}
+    return false;
+  },
   stop() { on = false; if (ctx) master.gain.setTargetAtTime(0, ctx.currentTime, 0.4); },
   toggle() { return on ? (this.stop(), false) : (this.start(), true); },
   // 매 프레임 호출

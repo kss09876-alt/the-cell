@@ -1,7 +1,7 @@
 // XPACE — 메인: 중앙의 X를 도는 전시 행성계
 import * as THREE from 'three';
 import { loadData, imageUrl, esc } from './data.js?v=12';
-import { hsound } from './home-sound.js?v=1';
+import { hsound } from './home-sound.js?v=2';
 
 const canvas = document.getElementById('stage');
 const card = document.getElementById('hover-card');
@@ -361,17 +361,41 @@ bindPanel('btn-index', 'index-panel');
 bindPanel('btn-about', 'about-panel');
 addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.panel').forEach((p) => (p.hidden = true)); });
 
+
+// ---------- 자동 재생 / 입장 화면 ----------
+function sndGate(kicker, title, onStart) {
+  const g = document.createElement('div'); g.className = 'snd-gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', '소리와 함께 입장');
+  g.innerHTML = `<div class="g-in"><p class="g-k">${kicker}</p><p class="g-t">${title}</p><button class="g-b"><i><b></b><b></b><b></b></i>입장하기</button><button class="g-s">소리 없이 보기</button><p class="g-n">헤드폰을 권장합니다</p></div>`;
+  document.body.appendChild(g);
+  const close = () => { g.classList.add('out'); setTimeout(() => g.remove(), 1000); };
+  g.querySelector('.g-s').addEventListener('click', (e) => { e.stopPropagation(); onStart(false); close(); });
+  g.addEventListener('click', () => { onStart(true); close(); });
+  return close;
+}
+
 // ---------- 사운드 ----------
 const sndBtn = document.getElementById('btn-sound');
 function sndUI() { sndBtn.classList.toggle('on', hsound.on); sndBtn.setAttribute('aria-pressed', String(hsound.on)); sndBtn.querySelector('span').textContent = hsound.on ? 'SOUND ON' : 'SOUND OFF'; }
 sndBtn.addEventListener('click', () => { hsound.toggle(); setTimeout(sndUI, 30); });
 const GEST = ['pointerdown', 'keydown', 'touchstart'];
 const firstGesture = (e) => {
-  if (e.target && e.target.closest && e.target.closest('#btn-sound')) return;
+  if (e.target && e.target.closest && e.target.closest('#btn-sound, .snd-gate')) return;
   GEST.forEach((ev) => removeEventListener(ev, firstGesture));
   if (hsound.pref !== 'off' && !hsound.on) hsound.start().then(sndUI).catch(() => {});
+  if (closeGate) { closeGate(); closeGate = null; }
 };
 GEST.forEach((ev) => addEventListener(ev, firstGesture, { passive: true }));
+let closeGate = null;
+function autoSound() {
+  if (hsound.pref === 'off') return;
+  hsound.tryAuto().then((ok) => {
+    if (ok) { GEST.forEach((ev) => removeEventListener(ev, firstGesture)); sndUI(); return; }
+    closeGate = sndGate('ONLINE INTERACTIVE EXHIBITION', 'XPACE', (withSound) => {
+      GEST.forEach((ev) => removeEventListener(ev, firstGesture));
+      if (withSound) hsound.start().then(sndUI); else { hsound.stop(); sndUI(); }
+    });
+  });
+}
 document.querySelectorAll('.cell-list').forEach((l) => l.addEventListener('pointerover', (e) => { const li = e.target.closest('li'); if (li && li !== l._last) { l._last = li; hsound.tick(); } }));
 
 // ---------- 시작 ----------
@@ -391,5 +415,6 @@ document.querySelectorAll('.cell-list').forEach((l) => l.addEventListener('point
   resize();
   t0 = last = performance.now();
   loader.classList.add('done');
+  autoSound();
   requestAnimationFrame(tick);
 })();
