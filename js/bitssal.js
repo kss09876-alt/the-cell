@@ -1,6 +1,7 @@
 // X-005 · 빛쌀 — 한 톨의 쌀을 따라가는 연속 스크롤 이야기
 // 사실 서술 출처: 진실·화해를위한과거사정리위원회 「대구10월사건 관련 민간인 희생 사건」(jinsil.go.kr/KoreanWar/30.do),
 //                「경산 코발트광산 사건」(jinsil.go.kr/KoreanWar/36.do)
+import { sound } from './bitssal-sound.js?v=1';
 const SRC1 = '진실·화해를위한과거사정리위원회, 「대구10월사건 관련 민간인 희생 사건」';
 const SRC2 = '진실·화해를위한과거사정리위원회, 「경산 코발트광산 사건」';
 const RICE = [255, 248, 230], DIM = [92, 86, 76], RED = [200, 56, 47], WARM = [255, 214, 150];
@@ -145,6 +146,19 @@ function vidHTML(id, title) {
   return `<div class="bs-video" data-vid="${id}"><img src="${thumb(id)}" alt="" loading="lazy" onerror="this.remove()"><button class="vplay"><span>▶</span>${esc(title || '영상 재생')}</button></div>`;
 }
 
+// 사운드: 첫 터치/클릭/키 입력에서 시작 (브라우저 자동재생 정책), 상단 버튼으로 켜고 끄기
+const sndBtn = document.querySelector('.bs-snd');
+let sndUserOff = false;
+function sndUI() { sndBtn.classList.toggle('on', sound.on); sndBtn.setAttribute('aria-pressed', String(sound.on)); sndBtn.querySelector('span').textContent = sound.on ? '소리 켜짐' : '소리 켜기'; }
+sndBtn.addEventListener('click', (e) => { e.stopPropagation(); const v = sound.toggle(); sndUserOff = !v; setTimeout(sndUI, 30); });
+const GEST = ['pointerdown', 'keydown', 'touchstart'];
+const firstGesture = (e) => {
+  if (e.target && e.target.closest && e.target.closest('.bs-snd')) return; // 버튼은 자체 처리
+  GEST.forEach((ev) => removeEventListener(ev, firstGesture));
+  if (!sndUserOff && !sound.on) sound.start().then(sndUI).catch(() => {});
+};
+GEST.forEach((ev) => addEventListener(ev, firstGesture, { passive: true }));
+
 // 목차 / 진행 막대
 const menu = document.getElementById('bs-menu'), menuBtn = document.querySelector('.bs-menu-btn');
 menu.innerHTML = `<ol>${SCENES.map((s, i) => `<li><a href="#s-${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${esc(s.title)}</a></li>`).join('')}</ol>`;
@@ -163,8 +177,8 @@ document.querySelectorAll('.card').forEach((c) => io.observe(c));
 // 기록 읽기 / 바로잡기
 document.querySelectorAll('.reveal-rec').forEach((c) => {
   const rv = c.querySelector('.rv-btn'), fix = c.querySelector('.fix-btn');
-  rv.addEventListener('click', () => { c.classList.add('open'); rv.hidden = true; if (fix) fix.hidden = false; });
-  fix && fix.addEventListener('click', () => { c.classList.add('fixed'); fix.hidden = true; c.querySelector('.fix-note').hidden = false; });
+  rv.addEventListener('click', () => { sound.ping('reveal'); c.classList.add('open'); rv.hidden = true; if (fix) fix.hidden = false; });
+  fix && fix.addEventListener('click', () => { sound.ping('fix'); c.classList.add('fixed'); fix.hidden = true; c.querySelector('.fix-note').hidden = false; });
 });
 // 선택 카드
 document.querySelectorAll('.choice').forEach((c) => {
@@ -174,23 +188,24 @@ document.querySelectorAll('.choice').forEach((c) => {
 
 // 영상: 눌렀을 때만 불러오기
 document.querySelectorAll('.bs-video').forEach((v) => v.querySelector('.vplay').addEventListener('click', () => {
-  v.innerHTML = `<iframe src="https://drive.google.com/file/d/${v.dataset.vid}/preview" allow="autoplay; fullscreen" allowfullscreen title="영상"></iframe>`; v.classList.add('playing');
+  v.innerHTML = `<iframe src="https://drive.google.com/file/d/${v.dataset.vid}/preview" allow="autoplay; fullscreen" allowfullscreen title="영상"></iframe>`; v.classList.add('playing'); sound.duck(0.15);
 }));
 // 라이트박스
 const lb = document.createElement('div'); lb.className = 'lb'; lb.hidden = true; lb.innerHTML = '<button class="lb-x" aria-label="닫기">×</button><div class="lb-in"></div>'; document.body.appendChild(lb);
 function openLB(html) { lb.querySelector('.lb-in').innerHTML = html; lb.hidden = false; document.body.classList.add('lb-open'); }
-function closeLB() { lb.hidden = true; lb.querySelector('.lb-in').innerHTML = ''; document.body.classList.remove('lb-open'); }
+function closeLB() { sound.duck(1); lb.hidden = true; lb.querySelector('.lb-in').innerHTML = ''; document.body.classList.remove('lb-open'); }
 lb.addEventListener('click', (e) => { if (e.target === lb || e.target.closest('.lb-x')) closeLB(); });
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lb.hidden) closeLB(); });
 document.addEventListener('click', (e) => {
   const i = e.target.closest('[data-lb-img]'), v = e.target.closest('[data-lb-vid]');
   if (i) openLB(`<img src="${img(i.dataset.lbImg, 2200)}" alt="작품 사진"><p>작품 사진 — ${WORK}</p>`);
+  if (v) sound.duck(0.15);
   if (v) openLB(`<div class="lb-vid"><iframe src="https://drive.google.com/file/d/${v.dataset.lbVid}/preview" allow="autoplay; fullscreen" allowfullscreen title="작업 영상"></iframe></div><p>작업 영상 — ${WORK}</p>`);
 });
 // 캐러셀
 document.querySelectorAll('.car').forEach((c) => {
   const sl = [...c.querySelectorAll('.car-slide')], cp = [...c.querySelectorAll('.car-cap')], dots = [...c.querySelectorAll('.car-nav i')]; let k = 0;
-  const go = (n) => { k = (n + sl.length) % sl.length; [sl, cp, dots].forEach((arr) => arr.forEach((el, j) => el.classList.toggle('on', j === k))); state.carK = k; };
+  const go = (n) => { k = (n + sl.length) % sl.length; [sl, cp, dots].forEach((arr) => arr.forEach((el, j) => el.classList.toggle('on', j === k))); state.carK = k; sound.ping('slide'); };
   c.querySelector('.car-prev').addEventListener('click', () => go(k - 1)); c.querySelector('.car-next').addEventListener('click', () => go(k + 1));
   dots.forEach((d, j) => d.addEventListener('click', () => go(j)));
   let sx = null; const v = c.querySelector('.car-view');
@@ -198,7 +213,7 @@ document.querySelectorAll('.car').forEach((c) => {
   v.addEventListener('click', (e) => { if (c._sw) { c._sw = false; e.stopPropagation(); e.preventDefault(); } }, true);
 });
 // 한 톨 보태기
-document.querySelectorAll('.add-voice').forEach((b) => b.addEventListener('click', () => { state.voice = Math.min(200, state.voice + 1); document.querySelectorAll('.voice-n').forEach((n) => (n.textContent = state.voice)); }));
+document.querySelectorAll('.add-voice').forEach((b) => b.addEventListener('click', () => { state.voice = Math.min(200, state.voice + 1); sound.ping('voice'); document.querySelectorAll('.voice-n').forEach((n) => (n.textContent = state.voice)); }));
 
 // ---------------- 캔버스 / 입자 ----------------
 const cv = document.getElementById('stage'), g = cv.getContext('2d');
@@ -580,6 +595,7 @@ function frame(now) {
   if (torch > 0) { const tg = g.createRadialGradient(tx, ty, 0, tx, ty, 170); tg.addColorStop(0, `rgba(255,236,200,${0.1 * torch})`); tg.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = tg; g.fillRect(tx - 170, ty - 170, 340, 340); }
   if (id === 'light') state.lamps.forEach((l) => { l.y -= l.v; l.x += Math.sin(t + l.ph) * 0.3; const r = 10 + Math.sin(t * 3 + l.ph) * 2; const lg = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, r * 2.4); lg.addColorStop(0, 'rgba(255,240,205,.95)'); lg.addColorStop(1, 'rgba(255,214,150,0)'); g.fillStyle = lg; g.beginPath(); g.arc(l.x, l.y, r * 2.4, 0, 6.283); g.fill(); if (l.y < -40) l.y = H + 40; });
   if (id === 'hunger' && state.hold > 0.05) { g.strokeStyle = `rgba(255,248,230,${0.5 * state.hold})`; g.beginPath(); g.arc(ptr.x, ptr.y, 26 + state.hold * 10, -Math.PI / 2, -Math.PI / 2 + state.hold * 6.283); g.stroke(); }
+  sound.update(id, p, { freeze: state.freeze, lamps: state.lamps.length });
   placeLabels(id, p);
   requestAnimationFrame(frame);
 }
@@ -588,16 +604,16 @@ function frame(now) {
 addEventListener('click', (e) => {
   if (e.target.closest('.card, .bs-top, .bs-menu, .bs-progress, .lab, .bs-credits, .lb')) return;
   const id = SCENES[cur].id;
-  if (id === 'prologue' && Math.hypot(e.clientX - X[0], e.clientY - Y[0]) < 60) { state.entered = true; setTimeout(() => window.scrollTo({ top: sections[0].offsetTop + sections[0].offsetHeight * 0.55, behavior: 'smooth' }), 300); }
+  if (id === 'prologue' && Math.hypot(e.clientX - X[0], e.clientY - Y[0]) < 60) { state.entered = true; sound.ping('enter'); setTimeout(() => window.scrollTo({ top: sections[0].offsetTop + sections[0].offsetHeight * 0.55, behavior: 'smooth' }), 300); }
   if (id === 'life') {
-    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 36 && state.bowls[k] < 1) { state.bowls[k] = Math.min(1, state.bowls[k] + 0.5); const done = state.bowls.filter((v) => v >= 1).length; document.querySelectorAll('.bowl-n').forEach((n) => (n.textContent = done)); if (done === 10) showTip('한 집의 하루', '열 그릇이 모두 찼습니다. 이 평범한 밥상이 다음 장면에서 비어 갑니다.', { getBoundingClientRect: () => ({ left: CX - 120, top: CY + R * 0.7 }) }); else showTip(b.t, state.bowls[k] >= 1 ? '한 그릇을 다 담았습니다.' : '한 번 더 누르면 가득 찹니다.', { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
+    BOWLS.forEach((b, k) => { const q = bowlPos(k); if (Math.hypot(e.clientX - q.x, e.clientY - q.y) < 36 && state.bowls[k] < 1) { state.bowls[k] = Math.min(1, state.bowls[k] + 0.5); const done = state.bowls.filter((v) => v >= 1).length; sound.ping(done === 10 && state.bowls[k] >= 1 ? 'bowlsDone' : 'bowl'); document.querySelectorAll('.bowl-n').forEach((n) => (n.textContent = done)); if (done === 10) showTip('한 집의 하루', '열 그릇이 모두 찼습니다. 이 평범한 밥상이 다음 장면에서 비어 갑니다.', { getBoundingClientRect: () => ({ left: CX - 120, top: CY + R * 0.7 }) }); else showTip(b.t, state.bowls[k] >= 1 ? '한 그릇을 다 담았습니다.' : '한 번 더 누르면 가득 찹니다.', { getBoundingClientRect: () => ({ left: q.x - 40, top: q.y - 10 }) }); } });
   }
-  if (id === 'light' && state.lamps.length < 60) { state.lamps.push({ x: e.clientX, y: e.clientY, v: 0.25 + Math.random() * 0.35, ph: Math.random() * 6 }); document.querySelectorAll('.lamp-n').forEach((n) => (n.textContent = state.lamps.length)); }
+  if (id === 'light' && state.lamps.length < 60) { sound.ping('lamp'); state.lamps.push({ x: e.clientX, y: e.clientY, v: 0.25 + Math.random() * 0.35, ph: Math.random() * 6 }); document.querySelectorAll('.lamp-n').forEach((n) => (n.textContent = state.lamps.length)); }
   if (id === 'share') {
     // 가장 가까운 주먹밥을 옆 자리로 건넴
     let best = null, bd = 1e9;
     state.balls.forEach((b) => { const x = CX + Math.cos(b.a) * R * b.r, y = CY + Math.sin(b.a) * R * b.r * 0.75, d = Math.hypot(e.clientX - x, e.clientY - y); if (d < bd) { bd = d; best = b; } });
-    if (best && bd < 70) { best.ta += Math.PI * 2 / 10 * (1 + Math.floor(Math.random() * 3)); best.tr = 0.55 + Math.random() * 0.35; state.share++; document.querySelectorAll('.share-n').forEach((n) => (n.textContent = state.share)); }
+    if (best && bd < 70) { best.ta += Math.PI * 2 / 10 * (1 + Math.floor(Math.random() * 3)); best.tr = 0.55 + Math.random() * 0.35; state.share++; sound.ping('share'); document.querySelectorAll('.share-n').forEach((n) => (n.textContent = state.share)); }
   }
 });
 addEventListener('pointermove', (e) => {
@@ -619,7 +635,7 @@ document.querySelectorAll('.mem-f').forEach((f) => {
   ta.addEventListener('input', () => (n.textContent = `${ta.value.length} / 120`));
   f.addEventListener('submit', (e) => {
     e.preventDefault(); const text = ta.value.trim().slice(0, 120); if (!text) return ta.focus();
-    state.memories.push({ text }); try { localStorage.setItem('xpace-bitssal-v2', JSON.stringify(state.memories.slice(-20).map((m) => ({ text: m.text })))); } catch (e2) {}
+    state.memories.push({ text }); sound.ping('memory'); try { localStorage.setItem('xpace-bitssal-v2', JSON.stringify(state.memories.slice(-20).map((m) => ({ text: m.text })))); } catch (e2) {}
     ta.value = ''; n.textContent = '0 / 120';
     f.parentElement.querySelector('.note').textContent = '당신의 문장이 빛이 되어 떠올랐습니다. 빛 위에 커서를 올리면 다시 볼 수 있어요. (이 브라우저에만 저장)';
   });
