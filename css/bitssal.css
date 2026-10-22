@@ -90,7 +90,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .bs-logo .x::before, .bs-logo .x::after { content: ''; position: absolute; left: 50%; top: 50%; width: 18px; height: 2px; background: currentColor; }
 .bs-logo .x::before { transform: translate(-50%, -50%) rotate(45deg); } .bs-logo .x::after { transform: translate(-50%, -50%) rotate(-45deg); }
 .bs-title { font-size: 12px; color: var(--muted); letter-spacing: .08em; }
-.bs-menu-btn { margin-left: auto; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .1em; }
+.bs-snd { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--muted); }
+.bs-snd span { margin-left: 6px; }
+.bs-snd i { width: 2px; height: 4px; background: currentColor; border-radius: 1px; }
+.bs-snd.on { color: var(--rice); border-color: rgba(255,248,230,.45); }
+.bs-snd.on i { animation: eq 1.1s ease-in-out infinite; }
+.bs-snd.on i:nth-child(2) { animation-delay: .25s; } .bs-snd.on i:nth-child(3) { animation-delay: .5s; }
+@keyframes eq { 50% { height: 12px; } }
+.bs-menu-btn { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .1em; }
 .bs-menu { position: fixed; z-index: 11; right: clamp(16px, 4vw, 40px); top: 60px; width: min(300px, 86vw); padding: 10px; background: rgba(8,8,7,.97); border: 1px solid var(--line); border-radius: 12px; }
 .bs-menu ol { list-style: none; }
 .bs-menu a { display: flex; gap: 12px; padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #cfccc4; }
